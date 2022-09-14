@@ -4,7 +4,7 @@ title = 'Ирокезнутый блог'
 publishDir = "docs"
 [Params]
   # Note: This is for the meta description, which is different from the "description" displayed in the terminal.
-  description = "Jane Doe's Portfolio!"
+  description = "Ирокезнутый блог Александра Васюкова"
   [Params.Terminal]
   # Note: color scheme
   # Note: You can choose between
