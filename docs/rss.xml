@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Ирокезнутый блог</title>
+    <link>https://brom95.github.io/rss.xml</link>
+    <description>Recent content on Ирокезнутый блог</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>ru-ru</language><atom:link href="https://brom95.github.io/rss.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Summary</title>
+      <link>https://brom95.github.io/summary/</link>
+      <pubDate>Wed, 14 Sep 2022 20:17:17 +0300</pubDate>
+      
+      <guid>https://brom95.github.io/summary/</guid>
+      <description>Резюме
+С 2012-го года я успел поработать с такими языками как:
+ python php java script (в том числе node.js) Go C# (разрабатываю на нем в настоящее время)  Уверенно чувствую себя в консолях unix like систем, сталкивался с задачами по настройке CI/CD pipeline (в рамках gitlab-ci), собирал и настраивал docker контейнеры, которые в дальнейшем с помощью docker-compose разворачивались в полноценное приложение.
+Есть опыт организации работы отдела разработки с нуля.</description>
+    </item>
+    
+  </channel>
+</rss>

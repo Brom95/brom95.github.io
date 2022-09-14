@@ -517,6 +517,7 @@ body{background:#1b1d1e}body #terminal{color:#BBBBBB}body #user{color:#23E298}bo
     
     
     
+    
 
 
     <span id="activity-title"></span> <br>
@@ -569,7 +570,7 @@ body{background:#1b1d1e}body #terminal{color:#BBBBBB}body #user{color:#23E298}bo
     const titleDelay = parseDelay("0"),
         contentDelay = parseDelay("0");
     const typeeffetct = async () => {
-        await typewriter("\u003cspan id=\u0027terminal\u0027\u003e\u003ch1 id=\u0027title\u0027\u003eSummary\u003c\/h1\u003e\u003c\/span\u003e", "activity-title", titleDelay);
+        await typewriter("\u003cspan id=\u0027terminal\u0027\u003e\u003ch1 id=\u0027title\u0027\u003eSummary\u003c\/h1\u003e\u003cspan id=\u0027date\u0027\u003e2022-09-14 20:17:17 \u002b0300 MSK\u003c\/span\u003e\u003c\/span\u003e", "activity-title", titleDelay);
         await typewriter("\u003cspan id=\u0027terminal\u0027\u003e\u003cp\u003e\u003ca href=\u0022https:\/\/career.habr.com\/bromid\u0022\u003eРезюме\u003c\/a\u003e\u003c\/p\u003e\n\u003cp\u003eС 2012-го года я успел поработать с такими языками как:\u003c\/p\u003e\n\u003cul\u003e\n\u003cli\u003epython\u003c\/li\u003e\n\u003cli\u003ephp\u003c\/li\u003e\n\u003cli\u003ejava script (в том числе node.js)\u003c\/li\u003e\n\u003cli\u003eGo\u003c\/li\u003e\n\u003cli\u003eC# (разрабатываю на нем в настоящее время)\u003c\/li\u003e\n\u003c\/ul\u003e\n\u003cp\u003eУверенно чувствую себя в консолях unix like систем, сталкивался с задачами по настройке CI\/CD  pipeline (в рамках gitlab-ci), собирал и настраивал docker контейнеры, которые в дальнейшем  с помощью docker-compose разворачивались в полноценное приложение.\u003c\/p\u003e\n\u003cp\u003eЕсть опыт организации работы отдела разработки с нуля.\u003c\/p\u003e\n\u003cp\u003eВ 2022-ом году прошёл курс «продвинутая разработка микросервисов на C#» от Ozon tech\u003c\/p\u003e\n\u003c\/span\u003e", "activity-content", contentDelay);
         return;
     }
@@ -577,9 +578,55 @@ body{background:#1b1d1e}body #terminal{color:#BBBBBB}body #user{color:#23E298}bo
     typeeffetct()
 </script>
 
-        </div>
+        </div><style>
+    h1 {
+         
+        color: #23E298;
+    }
+
+    ::marker {
+        color: #D08010;
+        content: "-rw-rw-r--";
         
+    }
+
+    a, #date {
+        color: #D08010;
+    }
+    li {
+        padding-left: 2%;
+    }
+    #activity-content{
+        font-size: 0.5rem;
+        line-height: 1.56;
+        overflow-wrap: break-word;
+        font-family: -apple-system,BlinkMacSystemFont,Arial,sans-serif;
+    }
+</style>
         
+        <span class="navFull">
+        
+    
+    
+
+    
+        
+
+<span>
+    <a href="/">Home</a>
+    <span>&#8192;|&#8192;</span>
+    <a href="./..">/</a>
+</span>
+
+    
+
+        
+        <span class="navCredits">
+            Hugo theme created by
+            <a href="https://github.com/Yukuro/hugo-theme-shell" target="_blank" rel="noopener">Yukuro</a>
+        </span>
+</span>
+
         
          
     </body>
