@@ -64,7 +64,7 @@ publishDir = "docs"
   folderName = "Projects"
   # Note: ["ACTIVITY", "URL or PATH TO YOUR MARKDOWN FILE"]
   files = [ 
-    ["Summary","/summary.md"],
+    ["summary.md","/summary.md"],
     ["GitHub", "https://github.com/Brom95"],
     ["Телеграм канал", "https://useless_chanel.t.me"],
     
