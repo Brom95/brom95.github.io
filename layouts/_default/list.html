@@ -1,0 +1,20 @@
+{{ define "main" }}
+
+<main id="main">
+  <h1>{{ .Title }}</h1>
+  <ul>
+    {{ range .Pages }}
+    <li>
+      <div>
+        <a href="{{ .RelPermalink }}">
+
+          {{ replace .Title " " "_" }}{{ if and (.IsPage) (.Site.Params.Extensions.use) }}{{ .Site.Params.Extensions.ext }}
+          {{ end }}
+        </a>
+      </div>
+    </li>
+    {{ end }}
+  </ul>
+</main>
+
+{{ end }}

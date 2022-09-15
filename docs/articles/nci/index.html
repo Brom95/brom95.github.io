@@ -1,0 +1,652 @@
+<!DOCTYPE html>
+<html lang="ru-ru"><head>
+    <title>Нейро-компьютерный интерфейс как глобальный двигатель прогресса</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <meta name="description" content="" />
+    <style>
+@import "https://fonts.googleapis.com/css2?family=Inconsolata&display=swap";:root{--cursor-visibility:hidden}html,body{width:100%;height:100%;overflow:auto;font-family:inconsolata,monospace;font-size:4vmin;line-height:4.1vmin;font-weight:400}body{margin:0;display:flex;flex-direction:row;justify-content:center;align-items:center}#content{min-width:82vmin;min-height:82vmin}::-webkit-scrollbar{width:10px}::-webkit-scrollbar-track{border-radius:10px;box-shadow:inset 0 0 1px white}::-webkit-scrollbar-thumb{border-radius:10px;box-shadow:0 0 0 1px white}.cursor,#activity-title:after,#activity-content:after,#cd:after,#whoami:after,#cat:after,#tree:after{visibility:var(--cursor-visibility);content:"|";overflow:hidden;color:#fff;animation:blink 500ms linear infinite alternate}@keyframes blink{0%{opacity:0}100%{opacity:1}}@media only screen and (min-width:768px){body{font-size:2.5vmin;line-height:2.6vmin}#content{min-width:60vmin}}:root{--cursor-visibility:hidden}body{align-items:unset;overflow-y:scroll}#content{max-width:80vmin}pre{overflow-x:scroll;white-space:pre}@keyframes blink{0%{opacity:0}100%{opacity:1}}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+        
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+
+
+body{background:#1b1d1e}body #terminal{color:#BBBBBB}body #user{color:#23E298}body #dir{color:#D08010}body .Typewriter__cursor{color:#BBBBBB}a{color:#BBBBBB}
+
+        
+.navFull {
+    background-color: #353535;
+    font-family: "Courier New";
+    font-size: 17px;
+    display: inline;
+    position: fixed;
+    bottom: 0px;
+    left: 0px;
+    width: 100%;
+    padding-top: 5px;
+    padding: 10px;
+    padding-bottom: 0px;
+}
+
+.navCredits {
+    float: right;
+    padding-right: 18px;
+    padding-bottom: 10px;
+    padding-top: 5px;
+}
+
+#content::after {
+    content: "\a\a";
+    white-space: pre;
+}
+        
+        
+</style>
+
+
+
+</head><body><div id="content">
+    
+    
+    
+    
+
+
+    <span id="activity-title"></span> <br>
+ <span id="activity-content"></span> <br>
+
+<script type="text/javascript">
+    async function typewriter(text, elementId, waitAfter) {
+        var n = 0,
+            isTag = false
+        addText = "";
+        const el = document.getElementById(elementId);
+
+        const wait = () => new Promise(r => setTimeout(r, waitAfter));
+        const nowait = () => new Promise(r => r());
+
+        const render = () => el.innerHTML = (text.slice(0, n + 1) + addText);
+
+        const cursor = document.createElement('span');
+        cursor.id = "blink";
+
+        el.style.setProperty("--cursor-visibility", "visible");
+        while (n < text.length) {
+            if (text.charAt(n + 1) === "<") isTag = true;
+            if (text.charAt(n + 1) === ">") isTag = false;
+
+            if (isTag) {
+                n++;
+                continue;
+            }
+
+            requestAnimationFrame(render);
+
+            if (waitAfter === 0) {
+                await nowait();
+            } else {
+                await wait();
+            }
+
+            n++;
+        }
+        el.style.setProperty("--cursor-visibility", "collapse");
+    }
+
+    function parseDelay(d) {
+        const parsed = parseInt(d, 10);
+        if (isNaN(parsed)) return 0;
+        return parsed;
+    }
+
+    const titleDelay = parseDelay("0"),
+        contentDelay = parseDelay("0");
+    const typeeffetct = async () => {
+        await typewriter("\u003cspan id=\u0027terminal\u0027\u003e\u003ch1 id=\u0027title\u0027\u003eНейро-компьютерный интерфейс как глобальный двигатель прогресса\u003c\/h1\u003e\u003cspan id=\u0027date\u0027\u003e2014-11-11 22:12:34 \u002b0300 MSK\u003c\/span\u003e\u003c\/span\u003e", "activity-title", titleDelay);
+        await typewriter("\u003cspan id=\u0027terminal\u0027\u003e\u003cp\u003e\u003cstrong\u003eНейро-компьютерный интерфейс\u003c\/strong\u003e (НКИ) (называемый также прямой нейронный интерфейс, мозговой интерфейс, интерфейс «мозг — компьютер») – устройство или принцип работы, предназначенный для обеспечения односторонней или двухсторонней связи между мозгом и электронным устройством.\u003c\/p\u003e\n\u003cp\u003eДругими словами, НКИ - это некоторый механизм, позволяющий управлять техникой с помощью \u0026quot; силы мысли\u0026quot;. Исследования этой области  начались в 1970-х годах в Калифорнийском университете в Лос-Анджелесе (UCLA). В середине 1990-х были разработаны устройства, которые позволили восстановить поврежденные функции слуха, зрения, а также утраченные двигательные навыки.\u003c\/p\u003e\n\u003cp\u003eОдной из главных причин, по которой НКИ станет катализатором научно-технического прогресса, является широкая область применимости данной технологии.\n\u003cimg src=\u0022\/assets\/brain.jpg\u0022 alt=\u0022\u0022\u003e\u003c\/p\u003e\n\u003cp\u003eОдно из самых перспективных направлений развития НКИ является медицина. НКИ позволит создавать протезы с высокой отзывчивостью, манипулировать подобного рода протезами можно будет наравне с здоровыми органами. Вопросами создания и имплантирования различных искусственных устройств для восстановления нарушений функций нервной системы и сенсорных органов занимается область неврологии –  нейропротезирование. Самым распространенным нейропротезом является кохлеарный имплантат, который используется для компенсирования потери слуха некоторым пациентам с выраженной или тяжёлой степенью нейросенсорной (сенсоневральной) тугоухости.\u003c\/p\u003e\n\u003cp\u003eОднако медицинские НКИ могут найти применение не только в медицине. На основе технологий нейропротезирования в последствии возможно создание систем управления гуманоидными роботами. Так, например, в 2000-ом году, исследовательской  группе Мигеля Николесиса удалось воспроизвести движение передних конечностей обезьяны. Система работала в реальном времени и использовалась для управления роботом по средствам интернет соединения. На практике  подобного рода роботы могут быть использованы при высокоточных работах, в местах, где прибывание человека невозможно. Так же, как и в случае с нейропротезами, НКИ позволит обеспечить более высокую точность и отзывчивость, что в значительной степени повысит эффективность работы оператора.\u003c\/p\u003e\n\u003cp\u003eРазвитие НКИ в сторону распознания мыслительных образов должно дать мощный толчек в развитии областей, связанных с моделированием и проектированием. НКИ позволит в значительной степени ускорить и упростить процесс создания моделей и чертежей. Ощутимый прогресс в данном направлении имеет группа NeuroG; группа занимается созданием алгоритмов для распознания зрительных образов, а 25 апреля 2011 года состоялась первая публичная демонстрация работы устройства по распознанию мыслительных образов. К сожалению, на тот момент, устройство распознавало только 4 изображения.\u003c\/p\u003e\n\u003cp\u003eСледующий способ практического применения НКИ трудно отнести к какой либо конкретной области. Речь идет о хранении и передачи знаний и опыта. Развитие НКИ в данном направлении позволит сократить длительность обучения, а также позволит создавать продвинутые базы знаний, которые будут включать в себя опыт и знания других специалистов в данной предметной области. Сама возможность использования НКИ для передачи опыта была подтверждена Мигелем Николелисом и Михаилом Лебедевым с коллегами из отдела нейробиологи университета Дьюка (США). Ими была опубликована научная работа с описанием первого в мире интерфейса для передачи сигналов из мозга в мозг через интернет. В процессе эксперимента первая крыса (кодер) в университете Дюка осуществляла сенсомоторные задачи, требующие выбора из двух вариантов с использованием тактильных или визуальных стимулов. В процессе выполнения кодером задачи образцы мозговой активности передавались в соответствующие области мозга второй крысы (декодера) с помощью интракортикальных стимуляций (ICMS). При этом крыса-декодер физически находилась в Бразилии.\u003c\/p\u003e\n\u003cp\u003eТак как работа НКИ связана с непосредственным воздействием на нервную систему человека, наиболее вероятным способом организации двусторонней связи человека с компьютером будет имплантирование модуля способного перехватывать, принимать (при необходимости обрабатывать) и передавать сигналы нервной системы.\u003c\/p\u003e\n\u003cp\u003eСогласно опросу, проведенному в интернете, 72% опрошенных считают, что НКИ окажут положительное влияние на развитие науки-техники и жизни  целом, 10% ответили отрицательно, 18% затруднились дать ответ на вопрос, однако на вопрос о согласии на имплантирование модуля, позволяющего использовать НКИ, положительно ответили только 35%, 24% ответили отказом, 32% затруднились дать ответ, 9% предложили свои варианты. В результате беседы с респондентами были выявлены основные причины, по которым люди затруднились ответить или дали отрицательный ответ:\u003c\/p\u003e\n\u003col\u003e\n\u003cli\u003eНе желание людей становится \u0026lsquo;\u0026lsquo;киборгами\u0026rsquo;\u0026rsquo;, т. е. модифицировать свое тело искусственным способом;\u003c\/li\u003e\n\u003cli\u003eСтрах потерять свободу воли и стать подконтрольным хакеру.\u003c\/li\u003e\n\u003c\/ol\u003e\n\u003ch4 id=\u0022список-литературы\u0022\u003eСписок литературы\u003c\/h4\u003e\n\u003col\u003e\n\u003cli\u003e\n\u003cp\u003e\u003cem\u003eСтароха А. В., Давыдов А. В.\u003c\/em\u003e Кохлеарная имплантация — перспективное направление слухопротезирования\/\/Бюллетень сибирской медицины.— 2004.— №4.— С.34—38\u003c\/p\u003e\n\u003c\/li\u003e\n\u003cli\u003e\n\u003cp\u003e\u003cem\u003eCarmena, J.M., Lebedev, M.A., Crist, R.E., O’Doherty, J.E., Santucci, D.M., Dimitrov, D.F., Patil, P.G., Henriquez, C.S., Nicolelis, M.A.L. (2003)\u003c\/em\u003e Learning to control a brain-machine interface for reaching and grasping by primates. PLoS Biology, 1: 193—208.\u003c\/p\u003e\n\u003c\/li\u003e\n\u003cli\u003e\n\u003cp\u003e\u003cem\u003eЕникеева, Альфия\u003c\/em\u003e «Российские учёные научат компьютер читать мысли», «Наука и технологии России»,  2011-04-27\u003c\/p\u003e\n\u003c\/li\u003e\n\u003cli\u003e\n\u003cp\u003e\u003cem\u003eMiguel Pais-Vieira, Mikhail Lebedev, Jing Wang , Miguel A. L. Nicolelis\u003c\/em\u003e «A Brain-to-Brain Interface for Real-Time Sharing of Sensorimotor Information» , 2013-02-28\u003c\/p\u003e\n\u003c\/li\u003e\n\u003c\/ol\u003e\n\u003c\/span\u003e", "activity-content", contentDelay);
+        return;
+    }
+
+    typeeffetct()
+</script>
+
+        </div><style>
+    h1 {
+         
+        color: #23E298;
+        line-height: 6vmin;
+        font-size: 6vmin;
+    }
+
+    
+    
+    ul ::marker {
+        
+        content: "-rw-rw-r--";
+
+    }
+
+    a, strong, ::marker,
+    #date {
+        color: #D08010;
+
+    }
+
+    li a {
+        font-family: -apple-system, BlinkMacSystemFont, Arial, sans-serif;
+        font-size: 0.5rem;
+        line-height: 1.56;
+    }
+
+    li {
+        padding-left: 2%;
+
+
+    }
+    a{
+        text-decoration: none;
+    }
+    #activity-content {
+        font-size: 0.5rem;
+        line-height: 1.56;
+        overflow-wrap: break-word;
+        font-family: -apple-system, BlinkMacSystemFont, Arial, sans-serif;
+    }
+</style>
+        
+        <span class="navFull">
+        
+    
+    
+
+    
+        
+
+<span>
+    <a href="/">Home</a>
+    <span>&#8192;|&#8192;</span>
+    <a href="./..">/articles/</a>
+</span>
+
+    
+
+        
+        <span class="navCredits">
+            Hugo theme created by
+            <a href="https://github.com/Yukuro/hugo-theme-shell" target="_blank" rel="noopener">Yukuro</a>
+        </span>
+</span>
+
+        
+         
+        
+    </body>
+</html>
