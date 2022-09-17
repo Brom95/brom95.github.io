@@ -6,7 +6,7 @@
     <description>Recent content on Ирокезнутый блог</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>ru-ru</language>
-    <lastBuildDate>Tue, 11 Nov 2014 22:12:34 +0300</lastBuildDate><atom:link href="https://brom95.github.io/rss.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Tue, 01 May 2018 00:00:59 +0300</lastBuildDate><atom:link href="https://brom95.github.io/rss.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>Summary</title>
       <link>https://brom95.github.io/summary/</link>
@@ -17,6 +17,17 @@
 С 2012-го года я успел поработать с такими языками как:
  python php java script (в том числе node.js) Go C# (разрабатываю на нем в настоящее время)  Уверенно чувствую себя в консолях unix like систем, сталкивался с задачами по настройке CI/CD pipeline (в рамках gitlab-ci), собирал и настраивал docker контейнеры, которые в дальнейшем с помощью docker-compose разворачивались в полноценное приложение.
 Есть опыт организации работы отдела разработки с нуля.</description>
+    </item>
+    
+    <item>
+      <title>ПОСТРОЕНИЕ СИСТЕМЫ АГРЕГИРОВАНИЯ ИНФОРМАЦИИ</title>
+      <link>https://brom95.github.io/articles/agregate/</link>
+      <pubDate>Tue, 01 May 2018 00:00:59 +0300</pubDate>
+      
+      <guid>https://brom95.github.io/articles/agregate/</guid>
+      <description>Оригинал статьи. Статья была написана в рамках моего обучения в магистратуре.
+ В современном мире, где объемы данных, поступающие в информационные системы, имеют тенденцию к постоянному росту, а отдельное клиентское устройство зачастую не способно совершать выборку и обработку всех необходимых данных режиме реального времени, вопрос построения систем агрегирования информации встает все более остро.
+Что же представляет из себя система агрегирования информации в сети Интернет? Согласно [4], система агрегации это способ создания новых web-приложений за счет объединения уже существующих интернетресурсов.</description>
     </item>
     
     <item>
