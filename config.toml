@@ -3,6 +3,7 @@ languageCode = 'ru-ru'
 title = 'Ирокезнутый блог'
 publishDir = "docs"
 description = "Ирокезнутый блог Александра Васюкова"
+enableRobotsTXT = true
 # menu = 'main'
 [outputs]
     home = [ "RSS", "HTML"]
