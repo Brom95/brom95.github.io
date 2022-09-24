@@ -2,8 +2,29 @@
     {{ $title := printf "<h1 id='title'>%s</h1><span id='date'>%s</span>" .Title .Date}}
     {{ $title := printf "<span id='terminal'>%s</span>"  $title}}
     
+        <!--AdFox START-->
+<!--yandex_wasalev-->
+<!--Площадка: Ирокезнутый блог / * / *-->
+<!--Тип баннера: 100%x100% Turbo-->
+<!--Расположение: верх страницы-->
+<div id="adfox_16640037030593922"></div>
+<script>
+    window.yaContextCb.push(()=>{
+        Ya.adfoxCode.create({
+            ownerId: 708284,
+            containerId: 'adfox_16640037030593922',
+            params: {
+                pp: 'g',
+                ps: 'gaal',
+                p2: 'hukd'
+            }
+        })
+    })
+</script>
+
     {{ $content := printf "<span id='terminal'>%s</span>" .Content }}
 
 
     {{ partial "partials/typeActivity.html" (dict "context" . "title" $title "content" $content "titledelay" $.Site.Params.Terminal.titleDelay "contentdelay" $.Site.Params.Terminal.contentDelay )}}
+    
 {{ end }}

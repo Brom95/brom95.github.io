@@ -2,23 +2,26 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
   xmlns:xhtml="http://www.w3.org/1999/xhtml">
   <url>
-    <loc>https://brom95.github.io/summary/</loc>
+    <loc>https://alexandrv.ru/summary/</loc>
     <lastmod>2022-09-14T20:17:17+03:00</lastmod>
   </url><url>
-    <loc>https://brom95.github.io/articles/</loc>
+    <loc>https://alexandrv.ru/articles/</loc>
+    <lastmod>2020-05-19T19:33:19+03:00</lastmod>
+  </url><url>
+    <loc>https://alexandrv.ru/articles/grigri/</loc>
+    <lastmod>2020-05-19T19:33:19+03:00</lastmod>
+  </url><url>
+    <loc>https://alexandrv.ru/</loc>
+    <lastmod>2020-05-19T19:33:19+03:00</lastmod>
+  </url><url>
+    <loc>https://alexandrv.ru/articles/agregate/</loc>
     <lastmod>2018-05-01T00:00:59+03:00</lastmod>
   </url><url>
-    <loc>https://brom95.github.io/</loc>
-    <lastmod>2018-05-01T00:00:59+03:00</lastmod>
-  </url><url>
-    <loc>https://brom95.github.io/articles/agregate/</loc>
-    <lastmod>2018-05-01T00:00:59+03:00</lastmod>
-  </url><url>
-    <loc>https://brom95.github.io/articles/nci/</loc>
+    <loc>https://alexandrv.ru/articles/nci/</loc>
     <lastmod>2014-11-11T22:12:34+03:00</lastmod>
   </url><url>
-    <loc>https://brom95.github.io/categories/</loc>
+    <loc>https://alexandrv.ru/categories/</loc>
   </url><url>
-    <loc>https://brom95.github.io/tags/</loc>
+    <loc>https://alexandrv.ru/tags/</loc>
   </url>
 </urlset>

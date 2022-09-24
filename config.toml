@@ -1,4 +1,4 @@
-baseURL = 'https://brom95.github.io/'
+baseURL = 'https://alexandrv.ru/'
 languageCode = 'ru-ru'
 title = 'Ирокезнутый блог'
 publishDir = "docs"
