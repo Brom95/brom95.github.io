@@ -6,7 +6,7 @@
     <description>Recent content on Ирокезнутый блог</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>ru-ru</language>
-    <lastBuildDate>Tue, 19 May 2020 19:33:19 +0300</lastBuildDate><atom:link href="https://alexandrv.ru/rss.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Sat, 20 Nov 2021 17:23:23 +0300</lastBuildDate><atom:link href="https://alexandrv.ru/rss.xml" rel="self" type="application/rss+xml" />
     <item turbo="true">
       <title>Summary</title>
       <link>https://alexandrv.ru/summary/</link>
@@ -29,6 +29,293 @@
 &lt;p&gt;Уверенно чувствую себя в консолях unix like систем, сталкивался с задачами по настройке CI/CD  pipeline (в рамках gitlab-ci), собирал и настраивал docker контейнеры, которые в дальнейшем  с помощью docker-compose разворачивались в полноценное приложение.&lt;/p&gt;
 &lt;p&gt;Есть опыт организации работы отдела разработки с нуля.&lt;/p&gt;
 &lt;p&gt;В 2022-ом году прошёл курс «продвинутая разработка микросервисов на C#» от Ozon tech&lt;/p&gt;
+</turbo:content>
+    </item>
+    
+    <item turbo="true">
+      <title>Сравнение в C#</title>
+      <link>https://alexandrv.ru/articles/comparer/</link>
+      <pubDate>Sat, 20 Nov 2021 17:23:23 +0300</pubDate>
+      
+      <guid>https://alexandrv.ru/articles/comparer/</guid>
+      <description>Предисловие Автор знает, как работает сравнение в C#, достаточно четко представляет разницу между семантикой значимого и ссылочного типов, однако все еще находит эту статью хорошей и позволяющей чуть глубже заглянуть под капот.
+ Думаю, что каждый программист рано или поздно сталкивается с кодом, который работает «не так, как ты от него ожидаешь». Именно это и подтолкнуло меня к написанию следующей статьи, в которой я пытаюсь понять, почему Except в Linq работает так, как написан, а не так, как я хочу.</description>
+      <turbo:content>&lt;h2 id=&#34;предисловие&#34;&gt;Предисловие&lt;/h2&gt;
+&lt;p&gt;Автор знает, как работает сравнение в C#, достаточно четко представляет разницу между семантикой значимого и ссылочного типов, однако все еще находит эту статью хорошей и позволяющей чуть глубже заглянуть под капот.&lt;/p&gt;
+&lt;hr&gt;
+&lt;p&gt;Думаю, что каждый программист рано или поздно сталкивается с кодом, который работает «не так, как ты от него ожидаешь». Именно это и подтолкнуло меня к написанию следующей статьи, в которой я пытаюсь понять, почему Except в Linq работает так, как написан, а не так, как я хочу.&lt;/p&gt;
+&lt;hr&gt;
+&lt;p&gt;Что, по вашему мнению, должен вывести следующий код:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-csharp&#34; data-lang=&#34;csharp&#34;&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;var&lt;/span&gt; documentsDir = &lt;span style=&#34;color:#66d9ef&#34;&gt;new&lt;/span&gt; DirectoryInfo(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments));
+
+FileInfo[] FirstDirrectoryFiles = documentsDir.GetFiles();
+FileInfo[] SecondDirrectoryFiles = documentsDir.GetFiles();
+&lt;span style=&#34;color:#66d9ef&#34;&gt;foreach&lt;/span&gt; (FileInfo item &lt;span style=&#34;color:#66d9ef&#34;&gt;in&lt;/span&gt; FirstDirrectoryFiles.Except(SecondDirrectoryFiles))
+{
+    Console.WriteLine(item.Name);
+}
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Я вот предположил, что ничего, потому что Except должен вычитать множество (IEnumerable) правого аргумента из множества (IEnumerable) левого аргумента. Однако, вопреки моим ожиданиям я получил:&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://alexandrv.ru/asserts/images/comparer_1.png&#34; alt=&#34;&#34;&gt;&lt;/p&gt;
+&lt;p&gt;Вне всякого сомнения — это не похоже на пустое множество. Давайте попробуем разобраться в том, почему так получается (результат в .NET 5 и в .NET 6 — эквивалентен). Чтобы понять, почему так происходит, и что можно с этим сделать обратимся к документации метода &lt;a href=&#34;https://docs.microsoft.com/ru-ru/dotnet/api/system.linq.enumerable.except?view=net-6.0&#34;&gt;Except&lt;/a&gt;. Там действительно написано, что этот метод «Находит разность множеств, представленных двумя последовательностями» и имеет две перегрузки:&lt;/p&gt;
+&lt;table&gt;
+&lt;thead&gt;
+&lt;tr&gt;
+&lt;th&gt;&lt;/th&gt;
+&lt;th&gt;&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+&lt;tbody&gt;
+&lt;tr&gt;
+&lt;td&gt;&lt;code&gt;Except&amp;lt;TSource&amp;gt;(IEnumerable&amp;lt;TSource&amp;gt;, IEnumerable&amp;lt;TSource&amp;gt;)&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;Находит разность множеств, представленных двумя последовательностями, используя для сравнения значений компаратор проверки на равенство по умолчанию.&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;&lt;code&gt;Except&amp;lt;TSource&amp;gt;(IEnumerable&amp;lt;TSource&amp;gt;, IEnumerable&amp;lt;TSource&amp;gt;, IEqualityComparer&amp;lt;TSource&amp;gt;)&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;Находит разность множеств, представленных двумя последовательностями, используя для сравнения значений указанный компаратор IEqualityComparer&lt;!-- raw HTML omitted --&gt;.&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+&lt;p&gt;Обратите внимание на заявление о том, что для сравнения используется компаратор по умолчанию. Чтобы понять, почему наш код сработал именно так, как сработал, нам предстоит разобраться с поведением компаратора по умолчанию. Для этого я предлагаю проследовать на &lt;a href=&#34;https://github.com/dotnet/runtime/&#34;&gt;https://github.com/dotnet/runtime/&lt;/a&gt; и проанализировать работу метода Except.&lt;/p&gt;
+&lt;p&gt;Наша &lt;a href=&#34;https://github.com/dotnet/runtime/blob/a7c69745a4e22757c69f65d2a750e2d6923e1186/src/libraries/System.Linq/src/System/Linq/Except.cs#L10&#34;&gt;точка входа&lt;/a&gt;:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-csharp&#34; data-lang=&#34;csharp&#34;&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;public&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;static&lt;/span&gt; IEnumerable&amp;lt;TSource&amp;gt; Except&amp;lt;TSource&amp;gt;(&lt;span style=&#34;color:#66d9ef&#34;&gt;this&lt;/span&gt; IEnumerable&amp;lt;TSource&amp;gt; first, IEnumerable&amp;lt;TSource&amp;gt; second)
+{
+    &lt;span style=&#34;color:#66d9ef&#34;&gt;if&lt;/span&gt; (first == &lt;span style=&#34;color:#66d9ef&#34;&gt;null&lt;/span&gt;)
+    {
+        ThrowHelper.ThrowArgumentNullException(ExceptionArgument.first);
+    }
+
+    &lt;span style=&#34;color:#66d9ef&#34;&gt;if&lt;/span&gt; (second == &lt;span style=&#34;color:#66d9ef&#34;&gt;null&lt;/span&gt;)
+    {
+        ThrowHelper.ThrowArgumentNullException(ExceptionArgument.second);
+    }
+
+    &lt;span style=&#34;color:#66d9ef&#34;&gt;return&lt;/span&gt; ExceptIterator(first, second, &lt;span style=&#34;color:#66d9ef&#34;&gt;null&lt;/span&gt;);
+}
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Метод проверяет, что получил два объекта с ненулевым указателем и передает аргументы в &lt;a href=&#34;https://github.com/dotnet/runtime/blob/a7c69745a4e22757c69f65d2a750e2d6923e1186/src/libraries/System.Linq/src/System/Linq/Except.cs#L79&#34;&gt;ExceptIterator&lt;/a&gt;.&lt;/p&gt;
+&lt;p&gt;Строго говоря, можно было бы использовать и метод перегрузку, так как он работает буквально также:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-csharp&#34; data-lang=&#34;csharp&#34;&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;public&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;static&lt;/span&gt; IEnumerable&amp;lt;TSource&amp;gt; Except&amp;lt;TSource&amp;gt;(&lt;span style=&#34;color:#66d9ef&#34;&gt;this&lt;/span&gt; IEnumerable&amp;lt;TSource&amp;gt; first, IEnumerable&amp;lt;TSource&amp;gt; second, IEqualityComparer&amp;lt;TSource&amp;gt;? comparer)
+{
+    &lt;span style=&#34;color:#66d9ef&#34;&gt;if&lt;/span&gt; (first == &lt;span style=&#34;color:#66d9ef&#34;&gt;null&lt;/span&gt;)
+    {
+        ThrowHelper.ThrowArgumentNullException(ExceptionArgument.first);
+    }
+
+    &lt;span style=&#34;color:#66d9ef&#34;&gt;if&lt;/span&gt; (second == &lt;span style=&#34;color:#66d9ef&#34;&gt;null&lt;/span&gt;)
+    {
+        ThrowHelper.ThrowArgumentNullException(ExceptionArgument.second);
+    }
+
+    &lt;span style=&#34;color:#66d9ef&#34;&gt;return&lt;/span&gt; ExceptIterator(first, second, comparer);
+}
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Почему перегрузка, а не параметр по умолчанию? Силами &lt;a href=&#34;https://t.me/dotnettalks&#34;&gt;сообщества&lt;/a&gt; было вынесено предположение, что дело в &lt;a href=&#34;https://coding.abel.nu/2014/07/adding-an-overload-is-a-breaking-change/&#34;&gt;этом&lt;/a&gt; и &lt;a href=&#34;https://rules.sonarsource.com/csharp/RSPEC-2360&#34;&gt;этом&lt;/a&gt;.&lt;/p&gt;
+&lt;p&gt;Собственно код &lt;a href=&#34;https://github.com/dotnet/runtime/blob/a7c69745a4e22757c69f65d2a750e2d6923e1186/src/libraries/System.Linq/src/System/Linq/Except.cs#L79&#34;&gt;ExceptIterator&lt;/a&gt;:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-csharp&#34; data-lang=&#34;csharp&#34;&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;private&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;static&lt;/span&gt; IEnumerable&amp;lt;TSource&amp;gt; ExceptIterator&amp;lt;TSource&amp;gt;(IEnumerable&amp;lt;TSource&amp;gt; first, IEnumerable&amp;lt;TSource&amp;gt; second, IEqualityComparer&amp;lt;TSource&amp;gt;? comparer)
+{
+    &lt;span style=&#34;color:#66d9ef&#34;&gt;var&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;set&lt;/span&gt; = &lt;span style=&#34;color:#66d9ef&#34;&gt;new&lt;/span&gt; HashSet&amp;lt;TSource&amp;gt;(second, comparer);
+
+    &lt;span style=&#34;color:#66d9ef&#34;&gt;foreach&lt;/span&gt; (TSource element &lt;span style=&#34;color:#66d9ef&#34;&gt;in&lt;/span&gt; first)
+    {
+        &lt;span style=&#34;color:#66d9ef&#34;&gt;if&lt;/span&gt; (&lt;span style=&#34;color:#66d9ef&#34;&gt;set&lt;/span&gt;.Add(element))
+        {
+            &lt;span style=&#34;color:#66d9ef&#34;&gt;yield&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;return&lt;/span&gt; element;
+        }
+    }
+}
+
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Из элементов второго аргумента создается &lt;a href=&#34;https://github.com/dotnet/runtime/blob/57bfe474518ab5b7cfe6bf7424a79ce3af9d6657/src/libraries/System.Private.CoreLib/src/System/Collections/Generic/HashSet.cs#L55&#34;&gt;множество&lt;/a&gt;. Элементы первого аргумента, которые удалось добавить в множество, возвращаются в качестве итератора.&lt;/p&gt;
+&lt;p&gt;Конструктор множества принимает интерфейс компаратора, который используется для сравнения элементов множества:&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://alexandrv.ru/asserts/images/comparer_2.png&#34; alt=&#34;&#34;&gt;&lt;/p&gt;
+&lt;p&gt;Конкретно в нашем случае компаратор равен null, поэтому проваливаемся в свойство Default обобщенного класса EqualityComparer.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-csharp&#34; data-lang=&#34;csharp&#34;&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;public&lt;/span&gt; HashSet(IEqualityComparer&amp;lt;T&amp;gt;? comparer)
+{
+    &lt;span style=&#34;color:#66d9ef&#34;&gt;if&lt;/span&gt; (comparer &lt;span style=&#34;color:#66d9ef&#34;&gt;is&lt;/span&gt; not &lt;span style=&#34;color:#66d9ef&#34;&gt;null&lt;/span&gt; &amp;amp;&amp;amp; comparer != EqualityComparer&amp;lt;T&amp;gt;.Default) &lt;span style=&#34;color:#75715e&#34;&gt;// first check for null to avoid forcing default comparer instantiation unnecessarily
+&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;&lt;/span&gt;    {
+        &lt;span style=&#34;color:#ae81ff&#34;&gt;_&lt;/span&gt;comparer = comparer;
+    }
+
+    &lt;span style=&#34;color:#75715e&#34;&gt;// Special-case EqualityComparer&amp;lt;string&amp;gt;.Default, StringComparer.Ordinal, and StringComparer.OrdinalIgnoreCase.
+&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;&lt;/span&gt;    &lt;span style=&#34;color:#75715e&#34;&gt;// We use a non-randomized comparer for improved perf, falling back to a randomized comparer if the
+&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;&lt;/span&gt;    &lt;span style=&#34;color:#75715e&#34;&gt;// hash buckets become unbalanced.
+&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;&lt;/span&gt;    &lt;span style=&#34;color:#66d9ef&#34;&gt;if&lt;/span&gt; (&lt;span style=&#34;color:#66d9ef&#34;&gt;typeof&lt;/span&gt;(T) == &lt;span style=&#34;color:#66d9ef&#34;&gt;typeof&lt;/span&gt;(&lt;span style=&#34;color:#66d9ef&#34;&gt;string&lt;/span&gt;))
+    {
+        IEqualityComparer&amp;lt;&lt;span style=&#34;color:#66d9ef&#34;&gt;string&lt;/span&gt;&amp;gt;? stringComparer = NonRandomizedStringEqualityComparer.GetStringComparer(&lt;span style=&#34;color:#ae81ff&#34;&gt;_&lt;/span&gt;comparer);
+        &lt;span style=&#34;color:#66d9ef&#34;&gt;if&lt;/span&gt; (stringComparer &lt;span style=&#34;color:#66d9ef&#34;&gt;is&lt;/span&gt; not &lt;span style=&#34;color:#66d9ef&#34;&gt;null&lt;/span&gt;)
+        {
+            &lt;span style=&#34;color:#ae81ff&#34;&gt;_&lt;/span&gt;comparer = (IEqualityComparer&amp;lt;T&amp;gt;?)stringComparer;
+        }
+    }
+}
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;&lt;img src=&#34;https://alexandrv.ru/asserts/images/comparer_3.png&#34; alt=&#34;&#34;&gt;&lt;/p&gt;
+&lt;p&gt;&lt;a href=&#34;https://github.com/dotnet/runtime/blob/57bfe474518ab5b7cfe6bf7424a79ce3af9d6657/src/coreclr/System.Private.CoreLib/src/System/Collections/Generic/EqualityComparer.CoreCLR.cs#L10&#34;&gt;Тут&lt;/a&gt;, на мой скромный взгляд, все очевидно:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-csharp&#34; data-lang=&#34;csharp&#34;&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;public&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;abstract&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;partial&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;class&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;EqualityComparer&lt;/span&gt;&amp;lt;T&amp;gt; : IEqualityComparer, IEqualityComparer&amp;lt;T&amp;gt;
+{
+    &lt;span style=&#34;color:#75715e&#34;&gt;// To minimize generic instantiation overhead of creating the comparer per type, we keep the generic portion of the code as small
+&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;&lt;/span&gt;    &lt;span style=&#34;color:#75715e&#34;&gt;// as possible and define most of the creation logic in a non-generic class.
+&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;&lt;/span&gt;    &lt;span style=&#34;color:#66d9ef&#34;&gt;public&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;static&lt;/span&gt; EqualityComparer&amp;lt;T&amp;gt; Default { [Intrinsic] &lt;span style=&#34;color:#66d9ef&#34;&gt;get&lt;/span&gt;; } = (EqualityComparer&amp;lt;T&amp;gt;)ComparerHelpers.CreateDefaultEqualityComparer(&lt;span style=&#34;color:#66d9ef&#34;&gt;typeof&lt;/span&gt;(T));
+}
+
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Комментарий гласит, что с целью минимизации накладных расходов на создание универсального экземпляра для каждого типа код обобщенных классов уменьшают насколько это возможно за счет переноса его логики в необобщенный класс (в нашем случае это ComparerHelpers).&lt;/p&gt;
+&lt;p&gt;Давайте же посмотрим на то, как &lt;a href=&#34;https://github.com/dotnet/runtime/blob/57bfe474518ab5b7cfe6bf7424a79ce3af9d6657/src/coreclr/System.Private.CoreLib/src/System/Collections/Generic/ComparerHelpers.cs#L116&#34;&gt;происходит процесс создания компаратора по умолчанию&lt;/a&gt;:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-csharp&#34; data-lang=&#34;csharp&#34;&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;internal&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;static&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;object&lt;/span&gt; CreateDefaultEqualityComparer(Type type)
+{
+    Debug.Assert(type != &lt;span style=&#34;color:#66d9ef&#34;&gt;null&lt;/span&gt; &amp;amp;&amp;amp; type &lt;span style=&#34;color:#66d9ef&#34;&gt;is&lt;/span&gt; RuntimeType);
+
+    &lt;span style=&#34;color:#66d9ef&#34;&gt;object?&lt;/span&gt; result = &lt;span style=&#34;color:#66d9ef&#34;&gt;null&lt;/span&gt;;
+    &lt;span style=&#34;color:#66d9ef&#34;&gt;var&lt;/span&gt; runtimeType = (RuntimeType)type;
+
+    &lt;span style=&#34;color:#66d9ef&#34;&gt;if&lt;/span&gt; (type == &lt;span style=&#34;color:#66d9ef&#34;&gt;typeof&lt;/span&gt;(&lt;span style=&#34;color:#66d9ef&#34;&gt;byte&lt;/span&gt;))
+    {
+        &lt;span style=&#34;color:#75715e&#34;&gt;// Specialize for byte so Array.IndexOf is faster.
+&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;&lt;/span&gt;        result = &lt;span style=&#34;color:#66d9ef&#34;&gt;new&lt;/span&gt; ByteEqualityComparer();
+    }
+    &lt;span style=&#34;color:#66d9ef&#34;&gt;else&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;if&lt;/span&gt; (type == &lt;span style=&#34;color:#66d9ef&#34;&gt;typeof&lt;/span&gt;(&lt;span style=&#34;color:#66d9ef&#34;&gt;string&lt;/span&gt;))
+    {
+        &lt;span style=&#34;color:#75715e&#34;&gt;// Specialize for string, as EqualityComparer&amp;lt;string&amp;gt;.Default is on the startup path
+&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;&lt;/span&gt;        result = &lt;span style=&#34;color:#66d9ef&#34;&gt;new&lt;/span&gt; GenericEqualityComparer&amp;lt;&lt;span style=&#34;color:#66d9ef&#34;&gt;string&lt;/span&gt;&amp;gt;();
+    }
+    &lt;span style=&#34;color:#66d9ef&#34;&gt;else&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;if&lt;/span&gt; (type.IsAssignableTo(&lt;span style=&#34;color:#66d9ef&#34;&gt;typeof&lt;/span&gt;(IEquatable&amp;lt;&amp;gt;).MakeGenericType(type)))
+    {
+        &lt;span style=&#34;color:#75715e&#34;&gt;// If T implements IEquatable&amp;lt;T&amp;gt; return a GenericEqualityComparer&amp;lt;T&amp;gt;
+&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;&lt;/span&gt;        result = CreateInstanceForAnotherGenericParameter((RuntimeType)&lt;span style=&#34;color:#66d9ef&#34;&gt;typeof&lt;/span&gt;(GenericEqualityComparer&amp;lt;&lt;span style=&#34;color:#66d9ef&#34;&gt;string&lt;/span&gt;&amp;gt;), runtimeType);
+    }
+    &lt;span style=&#34;color:#66d9ef&#34;&gt;else&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;if&lt;/span&gt; (type.IsGenericType)
+    {
+        &lt;span style=&#34;color:#75715e&#34;&gt;// Nullable does not implement IEquatable&amp;lt;T?&amp;gt; directly because that would add an extra interface call per comparison.
+&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;&lt;/span&gt;        &lt;span style=&#34;color:#75715e&#34;&gt;// Instead, it relies on EqualityComparer&amp;lt;T?&amp;gt;.Default to specialize for nullables and do the lifted comparisons if T implements IEquatable.
+&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;&lt;/span&gt;        &lt;span style=&#34;color:#66d9ef&#34;&gt;if&lt;/span&gt; (type.GetGenericTypeDefinition() == &lt;span style=&#34;color:#66d9ef&#34;&gt;typeof&lt;/span&gt;(Nullable&amp;lt;&amp;gt;))
+        {
+            result = TryCreateNullableEqualityComparer(runtimeType);
+        }
+    }
+    &lt;span style=&#34;color:#66d9ef&#34;&gt;else&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;if&lt;/span&gt; (type.IsEnum)
+    {
+        &lt;span style=&#34;color:#75715e&#34;&gt;// The equality comparer for enums is specialized to avoid boxing.
+&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;&lt;/span&gt;        result = TryCreateEnumEqualityComparer(runtimeType);
+    }
+
+    &lt;span style=&#34;color:#66d9ef&#34;&gt;return&lt;/span&gt; result ?? CreateInstanceForAnotherGenericParameter((RuntimeType)&lt;span style=&#34;color:#66d9ef&#34;&gt;typeof&lt;/span&gt;(ObjectEqualityComparer&amp;lt;&lt;span style=&#34;color:#66d9ef&#34;&gt;object&lt;/span&gt;&amp;gt;), runtimeType);
+}
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Пойдем по порядку:&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;
+&lt;p&gt;Если тип аргумента byte, то возвращается компаратор специально для этого типа (ByteEqualityComparer)&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Если это строка, то возвращается GenericEqualityComparer&lt;!-- raw HTML omitted --&gt;();&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Если тип реализует IEquatable, то на основе GenericEqualityComparer&lt;!-- raw HTML omitted --&gt; возвращается GenericEqualityComparer для типа аргумента (даже не спрашивайте);&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Если аргумент является универсальным типом (обобщением) и если этот универсальный тип Nullable&amp;lt;&amp;gt;,  &lt;a href=&#34;https://github.com/dotnet/runtime/blob/57bfe474518ab5b7cfe6bf7424a79ce3af9d6657/src/coreclr/System.Private.CoreLib/src/System/Collections/Generic/ComparerHelpers.cs#L160&#34;&gt;то на основе&lt;/a&gt; NullableEqualityComparer&lt;!-- raw HTML omitted --&gt;  создается NullableEqualityComparer для типа аргумента;&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Если аргумент – перечисление, &lt;a href=&#34;https://github.com/dotnet/runtime/blob/57bfe474518ab5b7cfe6bf7424a79ce3af9d6657/src/coreclr/System.Private.CoreLib/src/System/Collections/Generic/ComparerHelpers.cs#L179&#34;&gt;то на основе&lt;/a&gt; EnumEqualityComparer&amp;lt;&amp;gt; создается EnumEqualityComparer;&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Во всех остальных случаях на основе ObjectEqualityComparer&lt;!-- raw HTML omitted --&gt; создается ObjectEqualityComparer.&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;С помощью такого нехитрого кода (хотел было переписать через string builder, но, думаю, тут можно забить :D) попробуем понять, какой же из перечисленных случаев – наш:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-csharp&#34; data-lang=&#34;csharp&#34;&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;var&lt;/span&gt; documentsDir = &lt;span style=&#34;color:#66d9ef&#34;&gt;new&lt;/span&gt; DirectoryInfo(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments));
+FileInfo[] result1 = documentsDir.GetFiles();
+FileInfo[] result2 = documentsDir.GetFiles();
+
+Type type = result1[&lt;span style=&#34;color:#ae81ff&#34;&gt;0&lt;/span&gt;].GetType();
+Console.Write(
+    &lt;span style=&#34;color:#e6db74&#34;&gt;$&amp;#34;type == typeof(byte): {type == typeof(byte)}\n&amp;#34;&lt;/span&gt; +
+    &lt;span style=&#34;color:#e6db74&#34;&gt;$&amp;#34;type == typeof(string): {type == typeof(string)}\n&amp;#34;&lt;/span&gt; +
+    &lt;span style=&#34;color:#e6db74&#34;&gt;$&amp;#34;type.IsAssignableTo(typeof(IEquatable&amp;lt;&amp;gt;).MakeGenericType(type)): {type.IsAssignableTo(typeof(IEquatable&amp;lt;&amp;gt;).MakeGenericType(type))}\n&amp;#34;&lt;/span&gt; +
+    &lt;span style=&#34;color:#e6db74&#34;&gt;$&amp;#34;type.IsGenericType: {type.IsGenericType}\n&amp;#34;&lt;/span&gt; +
+    &lt;span style=&#34;color:#e6db74&#34;&gt;$&amp;#34;type.IsEnum: {type.IsEnum}\n\n&amp;#34;&lt;/span&gt;);
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Что и следовало ожидать:&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://alexandrv.ru/asserts/images/comparer_4.png&#34; alt=&#34;&#34;&gt;&lt;/p&gt;
+&lt;p&gt;Это значит, что теперь наш путь лежит в &lt;a href=&#34;https://github.com/dotnet/runtime/blob/57bfe474518ab5b7cfe6bf7424a79ce3af9d6657/src/libraries/System.Private.CoreLib/src/System/Collections/Generic/EqualityComparer.cs&#34;&gt;ObjectEqualityComparer&lt;/a&gt;. Вот, собственно, и он:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-csharp&#34; data-lang=&#34;csharp&#34;&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;public&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;sealed&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;partial&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;class&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;ObjectEqualityComparer&lt;/span&gt;&amp;lt;T&amp;gt; : EqualityComparer&amp;lt;T&amp;gt;
+{
+&lt;span style=&#34;color:#a6e22e&#34;&gt;    [MethodImpl(MethodImplOptions.AggressiveInlining)]&lt;/span&gt;
+    &lt;span style=&#34;color:#66d9ef&#34;&gt;public&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;override&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;bool&lt;/span&gt; Equals(T? x, T? y)
+    {
+        &lt;span style=&#34;color:#66d9ef&#34;&gt;if&lt;/span&gt; (x != &lt;span style=&#34;color:#66d9ef&#34;&gt;null&lt;/span&gt;)
+        {
+            &lt;span style=&#34;color:#66d9ef&#34;&gt;if&lt;/span&gt; (y != &lt;span style=&#34;color:#66d9ef&#34;&gt;null&lt;/span&gt;) &lt;span style=&#34;color:#66d9ef&#34;&gt;return&lt;/span&gt; x.Equals(y);
+            &lt;span style=&#34;color:#66d9ef&#34;&gt;return&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;false&lt;/span&gt;;
+        }
+        &lt;span style=&#34;color:#66d9ef&#34;&gt;if&lt;/span&gt; (y != &lt;span style=&#34;color:#66d9ef&#34;&gt;null&lt;/span&gt;) &lt;span style=&#34;color:#66d9ef&#34;&gt;return&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;false&lt;/span&gt;;
+        &lt;span style=&#34;color:#66d9ef&#34;&gt;return&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;true&lt;/span&gt;;
+    }
+&lt;span style=&#34;color:#a6e22e&#34;&gt;
+&lt;/span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;    [MethodImpl(MethodImplOptions.AggressiveInlining)]&lt;/span&gt;
+    &lt;span style=&#34;color:#66d9ef&#34;&gt;public&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;override&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;int&lt;/span&gt; GetHashCode([DisallowNull] T obj) =&amp;gt; obj?.GetHashCode() ?? &lt;span style=&#34;color:#ae81ff&#34;&gt;0&lt;/span&gt;;
+
+    &lt;span style=&#34;color:#75715e&#34;&gt;// Equals method for the comparer itself.
+&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;&lt;/span&gt;    &lt;span style=&#34;color:#66d9ef&#34;&gt;public&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;override&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;bool&lt;/span&gt; Equals([NotNullWhen(&lt;span style=&#34;color:#66d9ef&#34;&gt;true&lt;/span&gt;)] &lt;span style=&#34;color:#66d9ef&#34;&gt;object?&lt;/span&gt; obj) =&amp;gt;
+        obj != &lt;span style=&#34;color:#66d9ef&#34;&gt;null&lt;/span&gt; &amp;amp;&amp;amp; GetType() == obj.GetType();
+
+    &lt;span style=&#34;color:#66d9ef&#34;&gt;public&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;override&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;int&lt;/span&gt; GetHashCode() =&amp;gt;
+        GetType().GetHashCode();
+}
+
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;ObjectEqualityComparer определяет метод Equals для двух объектов следующим образом:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;
+&lt;p&gt;Объекты равны, если они оба null (что логично);&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Объекты не равны, если только один из них null;&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Если оба объекта не null, то их эквивалентность определяется методом Equals «левого» аргумента.&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;Если обратиться к &lt;a href=&#34;https://docs.microsoft.com/ru-ru/dotnet/api/system.io.fileinfo?view=net-6.0#methods&#34;&gt;документации&lt;/a&gt;, то можно увидеть, что у нашего класса FileInfo действительно есть метод Equals с пометкой «Унаследовано от Object». Что же, &lt;a href=&#34;https://docs.microsoft.com/ru-ru/dotnet/api/system.object.equals?view=net-6.0#System_Object_Equals_System_Object_&#34;&gt;туда&lt;/a&gt; и лежит наш путь! Там в секции «комментарии» мы можем узнать, что:&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;Если текущий экземпляр является ссылочным типом, Equals(Object) метод проверяет равенство ссылок, а вызов Equals(Object) метода эквивалентен вызову ReferenceEquals метода. Равенство ссылок означает, что сравниваемые объектные переменные ссылаются на один и тот же объект.&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;На этом, казалось, можно было бы завершить наше путешествие, но давайте на последок придумаем, как заставить Except перестать показывать файлы в директории с моими документами.&lt;/p&gt;
+&lt;p&gt;Вариант из категории «пока так, потом пофикшу»:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-csharp&#34; data-lang=&#34;csharp&#34;&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;var&lt;/span&gt; documentsDir = &lt;span style=&#34;color:#66d9ef&#34;&gt;new&lt;/span&gt; DirectoryInfo(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments));
+FileInfo[] result1 = documentsDir.GetFiles();
+FileInfo[] result2 = documentsDir.GetFiles();
+&lt;span style=&#34;color:#66d9ef&#34;&gt;foreach&lt;/span&gt; (FileInfo item &lt;span style=&#34;color:#66d9ef&#34;&gt;in&lt;/span&gt; result1
+                                 .Select(i =&amp;gt; i.FullName)
+                                 .Except(result2.Select(i =&amp;gt; i.FullName))
+                                 .Select(i =&amp;gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;new&lt;/span&gt; FileInfo(i)))
+{
+    Console.WriteLine(item.Name);
+}
+
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Мы, по сути, вызываем Except для двух IEnumerate&lt;!-- raw HTML omitted --&gt;, а потом из результата снова собираем IEnumerate&lt;!-- raw HTML omitted --&gt;.&lt;/p&gt;
+&lt;p&gt;В свежем .net6 еще можно воспользоваться &lt;a href=&#34;https://docs.microsoft.com/en-us/dotnet/api/system.linq.enumerable.exceptby?view=net-6.0&#34;&gt;ExceptBy&lt;/a&gt;:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-csharp&#34; data-lang=&#34;csharp&#34;&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;var&lt;/span&gt; documentsDir = &lt;span style=&#34;color:#66d9ef&#34;&gt;new&lt;/span&gt; DirectoryInfo(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments));
+FileInfo[] result1 = documentsDir.GetFiles();
+FileInfo[] result2 = documentsDir.GetFiles();
+&lt;span style=&#34;color:#66d9ef&#34;&gt;foreach&lt;/span&gt; (FileInfo item &lt;span style=&#34;color:#66d9ef&#34;&gt;in&lt;/span&gt; result1.ExceptBy(result2.Select(i =&amp;gt; i.FullName), ks =&amp;gt; ks.FullName))
+{
+    Console.WriteLine(item.Name);
+}
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Этот код уже выглядит приятнее и даже избавляет нас от необходимости разбирать и снова собирать изначальный массив, но можно сделать это иначе.&lt;/p&gt;
+&lt;p&gt;Следующей идеей, посетившей мою голову, было унаследовать FileInfo и переопределить Equals, но, к сожалению, FileInfo является запечатанным (sealed) классом, а это значит, что он не может быть унаследован, так что этот путь нам отрезан.&lt;/p&gt;
+&lt;p&gt;Подойдем к вопросу с другой стороны. Вспомним, что Equals имеет перегрузку, принимающую вторым аргументом IEqualityComparer, что позволяет нам создать что-то вроде такого решения:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-csharp&#34; data-lang=&#34;csharp&#34;&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;var&lt;/span&gt; documentsDir = &lt;span style=&#34;color:#66d9ef&#34;&gt;new&lt;/span&gt; DirectoryInfo(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments));
+FileInfo[] result1 = documentsDir.GetFiles();
+FileInfo[] result2 = documentsDir.GetFiles();
+
+&lt;span style=&#34;color:#66d9ef&#34;&gt;foreach&lt;/span&gt; (FileInfo item &lt;span style=&#34;color:#66d9ef&#34;&gt;in&lt;/span&gt; result1.Except(result2, &lt;span style=&#34;color:#66d9ef&#34;&gt;new&lt;/span&gt; CustomFileInfoComparer()))
+{
+    Console.WriteLine(item.Name);
+}
+
+&lt;span style=&#34;color:#66d9ef&#34;&gt;public&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;class&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;CustomFileInfoComparer&lt;/span&gt; : IEqualityComparer&amp;lt;FileInfo&amp;gt;
+{
+    &lt;span style=&#34;color:#66d9ef&#34;&gt;bool&lt;/span&gt; IEqualityComparer&amp;lt;FileInfo&amp;gt;.Equals(FileInfo? lhv, FileInfo? rhv)
+       =&amp;gt; lhv?.FullName == rhv?.FullName;
+    &lt;span style=&#34;color:#66d9ef&#34;&gt;int&lt;/span&gt; IEqualityComparer&amp;lt;FileInfo&amp;gt;.GetHashCode(FileInfo obj) =&amp;gt; obj.FullName.GetHashCode();
+}
+
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Это решение хорошо подходит в том случае, если дальше по коду вам предстоит еще хотя бы раз сравнивать IEnumerable&lt;!-- raw HTML omitted --&gt;.&lt;/p&gt;
+&lt;p&gt;На этом у меня все, надеюсь, что читатель нашел любопытным мой скромный труд.&lt;/p&gt;
+&lt;p&gt;Хочется выразить огромную благодарность моей жене за помощь в подготовке данного поста, а также сообществу &lt;a href=&#34;https://t.me/dotnettalks&#34;&gt;.NET Talks🎄&lt;/a&gt;&lt;/p&gt;
 </turbo:content>
     </item>
     
