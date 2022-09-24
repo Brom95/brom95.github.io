@@ -6,9 +6,11 @@
     <script src="https://cdn.jsdelivr.net/gh/tameemsafi/typewriterjs/dist/core.js"></script>
     <script type="text/javascript">
         const instance = new Typewriter('#typewriter', {
-            strings: '{{ .payload }}',
-            delay: '{{ .delay }}',
+            strings: '{{.payload}}',
+            delay: '{{ .delay }}/10000',
             autoStart: true,
         });
     </script>
+
+
 {{ end -}}
