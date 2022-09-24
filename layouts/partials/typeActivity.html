@@ -1,4 +1,5 @@
 <span id="activity-title"></span> <br>
+<span id="wait-content"></span> <br>
  <span id="activity-content"></span> <br>
 
 <script type="text/javascript">
@@ -49,9 +50,9 @@
         contentDelay = parseDelay("{{ .contentdelay }}");
     const typeeffetct = async () => {
         await typewriter("{{ .title }}", "activity-title", titleDelay);
-        await typewriter("Loading... Please wait! ", "activity-content", titleDelay);
+        await typewriter("Loading... Please wait! ", "wait-content", titleDelay);
         
-        await typewriter("{{ .content }}", "activity-content", contentDelay/100);
+        await typewriter("{{ .content }}", "activity-content", contentDelay);
         return;
     }
 
