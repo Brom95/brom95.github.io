@@ -1,20 +1,29 @@
 <!DOCTYPE html>
 <html lang="{{ with .Site.LanguageCode }}{{ . }}{{ else }}en{{ end }}">
-    {{- partial "head.html" . -}}
-    <body>
-        {{- partial "header.html" . -}}
-        <div id="content">
-        {{- block "main" . }}{{- end }}
-        </div>
-        {{- partial "footer.html" . -}}
+{{- partial "head.html" . -}}
 
-        <!--  Additions start here -->
+<body>
+    {{- partial "header.html" . -}}
+    <div id="content">
         
-        {{ if .Site.Params.Navbar.use }}
-            {{- partial "navbar.html" . -}} 
-        {{ end }}
-        
-        <!-- Additions stop here --> 
-        
-    </body>
+        {{- block "main" . }}{{- end }}
+
+    </div>
+    <!-- Yandex.RTB R-A-1957258-2 -->
+
+    {{- partial "footer.html" . -}}
+
+    <!--  Additions start here -->
+
+    
+    {{ if .Site.Params.Navbar.use }}
+    {{- partial "navbar.html" . -}}
+    {{ end }}
+
+    <!-- Additions stop here -->
+
+    <!-- Yandex.RTB R-A-1957258-2 -->
+
+</body>
+
 </html>
