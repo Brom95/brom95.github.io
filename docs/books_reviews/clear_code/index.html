@@ -1,0 +1,673 @@
+<!DOCTYPE html>
+<html lang="ru-ru"><head>
+    <title>Чистый код. Роберт Мартин</title>
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <meta name="description" content="мнение об одной из легендарных книг Роберта Мартина" />
+    <meta property="og:type" content="article" />
+    <meta property="og:image" content="https://alexandrv.ru/asserts/images/logo.jpg" />
+    <meta property="og:url" content="https://alexandrv.ru/books_reviews/clear_code/" />
+    <meta property="og:description" content="мнение об одной из легендарных книг Роберта Мартина" />
+    <style>
+@import "https://fonts.googleapis.com/css2?family=Inconsolata&display=swap";:root{--cursor-visibility:hidden}html,body{width:100%;height:100%;overflow:auto;font-family:inconsolata,monospace;font-size:4vmin;line-height:4.1vmin;font-weight:400}body{margin:0;display:flex;flex-direction:row;justify-content:center;align-items:center}#content{min-width:82vmin;min-height:82vmin}::-webkit-scrollbar{width:10px}::-webkit-scrollbar-track{border-radius:10px;box-shadow:inset 0 0 1px white}::-webkit-scrollbar-thumb{border-radius:10px;box-shadow:0 0 0 1px white}.cursor,#activity-title:after,#activity-content:after,#cd:after,#whoami:after,#cat:after,#tree:after{visibility:var(--cursor-visibility);content:"|";overflow:hidden;color:#fff;animation:blink 500ms linear infinite alternate}@keyframes blink{0%{opacity:0}100%{opacity:1}}@media only screen and (min-width:768px){body{font-size:2.5vmin;line-height:2.6vmin}#content{min-width:60vmin}}:root{--cursor-visibility:hidden}body{align-items:unset;overflow-y:scroll}#content{max-width:80vmin}pre{overflow-x:scroll;white-space:pre}@keyframes blink{0%{opacity:0}100%{opacity:1}}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+        
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+
+
+body{background:#1b1d1e}body #terminal{color:#BBBBBB}body #user{color:#23E298}body #dir{color:#D08010}body .Typewriter__cursor{color:#BBBBBB}a{color:#BBBBBB}
+
+        
+.navFull {
+    background-color: #353535;
+    font-family: "Courier New";
+    font-size: 17px;
+    display: inline;
+    position: fixed;
+    bottom: 0px;
+    left: 0px;
+    width: 100%;
+    padding-top: 5px;
+    padding: 10px;
+    padding-bottom: 0px;
+}
+
+.navCredits {
+    float: right;
+    padding-right: 18px;
+    padding-bottom: 10px;
+    padding-top: 5px;
+}
+
+#content::after {
+    content: "\a\a";
+    white-space: pre;
+}
+        
+        
+</style>
+
+
+
+    <meta name="yandex-verification" content="355904de153d5134" />
+    
+    
+    <script>window.yaContextCb = window.yaContextCb || []</script>
+    <script src="https://yandex.ru/ads/system/context.js" async></script>
+
+    <script type="text/javascript">
+            (function (m, e, t, r, i, k, a) {
+                m[i] = m[i] || function () { (m[i].a = m[i].a || []).push(arguments) };
+                m[i].l = 1 * new Date();
+                for (var j = 0; j < document.scripts.length; j++) { if (document.scripts[j].src === r) { return; } }
+                k = e.createElement(t), a = e.getElementsByTagName(t)[0], k.async = 1, k.src = r, a.parentNode.insertBefore(k, a)
+            })
+            (window, document, "script", "https://mc.yandex.ru/metrika/tag.js", "ym");
+
+        ym(90533415, "init", {
+            clickmap: true,
+            trackLinks: true,
+            accurateTrackBounce: true
+        });
+    </script>
+    <noscript>
+        <div><img src="https://mc.yandex.ru/watch/90533415" style="position:absolute; left:-9999px;" alt="" /></div>
+    </noscript>
+    
+
+
+</head><body><div id="content">
+<div id="block">
+
+    <div id="yandex_rtb_R-A-1957258-2"></div>
+    <script>window.yaContextCb.push(() => {
+            Ya.Context.AdvManager.render({
+                renderTo: 'yandex_rtb_R-A-1957258-2',
+                blockId: 'R-A-1957258-2'
+            })
+        })</script>
+</div>
+<meta property="og:title" content="Чистый код. Роберт Мартин"/>
+
+
+    
+    
+    
+
+
+
+    
+
+
+    <span id='terminal'><h1 id='title'>Чистый код. Роберт Мартин</h1><span id='date'>2021-12-05 08:40:14 +0300 MSK</span></span>
+
+    <span id=''><p><img src="/asserts/images/book_2.png" alt="обложка книги"></p>
+<p>Вчера я закончил чтение книги, прочесть которую мне следовало довольно давно. Книга в IT среде популярна настолько, что я не вижу никакого смысла разбирать, а что же там написано, я скорее хотел бы рассказать о своих мыслях и впечатлениях.</p>
+<p>Я программирую уже более 7-ми лет, но &ldquo;качественно копать в глубину&rdquo; я решил совсем недавно. Именно поэтому создалось впечатление, что книга была нужна мне лет 5 назад, когда мне советовал ее одногруппник, а не теперь, когда большая часть идей из книги была получена мной от других людей или на личном опыте. Думаю, что вместо того, чтобы читать всю книгу целиком, я мог бы прочитать раздел &ldquo;Запахи кода&rdquo; (есть отличный сайт про них и чистый код) и ничего не потерять, но этот вариант подходит только тем, кто работал в командах с практиками код-ревью.</p>
+<p>Недавно в одном из чатов, где я сижу, прозвучало мнение о том, что книгу следует отправить в помойку. На мой вопрос &ldquo;почему?&rdquo; я ответа не получил, но вы получите от меня ответ о том, почему на мой взгляд этого делать не стоит. Думаю, что любой из вас, вне зависимости от взглядов на религию, согласится, что всякого рода заповеди вида &ldquo;не укради&rdquo; и &ldquo;не убей&rdquo; не несут в себе ничего плохого. К этой книге следует относиться также. Сама по себе она не несет ничего плохого и идеи в ней логичные и здравые, плохими они становятся при попадании в руки фанатиков, которые начинают гнаться за чистым кодом и чистой архитектурой вне контекста.</p>
+</span>
+
+
+
+    </div>
+    <style>
+    h1 {
+         
+        color: #23E298;
+        line-height: 6vmin;
+        font-size: 6vmin;
+    }
+
+    
+    #block {
+        max-height: 200px;
+    }
+    ul ::marker {
+        
+        content: "-rw-rw-r--";
+
+    }
+
+    a, strong, ::marker,
+    #date {
+        color: #D08010;
+
+    }
+    table, td{
+        border-collapse: collapse;
+        border: 2px solid #D08010;
+        max-width: 100%;
+    }
+    td{
+        padding: 25px;
+    }
+    li a {
+        font-family: -apple-system, BlinkMacSystemFont, Arial, sans-serif;
+        font-size: 0.5rem;
+        line-height: 1.56;
+    }
+
+    li {
+        padding-left: 2%;
+
+
+    }
+    a{
+        text-decoration: none;
+    }
+    img{
+        max-width: 100%;
+    }
+    #content {
+        font-size: 0.5rem;
+        line-height: 1.56;
+        overflow-wrap: break-word;
+        font-family: -apple-system, BlinkMacSystemFont, Arial, sans-serif;
+    }
+    #content{
+        color:#BBBBBB;
+    }
+</style>
+
+
+    
+    <span class="navFull">
+        
+    
+    
+
+    
+        
+
+<span>
+    <a href="/">Home</a>
+    <span>&#8192;|&#8192;</span>
+    <a href="./..">/books_reviews/</a>
+</span>
+
+    
+
+        
+        <span class="navCredits">
+            Hugo theme created by
+            <a href="https://github.com/Yukuro/hugo-theme-shell" target="_blank" rel="noopener">Yukuro</a>
+        </span>
+</span>
+
+
+    
+
+    
+
+</body>
+
+</html>

@@ -51,7 +51,8 @@ enableRobotsTXT = true
   folderName = "Projects"
   files = [ 
     ["summary.md","/summary.md"],
-    ["Articles", "articles"],
+    ["Статьи", "articles"],
+    ["Обзоры книг", "books_reviews"],
     ["GitHub", "https://github.com/Brom95"],
     ["Телеграм канал", "https://useless_chanel.t.me"],
     ["rss.xml","rss.xml"]
