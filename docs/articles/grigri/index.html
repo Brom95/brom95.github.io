@@ -1,9 +1,14 @@
 <!DOCTYPE html>
 <html lang="ru-ru"><head>
     <title>Гри-Гри для JWT</title>
+
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width,initial-scale=1">
-    <meta name="description" content="" />
+    <meta name="description" content="Разбор узких мест безопасности JWT токенов на основе задач с root-me" />
+    <meta property="og:type" content="article" />
+    <meta property="og:image" content="https://alexandrv.ru/asserts/images/logo.jpg" />
+    <meta property="og:url" content="https://alexandrv.ru/articles/grigri/" />
+    <meta property="og:description" content="Разбор узких мест безопасности JWT токенов на основе задач с root-me" />
     <style>
 @import "https://fonts.googleapis.com/css2?family=Inconsolata&display=swap";:root{--cursor-visibility:hidden}html,body{width:100%;height:100%;overflow:auto;font-family:inconsolata,monospace;font-size:4vmin;line-height:4.1vmin;font-weight:400}body{margin:0;display:flex;flex-direction:row;justify-content:center;align-items:center}#content{min-width:82vmin;min-height:82vmin}::-webkit-scrollbar{width:10px}::-webkit-scrollbar-track{border-radius:10px;box-shadow:inset 0 0 1px white}::-webkit-scrollbar-thumb{border-radius:10px;box-shadow:0 0 0 1px white}.cursor,#activity-title:after,#activity-content:after,#cd:after,#whoami:after,#cat:after,#tree:after{visibility:var(--cursor-visibility);content:"|";overflow:hidden;color:#fff;animation:blink 500ms linear infinite alternate}@keyframes blink{0%{opacity:0}100%{opacity:1}}@media only screen and (min-width:768px){body{font-size:2.5vmin;line-height:2.6vmin}#content{min-width:60vmin}}:root{--cursor-visibility:hidden}body{align-items:unset;overflow-y:scroll}#content{max-width:80vmin}pre{overflow-x:scroll;white-space:pre}@keyframes blink{0%{opacity:0}100%{opacity:1}}
 
@@ -515,25 +520,29 @@ body{background:#1b1d1e}body #terminal{color:#BBBBBB}body #user{color:#23E298}bo
 
     <meta name="yandex-verification" content="355904de153d5134" />
     
+    
+    <script>window.yaContextCb = window.yaContextCb || []</script>
+    <script src="https://yandex.ru/ads/system/context.js" async></script>
 
-<script>window.yaContextCb=window.yaContextCb||[]</script>
-<script src="https://yandex.ru/ads/system/context.js" async></script>
+    <script type="text/javascript">
+            (function (m, e, t, r, i, k, a) {
+                m[i] = m[i] || function () { (m[i].a = m[i].a || []).push(arguments) };
+                m[i].l = 1 * new Date();
+                for (var j = 0; j < document.scripts.length; j++) { if (document.scripts[j].src === r) { return; } }
+                k = e.createElement(t), a = e.getElementsByTagName(t)[0], k.async = 1, k.src = r, a.parentNode.insertBefore(k, a)
+            })
+            (window, document, "script", "https://mc.yandex.ru/metrika/tag.js", "ym");
 
-<script type="text/javascript" >
-    (function(m,e,t,r,i,k,a){m[i]=m[i]||function(){(m[i].a=m[i].a||[]).push(arguments)};
-    m[i].l=1*new Date();
-    for (var j = 0; j < document.scripts.length; j++) {if (document.scripts[j].src === r) { return; }}
-    k=e.createElement(t),a=e.getElementsByTagName(t)[0],k.async=1,k.src=r,a.parentNode.insertBefore(k,a)})
-    (window, document, "script", "https://mc.yandex.ru/metrika/tag.js", "ym");
- 
-    ym(90533415, "init", {
-         clickmap:true,
-         trackLinks:true,
-         accurateTrackBounce:true
-    });
- </script>
- <noscript><div><img src="https://mc.yandex.ru/watch/90533415" style="position:absolute; left:-9999px;" alt="" /></div></noscript>
- 
+        ym(90533415, "init", {
+            clickmap: true,
+            trackLinks: true,
+            accurateTrackBounce: true
+        });
+    </script>
+    <noscript>
+        <div><img src="https://mc.yandex.ru/watch/90533415" style="position:absolute; left:-9999px;" alt="" /></div>
+    </noscript>
+    
 
 
 </head><body><div id="content">
@@ -549,117 +558,7 @@ body{background:#1b1d1e}body #terminal{color:#BBBBBB}body #user{color:#23E298}bo
 </div>
 <meta property="og:title" content="Гри-Гри для JWT"/>
 
-    <meta property="og:description" content='Оригинальная публикация
-Гри-гри — талисман вуду
-или амулет для защиты
-владельца от зла или на счастье.
-JWT (JSON Web Token) – это токен, а будет этот токен хорошим или плохим, зависит исключительно от вашей реализации. Структура JWT определена в соответствующем RFC , но если кратко, то JWT состоит из трех частей: заголовка (header), полезной нагрузки (payload) и подписи или данных шифрования. Заголовок и нагрузка представляют собой JSON-объекты “определенной” структуры, а третья часть – это зачастую подпись первой и второй частей. Если верить Википедии, то чаще всего вам придется сталкиваться с тем, что по науке называется JWS/JWE Compact Serialization, т.е. “компактная” версия токена. От развернутой она отличается тем, что заголовок и нагрузка кодируются в base64url, записываются через точку, после чего получившуюся строку подписывают, тоже кодируют в base64url и дописывают в конец снова через разделитель “точка”. Т.е. на выходе получается что-то вроде:
-eyJhbGciOiJIUzUxMiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NSIsIm5hbWUiOiJKb2huIEdvbGQiLCJhZG1pbiI6dHJ1ZX0K.LIHjWCBORSWMEibq-tnT8ue_deUqZx1K0XxCOXZRrBI
-Теперь чуть подробнее про каждую из частей, начнем, что называется, с головы. В заголовке указывается необходимая информация для описания самого токена.
-Обязательный ключ здесь только один:
 
-alg: алгоритм, используемый для подписи/шифрования (в случае не подписанного JWT используется значение «none»).
-
-Необязательные ключи:
-
-typ: тип токена (type). Используется в случае, когда токены смешиваются с другими объектами, имеющими JOSE-заголовки. Должно иметь значение “JWT”.
-cty: тип содержимого (content type). Если в токене помимо зарегистрированных служебных ключей есть пользовательские, то данный ключ не должен присутствовать. В противном случае он должен иметь значение “JWT”.
-
-В разделе полезной нагрузки указывается пользовательская информация (например, имя пользователя и уровень его доступа), а также могут быть использованы некоторые служебные ключи. Все они являются необязательными:
-
-iss: чувствительная к регистру строка или URI, которая является уникальным идентификатором стороны, генерирующей токен (issuer).
-sub: чувствительная к регистру строка или URI, которая является уникальным идентификатором стороны, о которой содержится информация в данном токене (subject). Значения с этим ключом должны быть уникальны в контексте стороны, генерирующей JWT.
-aud: массив чувствительных к регистру строк или URI, являющийся списком получателей данного токена. Когда принимающая сторона получает JWT с данным ключом, она должна проверить наличие себя в получателях — иначе проигнорировать токен (audience).
-exp: время в формате Unix Time, определяющее момент, когда токен станет невалидным (expiration).
-nbf: в противовес ключу exp, время в формате Unix Time, определяющее момент, когда токен станет валидным (not before).
-jti: строка, определяющая уникальный идентификатор данного токена (JWT ID).
-iat: время в формате Unix Time, определяющее момент, когда токен был создан. iat и nbf могут не совпадать, например, если токен был создан раньше, чем время, когда он должен стать валидным.
-
-Кейсы
-Теперь, когда ты, дорогой читатель, получил базовое представление о том, что такое JWT-токен, я могу перестать копипастить Википедию и заняться разбором проколов, связанных с безопасностью JWT на примере заданий с root-me:
-
-JSON Web Token (JWT) – Introduction
-JSON Web Token (JWT) – Weak secret
-JSON Web Token (JWT) – Public key
-
-И сразу ссылки на полезные источники, которые позволят вам избежать дальнейшего чтения моей статьи:
-
-Attacking JWT authentication
-Hacking JSON Web Token (JWT)
-
-Introduction
-В задании говорится о том, что необходимо авторизоваться под админом, чтобы получить флаг. Точкой входа предстает такая форма:
-
-Так как аккаунта у нас нет, а задание явно направлено на злоупотребление каким-нибудь токеном, попробуем авторизоваться как гость:
-
-И получаем заветный токен в куке:
-
-Хватаем содержимое куки jwt и идем с ним на jwt.io , где и лицезреем следующую картину:
-
-Чутье бывалого проникновенца говорит нам, что необходимо поменять username с guest на admin и переподписать все это дело. Однако HMAC с использованием SHA-256 требует от нас знания некоего секрета, который создатель задания сообщить нам забыл… Да кому вообще нужна эта подпись, сгенерируем себе токен и без нее:
-
-Заменяем значение куки jwt на полученный токен и надеемся, что программист ресурса не такой крутой профессионал, как мы:
-
-Вы великолепны! Вы не зря зовете себя ковбоем клавиатуры!
-Weak secret
-По одному только названию становится понятно, в чем в этот раз будет проблема. Но давайте не будем сильно забегать вперед и для начала поговорим о том, что за “HS256” использовался для подписи сообщения в предыдущем примере. HS256 – это HMAC with SHA-256. Что это значит для нас, простых смертных людей, не обремененных знаниями криптографической магии? Интернет говорит, что HMAC (Hash-based Message Authentication Code) – это код аутентификации сообщения на основе хэширования. Данный вид аутентификации подразумевает наличие у клиента и сервера некоего секретного ключа, который известен только им двоим. Отлично, опытный проникновенец внутри вас наверняка прочитал эту фразу как “это что-то симметричное и его можно сбрутить”. Теперь мы морально готовы приступать к заданию с root-me.
-Поехали. Точка входа в задание одаривает нас JSON-ом следующего содержания:
-{     
-    &#34;message&#34;: &#34;Let&#39;s play a small game, I bet you cannot access to my super secret admin section. Make a GET request to /token and use the token you&#39;ll get to try to access /admin with a POST request.&#34;
-}
-Я, конечно, не уверен, но, кажется, нам необходимо сделать GET-запрос на /token. Оттуда на нас нисходит новый JSON:
-{
-    &#34;Here is your token&#34;: &#34;eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJyb2xlIjoiZ3Vlc3QifQ.4kBPNf7Y6BrtP-Y3A-vQXPY9jAh_d0E6L4IUjL65CvmEjgdTZyr2ag-TM-glH6EYKGgO3dBYbhblaPQsbeClcw&#34;
-}
-
-Поле role, вероятнее всего, придется сменить с guest на admin, но сразу возникает вопрос валидности подписи. Если же в этом задании вы решите попробовать поменять алгоритм подписи на различные вариации None, то это не сработает. Название челленджа как бы намекает…
-Намекает на то, что можно воспользоваться утилитой типа jwtcrack  или John the Ripper  (я так и не понял, как заставить его работать с jwt), которые позволят узнать секрет методом словарного перебора и переподписать себе токен.
-Запускаем jwtcrack:
-
-Фантастика, мы заполучили секрет и теперь можем переписать себе токен:
-
-Его мы засовываем в заголовок Authorization (почему-то без Bearer) и получаем ключ этой таски. Можно рассказывать теперь историю этого взлома в баре “Джентльмен неудачник”; историю про сожжение Хром вы, конечно, не затмите, но использовать стойкие ключи научите.
-Public key
-В этот раз без теоретического введения, с места в карьер, так сказать. В челлендже нам дают три endpoint-а api:
-
-/key (GET)
-/auth (POST)
-/admin (POST)
-
-И говорят, чтобы мы всех хакнули.
-Пойдем по порядку и постучим на key:
-
-Как и ожидалось, мы получили ключ… Публичный. Сохраняем его себе куда-нибудь и идем дальше. На /auth нас просят послать свой username в теле запроса. Выполнив требования, получаем:
-
-Вы уже поняли, да? Идем на jwt.io  и смотрим на то, что мы получили:
-
-Видим RS256, и это печалит. Сразу становится понятно, зачем нам дали публичный ключ. RS – это RSA SHA, а RSA (Rivest-Shamir-Adleman) использует асимметричные ключи. Вы, конечно, можете попробовать способы из предыдущих двух заданий, но они тут не сработают. Зато сработает ход, который в обычных условиях показался бы не самым логичным. Давайте попробуем изменить алгоритм подписи с RS256 на HS256, а в качестве секретного ключа использовать полученный нами ранее публичный ключ.
-Возникает логичный вопрос, а какого черта это вообще должно сработать? Мы надеемся на то, что код расшифровки токена на сервере выглядит как-то так:
-
-И все это прекрасно работает, если у нас действительно используется асимметричный алгоритм подписи (в нашем случае RSA SHA-256), но если вместо чего-то асимметричного туда попадает что-то симметричное (HMAC SHA-256), то публичный ключ будет обработан функцией как симметричный ключ и токен будет валиден.
-Дальше придется произвести пляски с бубном, которые бы не пришлось проводить будь версия pyjwt не такой свежей. Связано это с тем, что свежие версии pyjwt не дают использовать публичный ключ в качестве секрета для HS256. Но начнем мы все равно с python:
-
-Отсюда нам понадобятся заголовок и нагрузка:
-eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1c2VybmFtZSI6ImFkbWluIn0
-А вот подписывать эти части нам придется самостоятельно.
-Перегоним наш ключ, полученный ранее, в последовательность HEX-ов:
-2d2d2d2d2d424547494e205055424c4943204b45592d2d2d2d2d0a4d494942496a414e42676b71686b6947397730424151454641414f43415138414d49494243674b43415145417576773168347477504a6e5a42772b54327743440a59624832556b4d427852672f686b534d6c365a77693259566d37397771723372506433676a7430695a576432724e42337175644b5749536d42516132517152480a74503666546a6569354d413471734c53586c32724765576a47767471704851446d63583447417841454b7947306e6632445065324170454330323152472f564f0a64595343414149702b536d6443746d35504966314153694f4141585537644c37324959736f63534d6759705249634a755a5341435571314a367775553958796c0a7042314e7657774644334659437a72655435416b5469636276676546316b39792f4f4b5431667632626e5347706a354b4d45462f51575552377877337262516b0a796e6365436a714645744c78584873584a506d5536676a4132494377547131475671435a447a6a6a665162426f4b7a6d59534f774c7a4f6e364a6237454f50670a58514944415141420a2d2d2d2d2d454e44205055424c4943204b45592d2d2d2d2d0a
-А теперь самостоятельно, как взрослые мальчики, подпишем себе токен:
-echo -n &#34;eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1c2VybmFtZSI6ImFkbWluIn0&#34; | openssl dgst -sha256 -mac HMAC -macopt hexkey: 2d2d2d2d2d424547494e205055424c4943204b45592d2d2d2d2d0a4d494942496a414e42676b71686b6947397730424151454641414f43415138414d49494243674b43415145417576773168347477504a6e5a42772b54327743440a59624832556b4d427852672f686b534d6c365a77693259566d37397771723372506433676a7430695a576432724e42337175644b5749536d42516132517152480a74503666546a6569354d413471734c53586c32724765576a47767471704851446d63583447417841454b7947306e6632445065324170454330323152472f564f0a64595343414149702b536d6443746d35504966314153694f4141585537644c37324959736f63534d6759705249634a755a5341435571314a367775553958796c0a7042314e7657774644334659437a72655435416b5469636276676546316b39792f4f4b5431667632626e5347706a354b4d45462f51575552377877337262516b0a796e6365436a714645744c78584873584a506d5536676a4132494377547131475671435a447a6a6a665162426f4b7a6d59534f774c7a4f6e364a6237454f50670a58514944415141420a2d2d2d2d2d454e44205055424c4943204b45592d2d2d2d2d0a
-Наша подпись:
-f4a3602e56b0b5d07229d66130ef0aedd1d338cbdc543641d0bb8bedaf8f65ba
-Но не спешите подставлять ее в наш токен. Вы ведь помните, что подпись должна быть base64url? Кодируем:
-Но не спешите подставлять ее в наш токен. Вы ведь помните, что подпись должна быть base64url? Кодируем:
-Получаем:
-9KNgLlawtdByKdZhMO8K7dHTOMvcVDZB0LuL7a-PZbo
-Собираем токен в кучу:
-eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1c2VybmFtZSI6ImFkbWluIn0.9KNgLlawtdByKdZhMO8K7dHTOMvcVDZB0LuL7a-PZbo
-Засовываем в заголовок Authorization: Bearer и хвастаемся еще одним успешным взломом.
-'/>
-
-<meta property="og:type" content="article"/>
-<meta property="og:image" content="https://alexandrv.ru//asserts/images/logo.jpg" />
-<meta property="og:url" content= "https://alexandrv.ru/articles/grigri/" />
     
     
     
@@ -830,7 +729,7 @@ eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1c2VybmFtZSI6ImFkbWluIn0.9KNgLlawtdByKdZ
     img{
         max-width: 100%;
     }
-    #activity-content {
+    #content {
         font-size: 0.5rem;
         line-height: 1.56;
         overflow-wrap: break-word;

@@ -10,12 +10,8 @@
         })</script>
 </div>
 <meta property="og:title" content="{{.Title}}"/>
-{{ range first 1 (split .Content "<hr>") }}
-    <meta property="og:description" content='{{. | safeHTML}}'/>
-{{end}}
-<meta property="og:type" content="article"/>
-<meta property="og:image" content="{{.Site.BaseURL}}/asserts/images/logo.jpg" />
-<meta property="og:url" content= "{{ .Permalink }}" />
+
+
     {{ $title := printf "<h1 id='title'>%s</h1><span id='date'>%s</span>" .Title .Date}}
     {{ $title := printf "<span id='terminal'>%s</span>"  $title}}
     

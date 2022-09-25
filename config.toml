@@ -16,6 +16,8 @@ enableRobotsTXT = true
     
 
 [Params]
+  description = "Ирокезнутый блог Александра Васюкова"
+
   [Params.Navbar]
   use = true
 

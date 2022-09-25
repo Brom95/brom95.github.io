@@ -2,6 +2,7 @@
 title: "Гри-Гри для JWT"
 date: 2020-05-19T19:33:19+03:00
 draft: false
+description: Разбор узких мест безопасности JWT токенов на основе задач с root-me
 ---
 
 [Оригинальная публикация](https://dc7495.org/gris-gris-for-jwt/)
