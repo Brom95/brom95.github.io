@@ -52,7 +52,7 @@ enableRobotsTXT = true
   files = [ 
     ["summary.md","/summary.md"],
     ["Статьи", "articles"],
-    ["Обзоры книг", "books_reviews"],
+    ["Обзоры книг", "books_reviews/"],
     ["GitHub", "https://github.com/Brom95"],
     ["Телеграм канал", "https://useless_chanel.t.me"],
     ["rss.xml","rss.xml"]
