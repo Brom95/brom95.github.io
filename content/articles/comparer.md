@@ -30,7 +30,7 @@ foreach (FileInfo item in FirstDirrectoryFiles.Except(SecondDirrectoryFiles))
 
 Я вот предположил, что ничего, потому что Except должен вычитать множество (IEnumerable) правого аргумента из множества (IEnumerable) левого аргумента. Однако, вопреки моим ожиданиям я получил:
 
-![](/asserts/images/comparer_1.png)
+![](/assets/images/comparer_1.png)
 
 Вне всякого сомнения — это не похоже на пустое множество. Давайте попробуем разобраться в том, почему так получается (результат в .NET 5 и в .NET 6 — эквивалентен). Чтобы понять, почему так происходит, и что можно с этим сделать обратимся к документации метода [Except](https://docs.microsoft.com/ru-ru/dotnet/api/system.linq.enumerable.except?view=net-6.0). Там действительно написано, что этот метод «Находит разность множеств, представленных двумя последовательностями» и имеет две перегрузки:
 - `Except<TSource>(IEnumerable<TSource>, IEnumerable<TSource>)` Находит разность множеств, представленных двумя последовательностями, используя для сравнения значений компаратор проверки на равенство по умолчанию. 
@@ -102,7 +102,7 @@ private static IEnumerable<TSource> ExceptIterator<TSource>(IEnumerable<TSource>
 
 Конструктор множества принимает интерфейс компаратора, который используется для сравнения элементов множества:  
 
-![](/asserts/images/comparer_2.png)
+![](/assets/images/comparer_2.png)
 
 Конкретно в нашем случае компаратор равен null, поэтому проваливаемся в свойство Default обобщенного класса EqualityComparer.
 
@@ -127,7 +127,7 @@ public HashSet(IEqualityComparer<T>? comparer)
     }
 }
 ```
-![](/asserts/images/comparer_3.png)
+![](/assets/images/comparer_3.png)
 
 [Тут](https://github.com/dotnet/runtime/blob/57bfe474518ab5b7cfe6bf7424a79ce3af9d6657/src/coreclr/System.Private.CoreLib/src/System/Collections/Generic/EqualityComparer.CoreCLR.cs#L10), на мой скромный взгляд, все очевидно:
 
@@ -219,7 +219,7 @@ Console.Write(
 
 Что и следовало ожидать:
 
-![](/asserts/images/comparer_4.png)
+![](/assets/images/comparer_4.png)
 
 Это значит, что теперь наш путь лежит в [ObjectEqualityComparer](https://github.com/dotnet/runtime/blob/57bfe474518ab5b7cfe6bf7424a79ce3af9d6657/src/libraries/System.Private.CoreLib/src/System/Collections/Generic/EqualityComparer.cs). Вот, собственно, и он:
 

@@ -6,7 +6,7 @@
     <meta name="viewport" content="width=device-width,initial-scale=1">
     <meta name="description" content="Думаю, что каждый программист рано или поздно сталкивается с кодом, который работает «не так, как ты от него ожидаешь». Именно это и подтолкнуло меня к написанию следующей статьи, в которой я пытаюсь понять, почему Except в Linq работает так, как написан, а не так, как я хочу." />
     <meta property="og:type" content="article" />
-    <meta property="og:image" content="https://alexandrv.ru/asserts/images/logo.jpg" />
+    <meta property="og:image" content="https://alexandrv.ru/assets/images/logo.jpg" />
     <meta property="og:url" content="https://alexandrv.ru/articles/comparer/" />
     <meta property="og:description" content="Думаю, что каждый программист рано или поздно сталкивается с кодом, который работает «не так, как ты от него ожидаешь». Именно это и подтолкнуло меня к написанию следующей статьи, в которой я пытаюсь понять, почему Except в Linq работает так, как написан, а не так, как я хочу." />
     <style>
@@ -585,7 +585,7 @@ FileInfo[] SecondDirrectoryFiles = documentsDir.GetFiles();
     Console.WriteLine(item.Name);
 }
 </code></pre></div><p>Я вот предположил, что ничего, потому что Except должен вычитать множество (IEnumerable) правого аргумента из множества (IEnumerable) левого аргумента. Однако, вопреки моим ожиданиям я получил:</p>
-<p><img src="/asserts/images/comparer_1.png" alt=""></p>
+<p><img src="/assets/images/comparer_1.png" alt=""></p>
 <p>Вне всякого сомнения — это не похоже на пустое множество. Давайте попробуем разобраться в том, почему так получается (результат в .NET 5 и в .NET 6 — эквивалентен). Чтобы понять, почему так происходит, и что можно с этим сделать обратимся к документации метода <a href="https://docs.microsoft.com/ru-ru/dotnet/api/system.linq.enumerable.except?view=net-6.0">Except</a>. Там действительно написано, что этот метод «Находит разность множеств, представленных двумя последовательностями» и имеет две перегрузки:</p>
 <ul>
 <li><code>Except&lt;TSource&gt;(IEnumerable&lt;TSource&gt;, IEnumerable&lt;TSource&gt;)</code> Находит разность множеств, представленных двумя последовательностями, используя для сравнения значений компаратор проверки на равенство по умолчанию.</li>
@@ -640,7 +640,7 @@ FileInfo[] SecondDirrectoryFiles = documentsDir.GetFiles();
 
 </code></pre></div><p>Из элементов второго аргумента создается <a href="https://github.com/dotnet/runtime/blob/57bfe474518ab5b7cfe6bf7424a79ce3af9d6657/src/libraries/System.Private.CoreLib/src/System/Collections/Generic/HashSet.cs#L55">множество</a>. Элементы первого аргумента, которые удалось добавить в множество, возвращаются в качестве итератора.</p>
 <p>Конструктор множества принимает интерфейс компаратора, который используется для сравнения элементов множества:</p>
-<p><img src="/asserts/images/comparer_2.png" alt=""></p>
+<p><img src="/assets/images/comparer_2.png" alt=""></p>
 <p>Конкретно в нашем случае компаратор равен null, поэтому проваливаемся в свойство Default обобщенного класса EqualityComparer.</p>
 <div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-csharp" data-lang="csharp"><span style="color:#66d9ef">public</span> HashSet(IEqualityComparer&lt;T&gt;? comparer)
 {
@@ -661,7 +661,7 @@ FileInfo[] SecondDirrectoryFiles = documentsDir.GetFiles();
         }
     }
 }
-</code></pre></div><p><img src="/asserts/images/comparer_3.png" alt=""></p>
+</code></pre></div><p><img src="/assets/images/comparer_3.png" alt=""></p>
 <p><a href="https://github.com/dotnet/runtime/blob/57bfe474518ab5b7cfe6bf7424a79ce3af9d6657/src/coreclr/System.Private.CoreLib/src/System/Collections/Generic/EqualityComparer.CoreCLR.cs#L10">Тут</a>, на мой скромный взгляд, все очевидно:</p>
 <div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-csharp" data-lang="csharp"><span style="color:#66d9ef">public</span> <span style="color:#66d9ef">abstract</span> <span style="color:#66d9ef">partial</span> <span style="color:#66d9ef">class</span> <span style="color:#a6e22e">EqualityComparer</span>&lt;T&gt; : IEqualityComparer, IEqualityComparer&lt;T&gt;
 {
@@ -745,7 +745,7 @@ Console.Write(
     <span style="color:#e6db74">$&#34;type.IsGenericType: {type.IsGenericType}\n&#34;</span> +
     <span style="color:#e6db74">$&#34;type.IsEnum: {type.IsEnum}\n\n&#34;</span>);
 </code></pre></div><p>Что и следовало ожидать:</p>
-<p><img src="/asserts/images/comparer_4.png" alt=""></p>
+<p><img src="/assets/images/comparer_4.png" alt=""></p>
 <p>Это значит, что теперь наш путь лежит в <a href="https://github.com/dotnet/runtime/blob/57bfe474518ab5b7cfe6bf7424a79ce3af9d6657/src/libraries/System.Private.CoreLib/src/System/Collections/Generic/EqualityComparer.cs">ObjectEqualityComparer</a>. Вот, собственно, и он:</p>
 <div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-csharp" data-lang="csharp"><span style="color:#66d9ef">public</span> <span style="color:#66d9ef">sealed</span> <span style="color:#66d9ef">partial</span> <span style="color:#66d9ef">class</span> <span style="color:#a6e22e">ObjectEqualityComparer</span>&lt;T&gt; : EqualityComparer&lt;T&gt;
 {
@@ -851,7 +851,7 @@ FileInfo[] result2 = documentsDir.GetFiles();
     }
     ul ::marker {
         
-        content: "-rw-rw-r--";
+        content: "\1F480";
 
     }
 
@@ -893,6 +893,9 @@ FileInfo[] result2 = documentsDir.GetFiles();
     }
     #content{
         color:#BBBBBB;
+    }
+    li p{
+        padding-left: 5%;
     }
 </style>
 

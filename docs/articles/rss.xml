@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
-    <title>Articles on Ирокезнутый блог</title>
+    <title>Статьи on Ирокезнутый блог</title>
     <link>https://alexandrv.ru/articles/</link>
-    <description>Recent content in Articles on Ирокезнутый блог</description>
+    <description>Recent content in Статьи on Ирокезнутый блог</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>ru-ru</language>
-    <lastBuildDate>Sat, 20 Nov 2021 17:23:23 +0300</lastBuildDate><atom:link href="https://alexandrv.ru/articles/rss.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Sun, 25 Sep 2022 20:25:57 +0300</lastBuildDate><atom:link href="https://alexandrv.ru/articles/rss.xml" rel="self" type="application/rss+xml" />
     <item turbo="true">
       <title>Сравнение в C#</title>
       <link>https://alexandrv.ru/articles/comparer/</link>
@@ -30,7 +30,7 @@ FileInfo[] SecondDirrectoryFiles = documentsDir.GetFiles();
     Console.WriteLine(item.Name);
 }
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Я вот предположил, что ничего, потому что Except должен вычитать множество (IEnumerable) правого аргумента из множества (IEnumerable) левого аргумента. Однако, вопреки моим ожиданиям я получил:&lt;/p&gt;
-&lt;p&gt;&lt;img src=&#34;https://alexandrv.ru/asserts/images/comparer_1.png&#34; alt=&#34;&#34;&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://alexandrv.ru/assets/images/comparer_1.png&#34; alt=&#34;&#34;&gt;&lt;/p&gt;
 &lt;p&gt;Вне всякого сомнения — это не похоже на пустое множество. Давайте попробуем разобраться в том, почему так получается (результат в .NET 5 и в .NET 6 — эквивалентен). Чтобы понять, почему так происходит, и что можно с этим сделать обратимся к документации метода &lt;a href=&#34;https://docs.microsoft.com/ru-ru/dotnet/api/system.linq.enumerable.except?view=net-6.0&#34;&gt;Except&lt;/a&gt;. Там действительно написано, что этот метод «Находит разность множеств, представленных двумя последовательностями» и имеет две перегрузки:&lt;/p&gt;
 &lt;ul&gt;
 &lt;li&gt;&lt;code&gt;Except&amp;lt;TSource&amp;gt;(IEnumerable&amp;lt;TSource&amp;gt;, IEnumerable&amp;lt;TSource&amp;gt;)&lt;/code&gt; Находит разность множеств, представленных двумя последовательностями, используя для сравнения значений компаратор проверки на равенство по умолчанию.&lt;/li&gt;
@@ -85,7 +85,7 @@ FileInfo[] SecondDirrectoryFiles = documentsDir.GetFiles();
 
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Из элементов второго аргумента создается &lt;a href=&#34;https://github.com/dotnet/runtime/blob/57bfe474518ab5b7cfe6bf7424a79ce3af9d6657/src/libraries/System.Private.CoreLib/src/System/Collections/Generic/HashSet.cs#L55&#34;&gt;множество&lt;/a&gt;. Элементы первого аргумента, которые удалось добавить в множество, возвращаются в качестве итератора.&lt;/p&gt;
 &lt;p&gt;Конструктор множества принимает интерфейс компаратора, который используется для сравнения элементов множества:&lt;/p&gt;
-&lt;p&gt;&lt;img src=&#34;https://alexandrv.ru/asserts/images/comparer_2.png&#34; alt=&#34;&#34;&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://alexandrv.ru/assets/images/comparer_2.png&#34; alt=&#34;&#34;&gt;&lt;/p&gt;
 &lt;p&gt;Конкретно в нашем случае компаратор равен null, поэтому проваливаемся в свойство Default обобщенного класса EqualityComparer.&lt;/p&gt;
 &lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-csharp&#34; data-lang=&#34;csharp&#34;&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;public&lt;/span&gt; HashSet(IEqualityComparer&amp;lt;T&amp;gt;? comparer)
 {
@@ -106,7 +106,7 @@ FileInfo[] SecondDirrectoryFiles = documentsDir.GetFiles();
         }
     }
 }
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;&lt;img src=&#34;https://alexandrv.ru/asserts/images/comparer_3.png&#34; alt=&#34;&#34;&gt;&lt;/p&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;&lt;img src=&#34;https://alexandrv.ru/assets/images/comparer_3.png&#34; alt=&#34;&#34;&gt;&lt;/p&gt;
 &lt;p&gt;&lt;a href=&#34;https://github.com/dotnet/runtime/blob/57bfe474518ab5b7cfe6bf7424a79ce3af9d6657/src/coreclr/System.Private.CoreLib/src/System/Collections/Generic/EqualityComparer.CoreCLR.cs#L10&#34;&gt;Тут&lt;/a&gt;, на мой скромный взгляд, все очевидно:&lt;/p&gt;
 &lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-csharp&#34; data-lang=&#34;csharp&#34;&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;public&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;abstract&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;partial&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;class&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;EqualityComparer&lt;/span&gt;&amp;lt;T&amp;gt; : IEqualityComparer, IEqualityComparer&amp;lt;T&amp;gt;
 {
@@ -190,7 +190,7 @@ Console.Write(
     &lt;span style=&#34;color:#e6db74&#34;&gt;$&amp;#34;type.IsGenericType: {type.IsGenericType}\n&amp;#34;&lt;/span&gt; +
     &lt;span style=&#34;color:#e6db74&#34;&gt;$&amp;#34;type.IsEnum: {type.IsEnum}\n\n&amp;#34;&lt;/span&gt;);
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Что и следовало ожидать:&lt;/p&gt;
-&lt;p&gt;&lt;img src=&#34;https://alexandrv.ru/asserts/images/comparer_4.png&#34; alt=&#34;&#34;&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://alexandrv.ru/assets/images/comparer_4.png&#34; alt=&#34;&#34;&gt;&lt;/p&gt;
 &lt;p&gt;Это значит, что теперь наш путь лежит в &lt;a href=&#34;https://github.com/dotnet/runtime/blob/57bfe474518ab5b7cfe6bf7424a79ce3af9d6657/src/libraries/System.Private.CoreLib/src/System/Collections/Generic/EqualityComparer.cs&#34;&gt;ObjectEqualityComparer&lt;/a&gt;. Вот, собственно, и он:&lt;/p&gt;
 &lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-csharp&#34; data-lang=&#34;csharp&#34;&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;public&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;sealed&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;partial&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;class&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;ObjectEqualityComparer&lt;/span&gt;&amp;lt;T&amp;gt; : EqualityComparer&amp;lt;T&amp;gt;
 {
@@ -329,17 +329,17 @@ JWT (JSON Web Token) – это токен, а будет этот токен х
 &lt;/ul&gt;
 &lt;h2 id=&#34;introduction&#34;&gt;Introduction&lt;/h2&gt;
 &lt;p&gt;В задании говорится о том, что необходимо авторизоваться под админом, чтобы получить флаг. Точкой входа предстает такая форма:&lt;/p&gt;
-&lt;p&gt;&lt;img src=&#34;https://alexandrv.ru/asserts/images/gri_1.png&#34; alt=&#34;форма&#34;&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://alexandrv.ru/assets/images/gri_1.png&#34; alt=&#34;форма&#34;&gt;&lt;/p&gt;
 &lt;p&gt;Так как аккаунта у нас нет, а задание явно направлено на злоупотребление каким-нибудь токеном, попробуем авторизоваться как гость:&lt;/p&gt;
-&lt;p&gt;&lt;img src=&#34;https://alexandrv.ru/asserts/images/gri_2.png&#34; alt=&#34;guest&#34;&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://alexandrv.ru/assets/images/gri_2.png&#34; alt=&#34;guest&#34;&gt;&lt;/p&gt;
 &lt;p&gt;И получаем заветный токен в куке:&lt;/p&gt;
-&lt;p&gt;&lt;img src=&#34;https://alexandrv.ru/asserts/images/gri_3.png&#34; alt=&#34;токен&#34;&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://alexandrv.ru/assets/images/gri_3.png&#34; alt=&#34;токен&#34;&gt;&lt;/p&gt;
 &lt;p&gt;Хватаем содержимое куки jwt и идем с ним на &lt;a href=&#34;https://jwt.io&#34;&gt;jwt.io&lt;/a&gt; , где и лицезреем следующую картину:&lt;/p&gt;
-&lt;p&gt;&lt;img src=&#34;https://alexandrv.ru/asserts/images/gri_4.png&#34; alt=&#34;&#34;&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://alexandrv.ru/assets/images/gri_4.png&#34; alt=&#34;&#34;&gt;&lt;/p&gt;
 &lt;p&gt;Чутье бывалого проникновенца говорит нам, что необходимо поменять username с guest на admin и переподписать все это дело. Однако HMAC с использованием SHA-256 требует от нас знания некоего секрета, который создатель задания сообщить нам забыл… Да кому вообще нужна эта подпись, сгенерируем себе токен и без нее:&lt;/p&gt;
-&lt;p&gt;&lt;img src=&#34;https://alexandrv.ru/asserts/images/gri_5.jpeg&#34; alt=&#34;&#34;&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://alexandrv.ru/assets/images/gri_5.jpeg&#34; alt=&#34;&#34;&gt;&lt;/p&gt;
 &lt;p&gt;Заменяем значение куки jwt на полученный токен и надеемся, что программист ресурса не такой крутой профессионал, как мы:&lt;/p&gt;
-&lt;p&gt;&lt;img src=&#34;https://alexandrv.ru/asserts/images/gri_6.png&#34; alt=&#34;&#34;&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://alexandrv.ru/assets/images/gri_6.png&#34; alt=&#34;&#34;&gt;&lt;/p&gt;
 &lt;p&gt;Вы великолепны! Вы не зря зовете себя ковбоем клавиатуры!&lt;/p&gt;
 &lt;h2 id=&#34;weak-secret&#34;&gt;Weak secret&lt;/h2&gt;
 &lt;p&gt;По одному только названию становится понятно, в чем в этот раз будет проблема. Но давайте не будем сильно забегать вперед и для начала поговорим о том, что за “HS256” использовался для подписи сообщения в предыдущем примере. HS256 – это HMAC with SHA-256. Что это значит для нас, простых смертных людей, не обремененных знаниями криптографической магии? Интернет говорит, что HMAC (Hash-based Message Authentication Code) – это код аутентификации сообщения на основе хэширования. Данный вид аутентификации подразумевает наличие у клиента и сервера некоего секретного ключа, который известен только им двоим. Отлично, опытный проникновенец внутри вас наверняка прочитал эту фразу как “это что-то симметричное и его можно сбрутить”. Теперь мы морально готовы приступать к заданию с root-me.&lt;/p&gt;
@@ -351,13 +351,13 @@ JWT (JSON Web Token) – это токен, а будет этот токен х
 &lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-json&#34; data-lang=&#34;json&#34;&gt;{
     &lt;span style=&#34;color:#f92672&#34;&gt;&amp;#34;Here is your token&amp;#34;&lt;/span&gt;: &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJyb2xlIjoiZ3Vlc3QifQ.4kBPNf7Y6BrtP-Y3A-vQXPY9jAh_d0E6L4IUjL65CvmEjgdTZyr2ag-TM-glH6EYKGgO3dBYbhblaPQsbeClcw&amp;#34;&lt;/span&gt;
 }
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;&lt;img src=&#34;https://alexandrv.ru/asserts/images/gri_7.png&#34; alt=&#34;&#34;&gt;&lt;/p&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;&lt;img src=&#34;https://alexandrv.ru/assets/images/gri_7.png&#34; alt=&#34;&#34;&gt;&lt;/p&gt;
 &lt;p&gt;Поле role, вероятнее всего, придется сменить с guest на admin, но сразу возникает вопрос валидности подписи. Если же в этом задании вы решите попробовать поменять алгоритм подписи на различные вариации None, то это не сработает. Название челленджа как бы намекает…&lt;/p&gt;
 &lt;p&gt;Намекает на то, что можно воспользоваться утилитой типа &lt;a href=&#34;https://github.com/Sjord/jwtcrack&#34;&gt;jwtcrack&lt;/a&gt;  или &lt;a href=&#34;https://github.com/magnumripper/JohnTheRipper&#34;&gt;John the Ripper&lt;/a&gt;  (я так и не понял, как заставить его работать с jwt), которые позволят узнать секрет методом словарного перебора и переподписать себе токен.&lt;/p&gt;
 &lt;p&gt;Запускаем jwtcrack:&lt;/p&gt;
-&lt;p&gt;&lt;img src=&#34;https://alexandrv.ru/asserts/images/gri_8.png&#34; alt=&#34;&#34;&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://alexandrv.ru/assets/images/gri_8.png&#34; alt=&#34;&#34;&gt;&lt;/p&gt;
 &lt;p&gt;Фантастика, мы заполучили секрет и теперь можем переписать себе токен:&lt;/p&gt;
-&lt;p&gt;&lt;img src=&#34;https://alexandrv.ru/asserts/images/gri_9.png&#34; alt=&#34;&#34;&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://alexandrv.ru/assets/images/gri_9.png&#34; alt=&#34;&#34;&gt;&lt;/p&gt;
 &lt;p&gt;Его мы засовываем в заголовок Authorization (почему-то без Bearer) и получаем ключ этой таски. Можно рассказывать теперь историю этого взлома в баре “Джентльмен неудачник”; историю про сожжение Хром вы, конечно, не затмите, но использовать стойкие ключи научите.&lt;/p&gt;
 &lt;h2 id=&#34;public-key&#34;&gt;Public key&lt;/h2&gt;
 &lt;p&gt;В этот раз без теоретического введения, с места в карьер, так сказать. В челлендже нам дают три endpoint-а api:&lt;/p&gt;
@@ -368,17 +368,17 @@ JWT (JSON Web Token) – это токен, а будет этот токен х
 &lt;/ol&gt;
 &lt;p&gt;И говорят, чтобы мы всех хакнули.&lt;/p&gt;
 &lt;p&gt;Пойдем по порядку и постучим на key:&lt;/p&gt;
-&lt;p&gt;&lt;img src=&#34;https://alexandrv.ru/asserts/images/gri_10.png&#34; alt=&#34;&#34;&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://alexandrv.ru/assets/images/gri_10.png&#34; alt=&#34;&#34;&gt;&lt;/p&gt;
 &lt;p&gt;Как и ожидалось, мы получили ключ… Публичный. Сохраняем его себе куда-нибудь и идем дальше. На /auth нас просят послать свой username в теле запроса. Выполнив требования, получаем:&lt;/p&gt;
-&lt;p&gt;&lt;img src=&#34;https://alexandrv.ru/asserts/images/gri_11.png&#34; alt=&#34;&#34;&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://alexandrv.ru/assets/images/gri_11.png&#34; alt=&#34;&#34;&gt;&lt;/p&gt;
 &lt;p&gt;Вы уже поняли, да? Идем на jwt.io  и смотрим на то, что мы получили:&lt;/p&gt;
-&lt;p&gt;&lt;img src=&#34;https://alexandrv.ru/asserts/images/gri_12.png&#34; alt=&#34;&#34;&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://alexandrv.ru/assets/images/gri_12.png&#34; alt=&#34;&#34;&gt;&lt;/p&gt;
 &lt;p&gt;Видим RS256, и это печалит. Сразу становится понятно, зачем нам дали публичный ключ. RS – это RSA SHA, а RSA (Rivest-Shamir-Adleman) использует асимметричные ключи. Вы, конечно, можете попробовать способы из предыдущих двух заданий, но они тут не сработают. Зато сработает ход, который в обычных условиях показался бы не самым логичным. Давайте попробуем изменить алгоритм подписи с RS256 на HS256, а в качестве секретного ключа использовать полученный нами ранее публичный ключ.&lt;/p&gt;
 &lt;p&gt;Возникает логичный вопрос, а какого черта это вообще должно сработать? Мы надеемся на то, что код расшифровки токена на сервере выглядит как-то так:&lt;/p&gt;
-&lt;p&gt;&lt;img src=&#34;https://alexandrv.ru/asserts/images/gri_13.png&#34; alt=&#34;&#34;&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://alexandrv.ru/assets/images/gri_13.png&#34; alt=&#34;&#34;&gt;&lt;/p&gt;
 &lt;p&gt;И все это прекрасно работает, если у нас действительно используется асимметричный алгоритм подписи (в нашем случае RSA SHA-256), но если вместо чего-то асимметричного туда попадает что-то симметричное (HMAC SHA-256), то публичный ключ будет обработан функцией как симметричный ключ и токен будет валиден.&lt;/p&gt;
 &lt;p&gt;Дальше придется произвести пляски с бубном, которые бы не пришлось проводить будь версия pyjwt не такой свежей. Связано это с тем, что свежие версии pyjwt не дают использовать публичный ключ в качестве секрета для HS256. Но начнем мы все равно с python:&lt;/p&gt;
-&lt;p&gt;&lt;img src=&#34;https://alexandrv.ru/asserts/images/gri_14.png&#34; alt=&#34;&#34;&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://alexandrv.ru/assets/images/gri_14.png&#34; alt=&#34;&#34;&gt;&lt;/p&gt;
 &lt;p&gt;Отсюда нам понадобятся заголовок и нагрузка:&lt;/p&gt;
 &lt;p&gt;&lt;code&gt;eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1c2VybmFtZSI6ImFkbWluIn0&lt;/code&gt;&lt;/p&gt;
 &lt;p&gt;А вот подписывать эти части нам придется самостоятельно.&lt;/p&gt;
@@ -415,10 +415,10 @@ JWT (JSON Web Token) – это токен, а будет этот токен х
 &lt;p&gt;Различают понятия горизонтальной и вертикальной масштабируемости. Вертикальная масштабируемость – способность системы увеличить общую производительность при увеличении производительности отдельных ее элементов. Горизонтальная масштабируемость – способность системы увеличивать производительность при увеличении количества элементов, участвующих в обработке информации [3].&lt;/p&gt;
 &lt;p&gt;В данной статье содержатся положения касаемо построения модели взаимодействия компонентов горизонтально масштабируемой системы доступа к удаленным информационным ресурсам в контексте использования данной системы в качестве агрегирующего сервиса. На построенной модели проведено исследование оптимальной конфигурации горизонтально масштабируемого слоя системы. Данный подход позволяет в рамках одной модели отразить как взаимодействие пользователя с данной системой, так и взаимодействие отдельных компонентов системы между собой.&lt;/p&gt;
 &lt;p&gt;Системы агрегации информации (в западной технической литературе [4,5] устоялся термин «mashupсистемы») строятся на основе горизонтально масштабируемых систем [2]. В рамках архитектуры «клиентсервер» подобная система может соответствовать архитектуре, представленной на рисунке 1.&lt;/p&gt;
-&lt;p&gt;&lt;img src=&#34;https://alexandrv.ru/asserts/images/agregate_1.png&#34; alt=&#34;Рис. 1. Архитектура «клиент-сервер» с горизонтально масштабируемым слоем&#34;&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://alexandrv.ru/assets/images/agregate_1.png&#34; alt=&#34;Рис. 1. Архитектура «клиент-сервер» с горизонтально масштабируемым слоем&#34;&gt;&lt;/p&gt;
 &lt;p&gt;Рис. 1. Архитектура «клиент-сервер» с горизонтально масштабируемым слоем&lt;/p&gt;
 &lt;p&gt;Один из вариантов архитектуры горизонтально масштабированного слоя представлен на изображении (рис.2). Пользователь формирует абстрактный запрос к контролеру горизонтально масштабированного слоя, затем контролер горизонтально масштабируемого слоя обрабатывает запрос, произведя разложение на некоторое количество подзапросов (в случае необходимо), которые могут быть удовлетворены API сервиса и переданы в виде задач другим серверам системы. Связанные с контролером серверы выполняют запрос к удаленному серверу и, получив ответ, передают его контролеру горизонтально масштабируемого слоя, который объединяет ответы, полученные от подчиненных серверов, передает агрегированный результат клиенту.&lt;/p&gt;
-&lt;p&gt;&lt;img src=&#34;https://alexandrv.ru/asserts/images/agregate_2.png&#34; alt=&#34;Рис. 2. Архитектура горизонтально масштабируемого слоя&#34;&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://alexandrv.ru/assets/images/agregate_2.png&#34; alt=&#34;Рис. 2. Архитектура горизонтально масштабируемого слоя&#34;&gt;&lt;/p&gt;
 &lt;p&gt;Рис. 2. Архитектура горизонтально масштабируемого слоя&lt;/p&gt;
 &lt;p&gt;Для выявления устойчивой к заявленным нагрузкам конфигурации горизонтально масштабируемого слоя в среде имитационного моделирования AnyLogic разработана модель, представленная на рисунке 3. Модель представляет собой набор логических элементов. Элемент source выступает в качестве генератора запросов, delay и delay1 используются для моделирования временной задержки. Сущность resourcePool является хранилищем ресурсов (в данном случае количества потоков), сущность seize хранит заданное количество запросов и при достаточном количестве ресурсов, передает запрос далее.&lt;/p&gt;
 &lt;p&gt;В случае невозможности обработки запроса, запрос уничтожается в сущности sink. Сущность sink1 также используется для уничтожения запросов, по завершению работы цикла.&lt;/p&gt;
@@ -427,7 +427,7 @@ JWT (JSON Web Token) – это токен, а будет этот токен х
 &lt;ol&gt;
 &lt;li&gt;Моделирование работы контроллера и удаленного сервера. В рамках этапа моделируется обработка 3 запроса контроллером и удаленным сервером, работа контроллера по разделению первичного запроса. Время на обработку запроса контролером (delay1) и удаленным сервером (delay) заложено как случайное значение согласно треугольному распределению от 0.5 до 5 с наиболее вероятным значением 1 секунда на обработку одного запроса. Блок split используется для моделирования работы контролера по разделению первичного запроса к горизонтально масштабируемому слою на запросы, которые необходимо совершить к API удаленного сервиса. После разделения, оригинальный запрос перемещается в sink.&lt;/li&gt;
 &lt;/ol&gt;
-&lt;p&gt;&lt;img src=&#34;https://alexandrv.ru/asserts/images/agregate_3.png&#34; alt=&#34;Рис. 3. Модель горизонтально масштабируемого слоя как сервиса&#34;&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://alexandrv.ru/assets/images/agregate_3.png&#34; alt=&#34;Рис. 3. Модель горизонтально масштабируемого слоя как сервиса&#34;&gt;&lt;/p&gt;
 &lt;p&gt;Рис. 3. Модель горизонтально масштабируемого слоя как сервиса&lt;/p&gt;
 &lt;ol start=&#34;2&#34;&gt;
 &lt;li&gt;
@@ -505,7 +505,7 @@ $f(x) = 1.76571 *  10^{-8}x^3 - 0.0000767385x^2 + 0.208204x − 0.122419 $, гд
       <turbo:content>&lt;p&gt;&lt;strong&gt;Нейро-компьютерный интерфейс&lt;/strong&gt; (НКИ) (называемый также прямой нейронный интерфейс, мозговой интерфейс, интерфейс «мозг — компьютер») – устройство или принцип работы, предназначенный для обеспечения односторонней или двухсторонней связи между мозгом и электронным устройством.&lt;/p&gt;
 &lt;p&gt;Другими словами, НКИ - это некоторый механизм, позволяющий управлять техникой с помощью &amp;quot; силы мысли&amp;quot;. Исследования этой области  начались в 1970-х годах в Калифорнийском университете в Лос-Анджелесе (UCLA). В середине 1990-х были разработаны устройства, которые позволили восстановить поврежденные функции слуха, зрения, а также утраченные двигательные навыки.&lt;/p&gt;
 &lt;p&gt;Одной из главных причин, по которой НКИ станет катализатором научно-технического прогресса, является широкая область применимости данной технологии.
-&lt;img src=&#34;https://alexandrv.ru/asserts/brain.jpg&#34; alt=&#34;&#34;&gt;&lt;/p&gt;
+&lt;img src=&#34;https://alexandrv.ru/assets/brain.jpg&#34; alt=&#34;&#34;&gt;&lt;/p&gt;
 &lt;p&gt;Одно из самых перспективных направлений развития НКИ является медицина. НКИ позволит создавать протезы с высокой отзывчивостью, манипулировать подобного рода протезами можно будет наравне с здоровыми органами. Вопросами создания и имплантирования различных искусственных устройств для восстановления нарушений функций нервной системы и сенсорных органов занимается область неврологии –  нейропротезирование. Самым распространенным нейропротезом является кохлеарный имплантат, который используется для компенсирования потери слуха некоторым пациентам с выраженной или тяжёлой степенью нейросенсорной (сенсоневральной) тугоухости.&lt;/p&gt;
 &lt;p&gt;Однако медицинские НКИ могут найти применение не только в медицине. На основе технологий нейропротезирования в последствии возможно создание систем управления гуманоидными роботами. Так, например, в 2000-ом году, исследовательской  группе Мигеля Николесиса удалось воспроизвести движение передних конечностей обезьяны. Система работала в реальном времени и использовалась для управления роботом по средствам интернет соединения. На практике  подобного рода роботы могут быть использованы при высокоточных работах, в местах, где прибывание человека невозможно. Так же, как и в случае с нейропротезами, НКИ позволит обеспечить более высокую точность и отзывчивость, что в значительной степени повысит эффективность работы оператора.&lt;/p&gt;
 &lt;p&gt;Развитие НКИ в сторону распознания мыслительных образов должно дать мощный толчек в развитии областей, связанных с моделированием и проектированием. НКИ позволит в значительной степени ускорить и упростить процесс создания моделей и чертежей. Ощутимый прогресс в данном направлении имеет группа NeuroG; группа занимается созданием алгоритмов для распознания зрительных образов, а 25 апреля 2011 года состоялась первая публичная демонстрация работы устройства по распознанию мыслительных образов. К сожалению, на тот момент, устройство распознавало только 4 изображения.&lt;/p&gt;

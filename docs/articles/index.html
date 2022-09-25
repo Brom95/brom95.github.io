@@ -1,14 +1,14 @@
 <!DOCTYPE html>
 <html lang="ru-ru"><head>
-    <title>Articles</title>
+    <title>Статьи</title>
 
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width,initial-scale=1">
-    <meta name="description" content="" />
+    <meta name="description" content="Список моих статей" />
     <meta property="og:type" content="article" />
-    <meta property="og:image" content="https://alexandrv.ru/asserts/images/logo.jpg" />
+    <meta property="og:image" content="https://alexandrv.ru/assets/images/logo.jpg" />
     <meta property="og:url" content="https://alexandrv.ru/articles/" />
-    <meta property="og:description" content="" />
+    <meta property="og:description" content="Список моих статей" />
     <style>
 @import "https://fonts.googleapis.com/css2?family=Inconsolata&display=swap";:root{--cursor-visibility:hidden}html,body{width:100%;height:100%;overflow:auto;font-family:inconsolata,monospace;font-size:4vmin;line-height:4.1vmin;font-weight:400}body{margin:0;display:flex;flex-direction:row;justify-content:center;align-items:center}#content{min-width:82vmin;min-height:82vmin}::-webkit-scrollbar{width:10px}::-webkit-scrollbar-track{border-radius:10px;box-shadow:inset 0 0 1px white}::-webkit-scrollbar-thumb{border-radius:10px;box-shadow:0 0 0 1px white}.cursor,#activity-title:after,#activity-content:after,#cd:after,#whoami:after,#cat:after,#tree:after{visibility:var(--cursor-visibility);content:"|";overflow:hidden;color:#fff;animation:blink 500ms linear infinite alternate}@keyframes blink{0%{opacity:0}100%{opacity:1}}@media only screen and (min-width:768px){body{font-size:2.5vmin;line-height:2.6vmin}#content{min-width:60vmin}}:root{--cursor-visibility:hidden}body{align-items:unset;overflow-y:scroll}#content{max-width:80vmin}pre{overflow-x:scroll;white-space:pre}@keyframes blink{0%{opacity:0}100%{opacity:1}}
 
@@ -548,46 +548,50 @@ body{background:#1b1d1e}body #terminal{color:#BBBBBB}body #user{color:#23E298}bo
 </head><body><div id="content">
 
 <main id="main">
-  <h1>Articles</h1>
+  <h1>Статьи</h1>
+  <div>
+    <p>Здесь собраны все написанные мной статьи связанные с IT, разработкой и даже закралась одна статья, которая была бы уместнее в философском разделе.</p>
+
+  </div>
   <ul>
     
     <li>
       <div>
         <a href="/articles/comparer/">
-
-          Сравнение_в_C#.md
-          
+         Сравнение в C#
         </a>
+        <p>&#09; Думаю, что каждый программист рано или поздно сталкивается с кодом, который работает «не так, как ты от него ожидаешь». Именно это и подтолкнуло меня к написанию следующей статьи, в которой я пытаюсь понять, почему Except в Linq работает так, как написан, а не так, как я хочу.</p>
+        <br>
       </div>
     </li>
     
     <li>
       <div>
         <a href="/articles/grigri/">
-
-          Гри-Гри_для_JWT.md
-          
+         Гри-Гри для JWT
         </a>
+        <p>&#09; Разбор узких мест безопасности JWT токенов на основе задач с root-me</p>
+        <br>
       </div>
     </li>
     
     <li>
       <div>
         <a href="/articles/agregate/">
-
-          ПОСТРОЕНИЕ_СИСТЕМЫ_АГРЕГИРОВАНИЯ_ИНФОРМАЦИИ.md
-          
+         ПОСТРОЕНИЕ СИСТЕМЫ АГРЕГИРОВАНИЯ ИНФОРМАЦИИ
         </a>
+        <p>&#09; В современном мире, где объемы данных, поступающие в информационные системы, имеют тенденцию к постоянному росту, а отдельное клиентское устройство зачастую не способно совершать выборку и обработку всех необходимых данных режиме реального времени, вопрос построения систем агрегирования информации встает все более остро.</p>
+        <br>
       </div>
     </li>
     
     <li>
       <div>
         <a href="/articles/nci/">
-
-          Нейро-компьютерный_интерфейс_как_глобальный_двигатель_прогресса.md
-          
+         Нейро-компьютерный интерфейс как глобальный двигатель прогресса
         </a>
+        <p>&#09; Нейро-компьютерный интерфейс (НКИ) (называемый также прямой нейронный интерфейс, мозговой интерфейс, интерфейс «мозг — компьютер») – устройство или принцип работы, предназначенный для обеспечения односторонней или двухсторонней связи между мозгом и электронным устройством.</p>
+        <br>
       </div>
     </li>
     
@@ -611,7 +615,7 @@ body{background:#1b1d1e}body #terminal{color:#BBBBBB}body #user{color:#23E298}bo
     }
     ul ::marker {
         
-        content: "-rw-rw-r--";
+        content: "\1F480";
 
     }
 
@@ -654,6 +658,9 @@ body{background:#1b1d1e}body #terminal{color:#BBBBBB}body #user{color:#23E298}bo
     #content{
         color:#BBBBBB;
     }
+    li p{
+        padding-left: 5%;
+    }
 </style>
 
 
@@ -671,7 +678,7 @@ body{background:#1b1d1e}body #terminal{color:#BBBBBB}body #user{color:#23E298}bo
 <span>
     <a href="/">Home</a>
     <span>&#8192;|&#8192;</span>
-    <a href="./..">/</a>
+    <a href="./.."></a>
 </span>
 
     

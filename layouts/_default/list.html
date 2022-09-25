@@ -2,15 +2,18 @@
 
 <main id="main">
   <h1>{{ .Title }}</h1>
+  <div>
+    {{.Content}}
+  </div>
   <ul>
     {{ range .Pages }}
     <li>
       <div>
         <a href="{{ .RelPermalink }}">
-
-          {{ replace .Title " " "_" }}{{ if and (.IsPage) (.Site.Params.Extensions.use) }}{{ .Site.Params.Extensions.ext }}
-          {{ end }}
+         {{.Title}}
         </a>
+        <p>&#09; {{.Description}}</p>
+        <br>
       </div>
     </li>
     {{ end }}

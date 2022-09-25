@@ -6,7 +6,7 @@
     <meta name="viewport" content="width=device-width,initial-scale=1">
     <meta name="description" content="Разбор узких мест безопасности JWT токенов на основе задач с root-me" />
     <meta property="og:type" content="article" />
-    <meta property="og:image" content="https://alexandrv.ru/asserts/images/logo.jpg" />
+    <meta property="og:image" content="https://alexandrv.ru/assets/images/logo.jpg" />
     <meta property="og:url" content="https://alexandrv.ru/articles/grigri/" />
     <meta property="og:description" content="Разбор узких мест безопасности JWT токенов на основе задач с root-me" />
     <style>
@@ -610,17 +610,17 @@ body{background:#1b1d1e}body #terminal{color:#BBBBBB}body #user{color:#23E298}bo
 </ul>
 <h2 id="introduction">Introduction</h2>
 <p>В задании говорится о том, что необходимо авторизоваться под админом, чтобы получить флаг. Точкой входа предстает такая форма:</p>
-<p><img src="/asserts/images/gri_1.png" alt="форма"></p>
+<p><img src="/assets/images/gri_1.png" alt="форма"></p>
 <p>Так как аккаунта у нас нет, а задание явно направлено на злоупотребление каким-нибудь токеном, попробуем авторизоваться как гость:</p>
-<p><img src="/asserts/images/gri_2.png" alt="guest"></p>
+<p><img src="/assets/images/gri_2.png" alt="guest"></p>
 <p>И получаем заветный токен в куке:</p>
-<p><img src="/asserts/images/gri_3.png" alt="токен"></p>
+<p><img src="/assets/images/gri_3.png" alt="токен"></p>
 <p>Хватаем содержимое куки jwt и идем с ним на <a href="https://jwt.io">jwt.io</a> , где и лицезреем следующую картину:</p>
-<p><img src="/asserts/images/gri_4.png" alt=""></p>
+<p><img src="/assets/images/gri_4.png" alt=""></p>
 <p>Чутье бывалого проникновенца говорит нам, что необходимо поменять username с guest на admin и переподписать все это дело. Однако HMAC с использованием SHA-256 требует от нас знания некоего секрета, который создатель задания сообщить нам забыл… Да кому вообще нужна эта подпись, сгенерируем себе токен и без нее:</p>
-<p><img src="/asserts/images/gri_5.jpeg" alt=""></p>
+<p><img src="/assets/images/gri_5.jpeg" alt=""></p>
 <p>Заменяем значение куки jwt на полученный токен и надеемся, что программист ресурса не такой крутой профессионал, как мы:</p>
-<p><img src="/asserts/images/gri_6.png" alt=""></p>
+<p><img src="/assets/images/gri_6.png" alt=""></p>
 <p>Вы великолепны! Вы не зря зовете себя ковбоем клавиатуры!</p>
 <h2 id="weak-secret">Weak secret</h2>
 <p>По одному только названию становится понятно, в чем в этот раз будет проблема. Но давайте не будем сильно забегать вперед и для начала поговорим о том, что за “HS256” использовался для подписи сообщения в предыдущем примере. HS256 – это HMAC with SHA-256. Что это значит для нас, простых смертных людей, не обремененных знаниями криптографической магии? Интернет говорит, что HMAC (Hash-based Message Authentication Code) – это код аутентификации сообщения на основе хэширования. Данный вид аутентификации подразумевает наличие у клиента и сервера некоего секретного ключа, который известен только им двоим. Отлично, опытный проникновенец внутри вас наверняка прочитал эту фразу как “это что-то симметричное и его можно сбрутить”. Теперь мы морально готовы приступать к заданию с root-me.</p>
@@ -632,13 +632,13 @@ body{background:#1b1d1e}body #terminal{color:#BBBBBB}body #user{color:#23E298}bo
 <div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-json" data-lang="json">{
     <span style="color:#f92672">&#34;Here is your token&#34;</span>: <span style="color:#e6db74">&#34;eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJyb2xlIjoiZ3Vlc3QifQ.4kBPNf7Y6BrtP-Y3A-vQXPY9jAh_d0E6L4IUjL65CvmEjgdTZyr2ag-TM-glH6EYKGgO3dBYbhblaPQsbeClcw&#34;</span>
 }
-</code></pre></div><p><img src="/asserts/images/gri_7.png" alt=""></p>
+</code></pre></div><p><img src="/assets/images/gri_7.png" alt=""></p>
 <p>Поле role, вероятнее всего, придется сменить с guest на admin, но сразу возникает вопрос валидности подписи. Если же в этом задании вы решите попробовать поменять алгоритм подписи на различные вариации None, то это не сработает. Название челленджа как бы намекает…</p>
 <p>Намекает на то, что можно воспользоваться утилитой типа <a href="https://github.com/Sjord/jwtcrack">jwtcrack</a>  или <a href="https://github.com/magnumripper/JohnTheRipper">John the Ripper</a>  (я так и не понял, как заставить его работать с jwt), которые позволят узнать секрет методом словарного перебора и переподписать себе токен.</p>
 <p>Запускаем jwtcrack:</p>
-<p><img src="/asserts/images/gri_8.png" alt=""></p>
+<p><img src="/assets/images/gri_8.png" alt=""></p>
 <p>Фантастика, мы заполучили секрет и теперь можем переписать себе токен:</p>
-<p><img src="/asserts/images/gri_9.png" alt=""></p>
+<p><img src="/assets/images/gri_9.png" alt=""></p>
 <p>Его мы засовываем в заголовок Authorization (почему-то без Bearer) и получаем ключ этой таски. Можно рассказывать теперь историю этого взлома в баре “Джентльмен неудачник”; историю про сожжение Хром вы, конечно, не затмите, но использовать стойкие ключи научите.</p>
 <h2 id="public-key">Public key</h2>
 <p>В этот раз без теоретического введения, с места в карьер, так сказать. В челлендже нам дают три endpoint-а api:</p>
@@ -649,17 +649,17 @@ body{background:#1b1d1e}body #terminal{color:#BBBBBB}body #user{color:#23E298}bo
 </ol>
 <p>И говорят, чтобы мы всех хакнули.</p>
 <p>Пойдем по порядку и постучим на key:</p>
-<p><img src="/asserts/images/gri_10.png" alt=""></p>
+<p><img src="/assets/images/gri_10.png" alt=""></p>
 <p>Как и ожидалось, мы получили ключ… Публичный. Сохраняем его себе куда-нибудь и идем дальше. На /auth нас просят послать свой username в теле запроса. Выполнив требования, получаем:</p>
-<p><img src="/asserts/images/gri_11.png" alt=""></p>
+<p><img src="/assets/images/gri_11.png" alt=""></p>
 <p>Вы уже поняли, да? Идем на jwt.io  и смотрим на то, что мы получили:</p>
-<p><img src="/asserts/images/gri_12.png" alt=""></p>
+<p><img src="/assets/images/gri_12.png" alt=""></p>
 <p>Видим RS256, и это печалит. Сразу становится понятно, зачем нам дали публичный ключ. RS – это RSA SHA, а RSA (Rivest-Shamir-Adleman) использует асимметричные ключи. Вы, конечно, можете попробовать способы из предыдущих двух заданий, но они тут не сработают. Зато сработает ход, который в обычных условиях показался бы не самым логичным. Давайте попробуем изменить алгоритм подписи с RS256 на HS256, а в качестве секретного ключа использовать полученный нами ранее публичный ключ.</p>
 <p>Возникает логичный вопрос, а какого черта это вообще должно сработать? Мы надеемся на то, что код расшифровки токена на сервере выглядит как-то так:</p>
-<p><img src="/asserts/images/gri_13.png" alt=""></p>
+<p><img src="/assets/images/gri_13.png" alt=""></p>
 <p>И все это прекрасно работает, если у нас действительно используется асимметричный алгоритм подписи (в нашем случае RSA SHA-256), но если вместо чего-то асимметричного туда попадает что-то симметричное (HMAC SHA-256), то публичный ключ будет обработан функцией как симметричный ключ и токен будет валиден.</p>
 <p>Дальше придется произвести пляски с бубном, которые бы не пришлось проводить будь версия pyjwt не такой свежей. Связано это с тем, что свежие версии pyjwt не дают использовать публичный ключ в качестве секрета для HS256. Но начнем мы все равно с python:</p>
-<p><img src="/asserts/images/gri_14.png" alt=""></p>
+<p><img src="/assets/images/gri_14.png" alt=""></p>
 <p>Отсюда нам понадобятся заголовок и нагрузка:</p>
 <p><code>eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1c2VybmFtZSI6ImFkbWluIn0</code></p>
 <p>А вот подписывать эти части нам придется самостоятельно.</p>
@@ -695,7 +695,7 @@ body{background:#1b1d1e}body #terminal{color:#BBBBBB}body #user{color:#23E298}bo
     }
     ul ::marker {
         
-        content: "-rw-rw-r--";
+        content: "\1F480";
 
     }
 
@@ -737,6 +737,9 @@ body{background:#1b1d1e}body #terminal{color:#BBBBBB}body #user{color:#23E298}bo
     }
     #content{
         color:#BBBBBB;
+    }
+    li p{
+        padding-left: 5%;
     }
 </style>
 
