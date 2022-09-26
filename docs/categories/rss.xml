@@ -2,9 +2,9 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>Categories on Ирокезнутый блог</title>
-    <link>https://alexandrv.ru/categories/</link>
+    <link>https://it-irokez.ru/categories/</link>
     <description>Recent content in Categories on Ирокезнутый блог</description>
     <generator>Hugo -- gohugo.io</generator>
-    <language>ru-ru</language><atom:link href="https://alexandrv.ru/categories/rss.xml" rel="self" type="application/rss+xml" />
+    <language>ru-ru</language><atom:link href="https://it-irokez.ru/categories/rss.xml" rel="self" type="application/rss+xml" />
   </channel>
 </rss>

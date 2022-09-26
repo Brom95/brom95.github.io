@@ -1,4 +1,4 @@
-baseURL = 'https://alexandrv.ru/'
+baseURL = 'https://it-irokez.ru/'
 languageCode = 'ru-ru'
 title = 'Ирокезнутый блог'
 publishDir = "docs"
@@ -26,8 +26,8 @@ enableRobotsTXT = true
   ext=".md"
   [Params.Terminal]
   scheme = "Molokai"
-  userName = "brom"
-  pcName = "Samedi"
+  userName = "alex"
+  pcName = "it-irokez.ru"
   workDir = "Documents"
   profile = "profile.txt"
 
