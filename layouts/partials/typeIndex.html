@@ -1,9 +1,9 @@
-<span id="ps1_01"></span> <span id="cd"></span> <br>
-<span id="ps1_02"></span> <span id="cat"></span> <br>
-<span id="std_out_01"></span> <br>
-<span id="ps1_03"></span> <span id="tree"></span> <br>
-<span id="std_out_02"></span> <br>
-<span id="ps1_04"></span>
+<span id="ps1_01">{{ .env }}</span> <span id="cd">{{ .cd }}</span> <br>
+<span id="ps1_02">{{ .envWithDir }}</span> <span id="cat">{{ .cat }}</span> <br>
+<span id="std_out_01">{{ .description }}</span> <br>
+<span id="ps1_03">{{ .envWithDir }}</span> <span id="tree">{{ .tree }}</span> <br>
+<span id="std_out_02">{{ .leaf }}</span> <br>
+<span id="ps1_04">{{ .envWithDir }}"</span>
 
 <script type="text/javascript">
     async function typewriter(text, elementId, waitAfter) {

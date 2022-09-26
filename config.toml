@@ -33,10 +33,10 @@ enableRobotsTXT = true
 
   ps1Delay = 0 
   stdoutDelay = 0
-  commandDelay = 10 
+  commandDelay = 0 
 
   
-  titleDelay = 20
+  titleDelay = 0
   contentDelay = 0
 
   description = """

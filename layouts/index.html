@@ -51,8 +51,5 @@
     {{ $commandDelay := $.Site.Params.Terminal.commandDelay }}
 
     {{ partial "partials/typeIndex.html" (dict "context" . "env" $env "cd" $cd "envWithDir" $envWithDir "cat" $cat "description" $description "tree" $tree "leaf" $leaf "ps1delay" $ps1Delay "stdoutdelay" $stdoutDelay "commanddelay" $commandDelay ) }}
-    <noscript>
-            {{$description}}
-            {{$leaf}}
-    </noscript>
+
 {{ end }}
