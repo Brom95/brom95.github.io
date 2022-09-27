@@ -496,12 +496,18 @@ body{background:#1b1d1e}body #terminal{color:#BBBBBB}body #user{color:#23E298}bo
     position: fixed;
     bottom: 0px;
     left: 0px;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
     width: 100%;
+    align-items: baseline;
     padding-top: 5px;
     padding: 10px;
     padding-bottom: 0px;
 }
-
+.navFull a {
+    font-size: 2vmax;
+}
 .navCredits {
     float: right;
     padding-right: 18px;
@@ -614,7 +620,7 @@ body{background:#1b1d1e}body #terminal{color:#BBBBBB}body #user{color:#23E298}bo
     }
     li a {
         font-family: -apple-system, BlinkMacSystemFont, Arial, sans-serif;
-        font-size: 0.5rem;
+        font-size: 1em;
         line-height: 1.56;
     }
 
@@ -625,6 +631,7 @@ body{background:#1b1d1e}body #terminal{color:#BBBBBB}body #user{color:#23E298}bo
     }
     a{
         text-decoration: none;
+        font-size: 1em;
     }
     img{
         max-width: 100%;
@@ -644,6 +651,7 @@ body{background:#1b1d1e}body #terminal{color:#BBBBBB}body #user{color:#23E298}bo
     {
         background-color: #D08010;
         color: #BBBBBB;
+        display: block;
         padding: 10px;
         border-width: 2px;
         border-radius: 10px;
@@ -660,18 +668,18 @@ body{background:#1b1d1e}body #terminal{color:#BBBBBB}body #user{color:#23E298}bo
     
         
 
-<span>
+<div>
     <a href="/">Home</a>
     <span>&#8192;|&#8192;</span>
     <a href="./..">/books_reviews/</a>
-</span>
+</div>
 
     
 
         
-        <span class="navCredits">
+        <div class="navCredits">
             <a id="coffee" href="https://www.tinkoff.ru/cf/qTUdfLwVFO">Купить автору кофе</a>
-        </span>
+        </div>
 </span>
 
 
