@@ -4,6 +4,7 @@ title = 'Ирокезнутый блог'
 publishDir = "docs"
 description = "Ирокезнутый блог Александра Васюкова"
 enableRobotsTXT = true
+
 # menu = 'main'
 [outputs]
     home = [ "RSS", "HTML"]
@@ -17,6 +18,7 @@ enableRobotsTXT = true
 
 [Params]
   description = "Ирокезнутый блог Александра Васюкова"
+  donationLink = "https://www.tinkoff.ru/cf/qTUdfLwVFO"
 
   [Params.Navbar]
   use = true
