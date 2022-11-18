@@ -5,7 +5,7 @@ draft: true
 description: short description
 ---
 
-![Обложка книги]()
+![Обложка книги](/assets/images/)
 
 ## О чем книга?
 

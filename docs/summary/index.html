@@ -488,37 +488,7 @@
 body{background:#1b1d1e}body #terminal{color:#BBBBBB}body #user{color:#23E298}body #dir{color:#D08010}body .Typewriter__cursor{color:#BBBBBB}a{color:#BBBBBB}
 
         
-.navFull {
-    background-color: #353535;
-    font-family: "Courier New";
-    font-size: 17px;
-    display: inline;
-    position: fixed;
-    bottom: 0px;
-    left: 0px;
-    display: flex;
-    flex-direction: row;
-    justify-content: space-around;
-    width: 100%;
-    align-items: baseline;
-    padding-top: 5px;
-    padding: 10px;
-    padding-bottom: 0px;
-}
-.navFull a {
-    font-size: 1.3vmax;
-}
-.navCredits {
-    float: right;
-    padding-right: 18px;
-    padding-bottom: 10px;
-     
-}
 
-#content::after {
-    content: "\a\a";
-    white-space: pre;
-}
         
         
 </style>
@@ -575,7 +545,7 @@ body{background:#1b1d1e}body #terminal{color:#BBBBBB}body #user{color:#23E298}bo
     
 
 
-    <span id='terminal'><h1 id='title'>Summary</h1><span id='date'>2022-09-14 20:17:17 +0300 MSK</span></span>
+    <span id='terminal'><h1 id='title'>Summary</h1><span id='date'>Опублиовано: 14-09-2022</span></span>
 
     <span id=''><p><a href="https://career.habr.com/bromid">Резюме</a></p>
 <p>С 2012-го года я успел поработать с такими языками как:</p>
@@ -644,8 +614,40 @@ body{background:#1b1d1e}body #terminal{color:#BBBBBB}body #user{color:#23E298}bo
     img{
         max-width: 100%;
     }
+    .navFull {
+    background-color: #353535;
+    line-height: 150%;
+    font-family: "Courier New";
+     
+    display: inline;
+    position: fixed;
+    bottom: 0px;
+    left: 0px;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+    width: 100%;
+    align-items: baseline;
+    padding-top: 5px;
+    padding: 10px;
+    padding-bottom: 0px;
+}
+ 
+.navCredits {
+    float: right;
+    padding-right: 18px;
+    padding-bottom: 10px;
+     
+}
+#navigationBlock{
+
+}
+#content::after {
+    content: "\a\a";
+    white-space: pre;
+}
     #content {
-        font-size: 1em;
+        font-size: 1.2em;
         line-height: 1.56;
         overflow-wrap: break-word;
         font-family: -apple-system, BlinkMacSystemFont, Arial, sans-serif;
@@ -658,11 +660,22 @@ body{background:#1b1d1e}body #terminal{color:#BBBBBB}body #user{color:#23E298}bo
     #coffee
     {
         background-color: #D08010;
-        color: #BBBBBB;
+        color: #fff;
         display: block;
         padding: 10px;
         border-width: 2px;
         border-radius: 10px;
+    }
+    @media only screen and (max-width:500px) {
+        #content{
+            padding-left: 2%;
+        }
+        body{
+            font-size: 1.2em;
+        }
+        .navFull{
+            line-height: 100%;
+        }
     }
 </style>
 
@@ -676,7 +689,7 @@ body{background:#1b1d1e}body #terminal{color:#BBBBBB}body #user{color:#23E298}bo
     
         
 
-<div>
+<div id="navigationBlock">
     <a href="/">Home</a>
     <span>&#8192;|&#8192;</span>
     <a href="./..">/</a>
