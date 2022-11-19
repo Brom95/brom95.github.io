@@ -1,0 +1,1089 @@
+<!DOCTYPE html>
+<html lang="ru-ru"><head>
+    <title>Обзор книги &#34;Чистая Архитектура&#34; Р. Мартин</title>
+    <link rel="icon"  type="image/x-icon" href="https://it-irokez.ru/favicon.ico">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <meta name="description" content="Обзор и личное мнение касательно одной из самых известных и обсуждаемых книг по архитектуре." />
+    <meta property="og:type" content="article" />
+    <meta property="og:title" content="Обзор книги &#34;Чистая Архитектура&#34; Р. Мартин" />
+    <meta property="og:image" content="https://it-irokez.ru/assets/images/logo.jpg" />
+    <meta property="og:url" content="https://it-irokez.ru/books_reviews/clear_architecture/" />
+    <meta property="og:description" content="Обзор и личное мнение касательно одной из самых известных и обсуждаемых книг по архитектуре." />
+    <style>
+@import "https://fonts.googleapis.com/css2?family=Inconsolata&display=swap";:root{--cursor-visibility:hidden}html,body{width:100%;height:100%;overflow:auto;font-family:inconsolata,monospace;font-size:4vmin;line-height:4.1vmin;font-weight:400}body{margin:0;display:flex;flex-direction:row;justify-content:center;align-items:center}#content{min-width:82vmin;min-height:82vmin}::-webkit-scrollbar{width:10px}::-webkit-scrollbar-track{border-radius:10px;box-shadow:inset 0 0 1px white}::-webkit-scrollbar-thumb{border-radius:10px;box-shadow:0 0 0 1px white}.cursor,#activity-title:after,#activity-content:after,#cd:after,#whoami:after,#cat:after,#tree:after{visibility:var(--cursor-visibility);content:"|";overflow:hidden;color:#fff;animation:blink 500ms linear infinite alternate}@keyframes blink{0%{opacity:0}100%{opacity:1}}@media only screen and (min-width:768px){body{font-size:2.5vmin;line-height:2.6vmin}#content{min-width:60vmin}}:root{--cursor-visibility:hidden}body{align-items:unset;overflow-y:scroll}#content{max-width:80vmin}pre{overflow-x:scroll;white-space:pre}@keyframes blink{0%{opacity:0}100%{opacity:1}}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+        
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+
+
+body{background:#1b1d1e}body #terminal{color:#BBBBBB}body #user{color:#23E298}body #dir{color:#D08010}body .Typewriter__cursor{color:#BBBBBB}a{color:#BBBBBB}
+
+        
+
+        
+        
+</style>
+
+
+
+    <meta name="yandex-verification" content="355904de153d5134" />
+    
+    
+    <script>window.yaContextCb = window.yaContextCb || []</script>
+    <script src="https://yandex.ru/ads/system/context.js" async></script>
+
+    <script type="text/javascript">
+            (function (m, e, t, r, i, k, a) {
+                m[i] = m[i] || function () { (m[i].a = m[i].a || []).push(arguments) };
+                m[i].l = 1 * new Date();
+                for (var j = 0; j < document.scripts.length; j++) { if (document.scripts[j].src === r) { return; } }
+                k = e.createElement(t), a = e.getElementsByTagName(t)[0], k.async = 1, k.src = r, a.parentNode.insertBefore(k, a)
+            })
+            (window, document, "script", "https://mc.yandex.ru/metrika/tag.js", "ym");
+
+        ym(90533415, "init", {
+            clickmap: true,
+            trackLinks: true,
+            accurateTrackBounce: true
+        });
+    </script>
+    <noscript>
+        <div><img src="https://mc.yandex.ru/watch/90533415" style="position:absolute; left:-9999px;" alt="" /></div>
+    </noscript>
+    
+
+
+</head><body><div id="content">
+<div id="block">
+
+<div id="yandex_rtb_R-A-1957258-2"></div>
+<script>window.yaContextCb.push(()=>{
+  Ya.Context.AdvManager.render({
+    renderTo: 'yandex_rtb_R-A-1957258-2',
+    blockId: 'R-A-1957258-2'
+  })
+})</script>
+</div>
+<meta property="og:title" content="Обзор книги &#34;Чистая Архитектура&#34; Р. Мартин"/>
+
+
+    
+    
+    
+
+
+
+    
+
+
+    <span id='terminal'><h1 id='title'>Обзор книги "Чистая Архитектура" Р. Мартин</h1><span id='date'>Опублиовано: 18-11-2022</span></span>
+
+    <span id=''><p><img src="/assets/images/clear_architect.jpg" alt="Обложка книги"></p>
+<h2 id="о-чем-книга">О чем книга?</h2>
+<p>Книга посвящена, как следует из названия, вопросам построения чистой архитектуры и различных вопросов лежащих в смежных областях. Отдельное внимание автор уделяет SOLID, тестируемости кода и месте тестов в архитектуре приложения. На фоне &ldquo;чистого кода&rdquo; книга выглядит гораздо менее категоричной и имеет достаточно примеров того, как чрезмерное увлечение &ldquo;большим и правильным&rdquo; способно погубить проект.</p>
+<h2 id="что-нашел-полезным-для-себя">Что нашел полезным для себя?</h2>
+<ul>
+<li>Нашел книгу полезной для себя в целом и по этому следующий после прочтения проект стали строить по заветам дяди Боба. На момент написания ревью всем довольны, собираем профиты в виде возможности независимой разработки уровней приложения.</li>
+<li>Возможность изменений ценнее работоспособности. Приложение, которое легко изменять почти всегда можно привести к рабочему состоянию, но работающее приложение, которое трудно изменять, после внесения изменений будет тяжело привести обратно в рабочее состояние;</li>
+<li>Принцип единой ответственности в большей степени относится к акторам, чем к функциональному назначению класса. Т.е. имеется ввиду не причина, по которой должен меняться класс, а источник этих изменений;</li>
+<li>Нашел любопытной мысль о том, что разделение интерфейсов (ISP) это проблема языка, а не архитектуры.</li>
+<li>Понравились определения:
+<ul>
+<li><strong>Бизнес правило</strong> &ndash; действие приносящее или экономящее деньги не зависимо от того, выполняется ли оно вручную или автоматизированной системой.</li>
+<li><strong>Вариант использования</strong> &ndash; описывает как и когда вызываются бизнес правила в рамках автоматизированной системы.</li>
+</ul>
+</li>
+<li>Службы независимы на уровне отдельных переменных, но они, по меньшей мере, связаны общими данными.</li>
+<li>Приведенный ниже фрагмент из книги также напомнил мне <a href="https://habr.com/ru/post/312022/">одну старую статью с Хабра</a> <img src="/assets/images/clear_architect2.jpg" alt="забавный фрагмент из книги"></li>
+</ul>
+<h2 id="кому-подойдет">Кому подойдет?</h2>
+<ul>
+<li>Архитекторам (кто бы мог подумать?);</li>
+<li>Старшим разработчикам, принимающим архитектурные решения (как касательно архитектуры кода, так и касательно архитектуры приложения).</li>
+<li>Младшим разработчикам, желающим понять, почему старшие коллеги требуют от них строить код именно так, как они требуют (или чтобы найти аргументы против того, чтобы так делать).</li>
+</ul>
+<h2 id="кому-не-подойдет">Кому не подойдет?</h2>
+<ul>
+<li>Тем для кого &ldquo;чистая архитектура&rdquo; это фабрика фабрик.</li>
+</ul>
+<h2 id="оглавление">Оглавление</h2>
+<ol>
+<li>
+<p>Что такое дизайн и архитектура?</p>
+<ul>
+<li>Цель?</li>
+<li>Пример из практики</li>
+<li>Заключение</li>
+</ul>
+</li>
+<li>
+<p>История о двух ценностях</p>
+<ul>
+<li>Поведение</li>
+<li>Архитектура</li>
+<li>Наибольшая ценность</li>
+<li>Матрица Эйзенхауэра</li>
+<li>Битва за архитектуру</li>
+</ul>
+</li>
+<li>
+<p>Обзор парадигм</p>
+<ul>
+<li>Структурное программирование</li>
+<li>Объектно-ориентированное программирование</li>
+<li>Функциональное программирование</li>
+<li>Пища для ума</li>
+<li>Заключение</li>
+</ul>
+</li>
+<li>
+<p>Структурное программирование</p>
+<ul>
+<li>Доказательство</li>
+<li>Объявление вредным</li>
+<li>Функциональная декомпозиция</li>
+<li>Формальные доказательства отсутствуют</li>
+<li>Наука во спасение</li>
+<li>Тестирование</li>
+<li>Заключение</li>
+</ul>
+</li>
+<li>
+<p>Объектно- ориентированное программирование</p>
+<ul>
+<li>Инкапсуляция?</li>
+<li>Наследование?</li>
+<li>Полиморфизм?</li>
+<li>Заключение</li>
+</ul>
+</li>
+<li>
+<p>Функциональное программирование</p>
+<ul>
+<li>Квадраты целых чисел</li>
+<li>Неизменяемость и архитектура</li>
+<li>Ограничение изменяемости</li>
+<li>Регистрация событий</li>
+<li>Заключение</li>
+</ul>
+</li>
+<li>
+<p>Принцип единственной ответственности</p>
+<ul>
+<li>Признак 1: непреднамеренное дублирование</li>
+<li>Признак 2: слияния</li>
+<li>Решения</li>
+<li>Заключение</li>
+</ul>
+</li>
+<li>
+<p>Принцип открытости/закрытости</p>
+<ul>
+<li>Мысленный эксперимент</li>
+<li>Управление направлением</li>
+<li>Сокрытие информации</li>
+<li>Заключение</li>
+</ul>
+</li>
+<li>
+<p>Принцип подстановки Барбары Лисков</p>
+<ul>
+<li>Руководство по использованию наследования</li>
+<li>Проблема квадрат/прямоугольник</li>
+<li>LSP и архитектура</li>
+<li>Пример нарушения LSP</li>
+<li>Заключение</li>
+</ul>
+</li>
+<li>
+<p>Принцип разделения интерфейсов</p>
+<ul>
+<li>Принцип разделения интерфейсов и язык</li>
+<li>Принцип разделения интерфейсов и архитектура</li>
+<li>Заключение</li>
+</ul>
+</li>
+<li>
+<p>Принцип инверсии зависимости</p>
+<ul>
+<li>Стабильные абстракции</li>
+<li>Фабрики</li>
+<li>Конкретные компоненты</li>
+<li>Заключение</li>
+</ul>
+</li>
+<li>
+<p>Компоненты</p>
+<ul>
+<li>Краткая история компонентов</li>
+<li>Перемещаемость</li>
+<li>Компоновщики</li>
+<li>Заключение</li>
+</ul>
+</li>
+<li>
+<p>Связность компонентов</p>
+<ul>
+<li>Принцип эквивалентности повторного использования и выпусков</li>
+<li>Принцип согласованного изменения</li>
+<li>Принцип совместного повторного использования</li>
+<li>Диаграмма противоречий для определения связности компонентов</li>
+<li>Заключение</li>
+</ul>
+</li>
+<li>
+<p>Сочетаемость компонентов</p>
+<ul>
+<li>Принцип ацикличности зависимостей</li>
+<li>Проектирование сверху вниз</li>
+<li>Принцип устойчивых зависимостей</li>
+<li>Принцип устойчивости абстракций</li>
+<li>Заключение</li>
+</ul>
+</li>
+<li>
+<p>Что такое архитектура</p>
+<ul>
+<li>Разработка</li>
+<li>Развертывание</li>
+<li>Эффективность работы</li>
+<li>Сопровождение</li>
+<li>Сохранение разнообразия вариантов</li>
+<li>Независимость от устройства</li>
+<li>Нежелательная почта</li>
+<li>Физическая адресация</li>
+<li>Заключение</li>
+</ul>
+</li>
+<li>
+<p>Независимость</p>
+<ul>
+<li>Варианты использования</li>
+<li>Эффективность работы</li>
+<li>Разработка</li>
+<li>Развертывание</li>
+<li>Сохранение разнообразия вариантов</li>
+<li>Разделение уровней</li>
+<li>Разделение вариантов использования</li>
+<li>Режим разделения</li>
+<li>Возможность независимой разработки</li>
+<li>Возможность независимого развертывания</li>
+<li>Дублирование</li>
+<li>Режимы разделения (еще раз)</li>
+<li>Заключение</li>
+</ul>
+</li>
+<li>
+<p>Границы: проведение разделяющих линий</p>
+<ul>
+<li>Пара печальных историй</li>
+<li>FitNesse</li>
+<li>Какие границы проводить и когда?</li>
+<li>О вводе и выводе</li>
+<li>Архитектура с плагинами</li>
+<li>Аргумент в пользу плагинов</li>
+<li>Заключение</li>
+</ul>
+</li>
+<li>
+<p>Анатомия границ</p>
+<ul>
+<li>Пересечение границ</li>
+<li>Ужасный монолит</li>
+<li>Компоненты развертывания</li>
+<li>Потоки выполнения</li>
+<li>Локальные процессы</li>
+<li>Службы</li>
+<li>Заключение</li>
+</ul>
+</li>
+<li>
+<p>Политика и уровень</p>
+<ul>
+<li>Уровень</li>
+<li>Заключение</li>
+</ul>
+</li>
+<li>
+<p>Бизнес-правила</p>
+<ul>
+<li>Сущности</li>
+<li>Варианты использования</li>
+<li>Модели запросов и ответов</li>
+<li>Заключение</li>
+</ul>
+</li>
+<li>
+<p>Кричащая архитектура</p>
+<ul>
+<li>Тема архитектуры</li>
+<li>Цель архитектуры</li>
+<li>А что насчет Веб?</li>
+<li>Фреймворки — это инструменты, а не образ жизни</li>
+<li>Тестируемые архитектуры</li>
+<li>Заключение</li>
+</ul>
+</li>
+<li>
+<p>Чистая архитектура</p>
+<ul>
+<li>Правило зависимостей</li>
+<li>Типичный сценарий</li>
+<li>Заключение</li>
+</ul>
+</li>
+<li>
+<p>Презентаторы и скромные объекты</p>
+<ul>
+<li>Шаблон «Скромный объект»</li>
+<li>Презентаторы и представления</li>
+<li>Тестирование и архитектура</li>
+<li>Шлюзы к базам данных</li>
+<li>Преобразователи данных</li>
+<li>Службы</li>
+<li>Заключение</li>
+</ul>
+</li>
+<li>
+<p>Неполные границы</p>
+<ul>
+<li>Пропустить последний шаг</li>
+<li>Одномерные границы</li>
+<li>Фасады</li>
+<li>Заключение</li>
+</ul>
+</li>
+<li>
+<p>Уровни и границы</p>
+<ul>
+<li>Охота на Вампуса</li>
+<li>Чистая архитектура?</li>
+<li>Пересечение потоков</li>
+<li>Разбиение потоков</li>
+<li>Заключение</li>
+</ul>
+</li>
+<li>
+<p>Главный компонент</p>
+<ul>
+<li>Конечная деталь</li>
+<li>Заключение</li>
+</ul>
+</li>
+<li>
+<p>Службы: большие и малые</p>
+<ul>
+<li>Сервисная архитектура?</li>
+<li>Преимущества служб?</li>
+<li>Проблема с животными</li>
+<li>Спасение в объектах</li>
+<li>Службы на основе компонентов</li>
+<li>Сквозные задачи</li>
+<li>Заключение</li>
+</ul>
+</li>
+<li>
+<p>Границы тестов</p>
+<ul>
+<li>Тесты как компоненты системы</li>
+<li>Проектирование для простоты тестирования</li>
+<li>Программный интерфейс для тестирования</li>
+<li>Безопасность</li>
+<li>Заключение</li>
+</ul>
+</li>
+<li>
+<p>Чистая встраиваемая архитектура</p>
+<ul>
+<li>Тест на профпригодность</li>
+<li>Привязка к оборудованию — узкое место</li>
+<li>Заключение</li>
+</ul>
+</li>
+<li>
+<p>База данных — это деталь</p>
+<ul>
+<li>Реляционные базы данных</li>
+<li>Почему системы баз данных настолько распространены?</li>
+<li>Сохранятся ли диски?</li>
+<li>Детали</li>
+<li>А производительность?</li>
+<li>История</li>
+<li>Заключение</li>
+</ul>
+</li>
+<li>
+<p>Веб — это деталь</p>
+<ul>
+<li>Бесконечный маятник</li>
+<li>Вывод</li>
+<li>Заключение</li>
+</ul>
+</li>
+<li>
+<p>Фреймворки — это деталь</p>
+<ul>
+<li>Авторы фреймворков</li>
+<li>Неравный брак</li>
+<li>Риски</li>
+<li>Решение</li>
+<li>Объявляю вас</li>
+<li>Заключение</li>
+</ul>
+</li>
+<li>
+<p>Практический пример: продажа видео</p>
+<ul>
+<li>Продукт</li>
+<li>Анализ вариантов использования</li>
+<li>Компонентная архитектура</li>
+<li>Управление зависимостями</li>
+<li>Заключение</li>
+</ul>
+</li>
+<li>
+<p>Недостающая глава</p>
+<ul>
+<li>Упаковка по уровням</li>
+<li>Упаковка по особенностям</li>
+<li>Порты и адаптеры</li>
+<li>Упаковка по компонентам</li>
+<li>Дьявол в деталях реализации</li>
+<li>Организация и инкапсуляция</li>
+<li>Другие режимы разделения</li>
+<li>Заключение: недостающий совет</li>
+</ul>
+</li>
+</ol>
+</span>
+
+
+
+    </div>
+    <style>
+    h1 {
+         
+        color: #23E298;
+        line-height: 6vmin;
+        font-size: 6vmin;
+    }
+
+    
+    #block {
+        max-height: 350px;
+        max-width: 1000px;
+    }
+    ul ::marker {
+        
+        content: "\1F480";
+
+    }
+
+    a, strong, ::marker,
+    #date {
+        color: #D08010;
+
+    }
+    table, td{
+        border-collapse: collapse;
+        border: 2px solid #D08010;
+        max-width: 100%;
+    }
+    td{
+        padding: 25px;
+    }
+    li a {
+        font-family: -apple-system, BlinkMacSystemFont, Arial, sans-serif;
+        font-size: 1em;
+        line-height: 1.56;
+    }
+
+    li {
+        padding-left: 2%;
+
+
+    }
+    a{
+        text-decoration: none;
+        font-size: 1em;
+    }
+    img{
+        max-width: 100%;
+        max-height: 80vh;
+    }
+    .navFull {
+    background-color: #353535;
+    line-height: 150%;
+    font-family: "Courier New";
+     
+    display: inline;
+    position: fixed;
+    bottom: 0px;
+    left: 0px;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+    width: 100%;
+    align-items: baseline;
+    padding-top: 5px;
+    padding: 10px;
+    padding-bottom: 0px;
+}
+ 
+.navCredits {
+    float: right;
+    padding-right: 18px;
+    padding-bottom: 10px;
+     
+}
+#navigationBlock{
+
+}
+#content::after {
+    content: "\a\a";
+    white-space: pre;
+}
+    #content {
+        font-size: 2.0vmax;
+        line-height: 1.56;
+        overflow-wrap: break-word;
+        font-family: -apple-system, BlinkMacSystemFont, Arial, sans-serif;
+        color:#BBBBBB;
+    }
+    
+    li p{
+        padding-left: 5%;
+    }
+    #coffee
+    {
+        background-color: #D08010;
+        color: #fff;
+        display: block;
+        padding: 10px;
+        border-width: 2px;
+        border-radius: 10px;
+    }
+    @media only screen and (max-width:500px) {
+        #content{
+            padding-left: 2%;
+        }
+        body{
+            font-size: 1.2em;
+        }
+        .navFull{
+            line-height: 100%;
+        }
+    }
+</style>
+
+
+    
+    <span class="navFull">
+        
+    
+    
+
+    
+        
+
+<div id="navigationBlock">
+    <a href="/">Home</a>
+    <span>&#8192;|&#8192;</span>
+    <a href="./..">/books_reviews/</a>
+</div>
+
+    
+
+        
+        <div class="navCredits">
+            <a id="coffee" href="https://www.tinkoff.ru/cf/qTUdfLwVFO">Купить автору кофе</a>
+        </div>
+</span>
+
+
+    
+
+    
+
+</body>
+
+</html>
