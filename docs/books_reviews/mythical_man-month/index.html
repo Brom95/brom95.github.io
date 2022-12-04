@@ -1,0 +1,791 @@
+<!DOCTYPE html>
+<html lang="ru-ru"><head>
+    <title>Обзор книги &#34;Мистический человеко-месяц, или Как создаются программные системы&#34; Ф.Брукса</title>
+    <link rel="icon"  type="image/x-icon" href="https://it-irokez.ru/favicon.ico">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <meta name="description" content="Обзор на книгу Ф.Брукса посвященную вопросам программной инженерии." />
+    <meta property="og:type" content="article" />
+    <meta property="og:title" content="Обзор книги &#34;Мистический человеко-месяц, или Как создаются программные системы&#34; Ф.Брукса" />
+    <meta property="og:image" content="https://it-irokez.ru/assets/images/logo.jpg" />
+    <meta property="og:url" content="https://it-irokez.ru/books_reviews/mythical_man-month/" />
+    <meta property="og:description" content="Обзор на книгу Ф.Брукса посвященную вопросам программной инженерии." />
+    <style>
+@import "https://fonts.googleapis.com/css2?family=Inconsolata&display=swap";:root{--cursor-visibility:hidden}html,body{width:100%;height:100%;overflow:auto;font-family:inconsolata,monospace;font-size:4vmin;line-height:4.1vmin;font-weight:400}body{margin:0;display:flex;flex-direction:row;justify-content:center;align-items:center}#content{min-width:82vmin;min-height:82vmin}::-webkit-scrollbar{width:10px}::-webkit-scrollbar-track{border-radius:10px;box-shadow:inset 0 0 1px white}::-webkit-scrollbar-thumb{border-radius:10px;box-shadow:0 0 0 1px white}.cursor,#activity-title:after,#activity-content:after,#cd:after,#whoami:after,#cat:after,#tree:after{visibility:var(--cursor-visibility);content:"|";overflow:hidden;color:#fff;animation:blink 500ms linear infinite alternate}@keyframes blink{0%{opacity:0}100%{opacity:1}}@media only screen and (min-width:768px){body{font-size:2.5vmin;line-height:2.6vmin}#content{min-width:60vmin}}:root{--cursor-visibility:hidden}body{align-items:unset;overflow-y:scroll}#content{max-width:80vmin}pre{overflow-x:scroll;white-space:pre}@keyframes blink{0%{opacity:0}100%{opacity:1}}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+        
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+
+
+body{background:#1b1d1e}body #terminal{color:#BBBBBB}body #user{color:#23E298}body #dir{color:#D08010}body .Typewriter__cursor{color:#BBBBBB}a{color:#BBBBBB}
+
+        
+
+        
+        
+</style>
+
+
+
+    <meta name="yandex-verification" content="355904de153d5134" />
+    
+    
+    <script>window.yaContextCb = window.yaContextCb || []</script>
+    <script src="https://yandex.ru/ads/system/context.js" async></script>
+
+    <script type="text/javascript">
+            (function (m, e, t, r, i, k, a) {
+                m[i] = m[i] || function () { (m[i].a = m[i].a || []).push(arguments) };
+                m[i].l = 1 * new Date();
+                for (var j = 0; j < document.scripts.length; j++) { if (document.scripts[j].src === r) { return; } }
+                k = e.createElement(t), a = e.getElementsByTagName(t)[0], k.async = 1, k.src = r, a.parentNode.insertBefore(k, a)
+            })
+            (window, document, "script", "https://mc.yandex.ru/metrika/tag.js", "ym");
+
+        ym(90533415, "init", {
+            clickmap: true,
+            trackLinks: true,
+            accurateTrackBounce: true
+        });
+    </script>
+    <noscript>
+        <div><img src="https://mc.yandex.ru/watch/90533415" style="position:absolute; left:-9999px;" alt="" /></div>
+    </noscript>
+    
+
+
+</head><body><div id="content">
+<div id="block">
+
+<div id="yandex_rtb_R-A-1957258-2"></div>
+<script>window.yaContextCb.push(()=>{
+  Ya.Context.AdvManager.render({
+    renderTo: 'yandex_rtb_R-A-1957258-2',
+    blockId: 'R-A-1957258-2'
+  })
+})</script>
+</div>
+<meta property="og:title" content="Обзор книги &#34;Мистический человеко-месяц, или Как создаются программные системы&#34; Ф.Брукса"/>
+
+
+    
+    
+    
+
+
+
+    
+
+
+    <span id='terminal'><h1 id='title'>Обзор книги "Мистический человеко-месяц, или Как создаются программные системы" Ф.Брукса</h1><span id='date'>Опубликовано: 04-12-2022</span></span>
+
+    <span id=''><p><img src="/assets/images/book_6.png" alt="Обложка книги"></p>
+<h2 id="о-чем-книга">О чем книга?</h2>
+<p>Весьма старая и, по мнению некоторых &ldquo;классическая&rdquo; книга о программной инженерии. Искушенный читатель, уже знакомый с книгами о &ldquo;мета разработке&rdquo; (говоря точнее, об организации процесса разработки), едва ли сможет найти для себя в книге что-то новое. Во многом это связано с тем, что подавляющее большинство современных авторов, затрагивающих темы организации разработки и проектирования систем, развивают идеи Ф.Брукса и честно на него ссылаются.</p>
+<p>С другой стороны читателя может оттолкнуть безнадежное моральное устаревание книги и от этого не спасают даже добавленные в более поздних изданиях книги главы. В чем это выражается? Автор большую часть книги приводит примеры из истории разработки OS360, не обходит стороной проблемы распределения времени использования мейнфреймов, важность наличия телефонной связи у менеджеров и на полном серьезе обсуждает методологию waterfall.</p>
+<p>Однако, вопреки всему вышеперечисленному, в книги можно отметить для себя некоторые моменты или задуматься над некоторыми мыслями автора.</p>
+<h2 id="что-нашел-полезным-для-себя">Что нашел полезным для себя?</h2>
+<ul>
+<li>Прогнозы времени, необходимого на завершение задачи,часто исходят из неверных суждений о структуре рабочего времени.</li>
+<li>Вероятнее всего, первую версию системы прийдется выкинуть. (Подобная мысль была у Ханта и Томаса в &ldquo;программист прагматик&rdquo;, они продвигали идею прототипирования системы);</li>
+<li>Ф.Брукс продвигает идею нисходящего проектирования, а также идею о том, что для разработки полезнее всегда иметь работающую версию системы, пусть она даже и не будет делать какую-то полезную работу.</li>
+<li>Следует разделять данные о действиях и данными о состоянии дел и не вмешиваться в проблемы, которые могут решить ваши подчиненные.</li>
+<li>Для написания полезного текстового описания системы, модуля, чего угодно, Ф.Брукс предлагает следующий план:
+<ol>
+<li><em>Назначение</em>. Что является главной функцией?</li>
+<li><em>Среда</em>. Где это будет работать?</li>
+<li><em>Область определения и область значений</em>. Какие диапазоны допустимых значений входных и выходных данных?</li>
+<li><em>Функции</em>. Что может делать?</li>
+<li><em>Форматы</em> входных и выходных данных.</li>
+<li><em>Инструкция по работе</em>. Выглядит как-то рекурсивно :D</li>
+<li><em>Опции</em>. Какой выбор предоставляется пользователю в отношении функций?</li>
+<li><em>Время работы</em>. Сколько времени занимает решение той или иной задачи при той или иной конфигурации.</li>
+</ol>
+</li>
+<li>Ф. Брукс активно продвигает идею генерирования документации из кода.</li>
+<li>&ldquo;Вместо объяснения людям, что ООП является видом проектирования, и вооружения их принципами проектирования, их учили, что ООП &ndash; это использования определенного инструмента.&quot;(С) Д. Парнас.</li>
+<li>Важно определить по меньшей мере предположительные признаки группы пользователей системы.</li>
+<li>Программисты эффективнее всего работают, будучи ограждены от внутренностей чужих моделей.</li>
+</ul>
+<h2 id="кому-подойдет">Кому подойдет?</h2>
+<ul>
+<li>Тем, кто хочет взглянуть на первоисточник идей, изложенных в книгах об организации разработки.</li>
+</ul>
+<h2 id="кому-не-подойдет">Кому не подойдет?</h2>
+<ul>
+<li>Тем, кто еще не читал других книг об организации процесса разработки;</li>
+<li>Вероятнее всего будет бесполезно тем, кто уже читал &ldquo;Чистую архитектуру&rdquo;, &ldquo;Программист прагматик&rdquo; и другие подобные книги.</li>
+</ul>
+<h2 id="оглавление">Оглавление</h2>
+<ul>
+<li>ГЛАВА 1. СМОЛЯНАЯ ЯМА</li>
+<li>ГЛАВА 2. ЭТОТ МИФИЧЕСКИЙ «ЧЕЛОВЕКО-МЕСЯЦ»</li>
+<li>ГЛАВА 3. ОПЕРАЦИОННАЯ БРИГАДА</li>
+<li>ГЛАВА 4. АРИСТОКРАТИЯ, ДЕМОКРАТИЯ И СИСТЕМНОЕ ПРОЕКТИРОВАНИЕ</li>
+<li>ГЛАВА 5. ЭФФЕКТ ВТОРОЙ СИСТЕМЫ</li>
+<li>ГЛАВА 6. ДОНЕСТИ СЛОВО</li>
+<li>ГЛАВА 7. ПОЧЕМУ НЕ УДАЛОСЬ ПОСТРОИТЬ ВАВИЛОНСКУЮ БАШНЮ?</li>
+<li>ГЛАВА 8. ОБЪЯВЛЯЯ УДАР</li>
+<li>ГЛАВА 9. ДВА В ОДНОМ</li>
+<li>ГЛАВА 10. ДОКУМЕНТАРНАЯ ГИПОТЕЗА</li>
+<li>ГЛАВА 11. ПЛАНИРУЙТЕ НА ВЫБРОС</li>
+<li>ГЛАВА 12. ОСТРЫЙ ИНСТРУМЕНТ</li>
+<li>ГЛАВА 13. ЦЕЛОЕ И ЧАСТИ</li>
+<li>ГЛАВА 14. НАЗРЕВАНИЕ КАТАСТРОФЫ</li>
+<li>ГЛАВА 15. ОБРАТНАЯ СТОРОНА</li>
+<li>ГЛАВА 16. СЕРЕБРЯНОЙ ПУЛИ НЕТ — СУЩНОСТЬ И АКЦИДЕНЦИЯ В ПРОГРАММНОЙ ИНЖЕНЕРИИ</li>
+<li>ГЛАВА 17. НОВЫЙ ВЫСТРЕЛ «СЕРЕБРЯНОЙ ПУЛИ НЕТ»</li>
+<li>ГЛАВА 18. ЗАЯВЛЕНИЯ «МИФИЧЕСКОГО ЧЕЛОВЕКО-МЕСЯЦА»: ПРАВДА ИЛИ ЛОЖЬ?</li>
+<li>ГЛАВА 19. «МИФИЧЕСКИЙ ЧЕЛОВЕКО-МЕСЯЦ» ДВАДЦАТЬ ЛЕТ СПУСТЯ</li>
+</ul>
+</span>
+
+
+
+    </div>
+    <style>
+    h1 {
+         
+        color: #23E298;
+        line-height: 6vmin;
+        font-size: 6vmin;
+    }
+
+
+    #block {
+        max-height: 350px;
+        max-width: 1000px;
+    }
+
+    ul ::marker {
+
+        content: "\1F480";
+
+    }
+
+    a,
+    strong,
+    ::marker,
+    #date {
+        color: #D08010;
+
+    }
+
+    table,
+    td {
+        border-collapse: collapse;
+        border: 2px solid #D08010;
+        max-width: 100%;
+    }
+
+    td {
+        padding: 25px;
+    }
+
+    li a {
+        font-family: -apple-system, BlinkMacSystemFont, Arial, sans-serif;
+        font-size: 1em;
+        line-height: 1.56;
+    }
+
+    li {
+        padding-left: 2%;
+
+
+    }
+
+    a {
+        text-decoration: none;
+        font-size: 1em;
+    }
+
+    img {
+        max-width: 100%;
+        max-height: 80vh;
+    }
+
+    .navFull {
+        background-color: #353535;
+        line-height: 150%;
+        font-family: "Courier New";
+         
+        display: inline;
+        position: fixed;
+        bottom: 0px;
+        left: 0px;
+        display: flex;
+        flex-direction: row;
+        justify-content: space-around;
+        width: 100%;
+        align-items: baseline;
+        padding-top: 5px;
+        padding: 10px;
+        padding-bottom: 0px;
+    }
+
+     
+    .navCredits {
+        float: right;
+        padding-right: 18px;
+        padding-bottom: 10px;
+         
+    }
+
+    #navigationBlock {}
+
+    #content::after {
+        content: "\a\a";
+        white-space: pre;
+    }
+
+    
+    #content {
+        font-size: 2.0vmax;
+        line-height: 1.56;
+        overflow-wrap: break-word;
+        font-family: -apple-system, BlinkMacSystemFont, Arial, sans-serif;
+        color: #BBBBBB;
+    }
+    @media only screen and (min-width : 1400px) {
+        #content {
+            font-size: 2.0vmin;
+        }
+
+    }
+    li p {
+        padding-left: 5%;
+    }
+
+    #coffee {
+        background-color: #D08010;
+        color: #fff;
+        display: block;
+        padding: 10px;
+        border-width: 2px;
+        border-radius: 10px;
+    }
+
+    @media only screen and (max-width:500px) {
+        #content {
+            padding-left: 2%;
+        }
+
+        body {
+            font-size: 1.2em;
+        }
+
+        .navFull {
+            line-height: 100%;
+        }
+    }
+</style>
+
+    
+    <span class="navFull">
+        
+    
+    
+
+    
+        
+
+<div id="navigationBlock">
+    <a href="/">Home</a>
+    <span>&#8192;|&#8192;</span>
+    <a href="./..">/books_reviews/</a>
+</div>
+
+    
+
+        
+        <div class="navCredits">
+            <a id="coffee" href="https://www.tinkoff.ru/cf/qTUdfLwVFO">Купить автору кофе</a>
+        </div>
+</span>
+
+
+    
+
+    
+
+</body>
+
+</html>
