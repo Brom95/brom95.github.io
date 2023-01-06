@@ -1,0 +1,812 @@
+<!DOCTYPE html>
+<html lang="ru-ru"><head>
+    <title>Обзор книги &#34;Как пасти котов. Наставление для программистов, руководящих другими программистами&#34; Д. Рейнвотер</title>
+    <link rel="icon"  type="image/x-icon" href="https://it-irokez.ru/favicon.ico">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <meta name="description" content="Обзор на книгу, рассказывающую о том, как стать тимлидом и не облажаться (или облажаться)." />
+    <meta property="og:type" content="article" />
+    <meta property="og:title" content="Обзор книги &#34;Как пасти котов. Наставление для программистов, руководящих другими программистами&#34; Д. Рейнвотер" />
+    <meta property="og:image" content="https://it-irokez.ru/assets/images/logo.jpg" />
+    <meta property="og:url" content="https://it-irokez.ru/books_reviews/how-to-herd-cats/" />
+    <meta property="og:description" content="Обзор на книгу, рассказывающую о том, как стать тимлидом и не облажаться (или облажаться)." />
+    <style>
+@import "https://fonts.googleapis.com/css2?family=Inconsolata&display=swap";:root{--cursor-visibility:hidden}html,body{width:100%;height:100%;overflow:auto;font-family:inconsolata,monospace;font-size:4vmin;line-height:4.1vmin;font-weight:400}body{margin:0;display:flex;flex-direction:row;justify-content:center;align-items:center}#content{min-width:82vmin;min-height:82vmin}::-webkit-scrollbar{width:10px}::-webkit-scrollbar-track{border-radius:10px;box-shadow:inset 0 0 1px white}::-webkit-scrollbar-thumb{border-radius:10px;box-shadow:0 0 0 1px white}.cursor,#activity-title:after,#activity-content:after,#cd:after,#whoami:after,#cat:after,#tree:after{visibility:var(--cursor-visibility);content:"|";overflow:hidden;color:#fff;animation:blink 500ms linear infinite alternate}@keyframes blink{0%{opacity:0}100%{opacity:1}}@media only screen and (min-width:768px){body{font-size:2.5vmin;line-height:2.6vmin}#content{min-width:60vmin}}:root{--cursor-visibility:hidden}body{align-items:unset;overflow-y:scroll}#content{max-width:80vmin}pre{overflow-x:scroll;white-space:pre}@keyframes blink{0%{opacity:0}100%{opacity:1}}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+        
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+
+
+body{background:#1b1d1e}body #terminal{color:#BBBBBB}body #user{color:#23E298}body #dir{color:#D08010}body .Typewriter__cursor{color:#BBBBBB}a{color:#BBBBBB}
+
+        
+
+        
+        
+</style>
+
+
+
+    <meta name="yandex-verification" content="355904de153d5134" />
+    
+    
+    <script>window.yaContextCb = window.yaContextCb || []</script>
+    <script src="https://yandex.ru/ads/system/context.js" async></script>
+
+    <script type="text/javascript">
+            (function (m, e, t, r, i, k, a) {
+                m[i] = m[i] || function () { (m[i].a = m[i].a || []).push(arguments) };
+                m[i].l = 1 * new Date();
+                for (var j = 0; j < document.scripts.length; j++) { if (document.scripts[j].src === r) { return; } }
+                k = e.createElement(t), a = e.getElementsByTagName(t)[0], k.async = 1, k.src = r, a.parentNode.insertBefore(k, a)
+            })
+            (window, document, "script", "https://mc.yandex.ru/metrika/tag.js", "ym");
+
+        ym(90533415, "init", {
+            clickmap: true,
+            trackLinks: true,
+            accurateTrackBounce: true
+        });
+    </script>
+    <noscript>
+        <div><img src="https://mc.yandex.ru/watch/90533415" style="position:absolute; left:-9999px;" alt="" /></div>
+    </noscript>
+    
+
+
+</head><body><div id="content">
+<div id="block">
+
+<div id="yandex_rtb_R-A-1957258-2"></div>
+<script>window.yaContextCb.push(()=>{
+  Ya.Context.AdvManager.render({
+    renderTo: 'yandex_rtb_R-A-1957258-2',
+    blockId: 'R-A-1957258-2'
+  })
+})</script>
+</div>
+<meta property="og:title" content="Обзор книги &#34;Как пасти котов. Наставление для программистов, руководящих другими программистами&#34; Д. Рейнвотер"/>
+
+
+    
+    
+    
+
+
+
+    
+
+
+    <span id='terminal'><h1 id='title'>Обзор книги "Как пасти котов. Наставление для программистов, руководящих другими программистами" Д. Рейнвотер</h1><span id='date'>Опубликовано: 06-01-2023</span></span>
+
+    <span id=''><p><img src="/assets/images/book7.jpg" alt="Обложка книги"></p>
+<h2 id="о-чем-книга">О чем книга?</h2>
+<p>Книга рассказывает о том, как вчерашнему разработчику, внезапно обнаружившему себя тимлидом в дне сегодняшнем, найти себя, найти общий язык с командой и своим начальством. Авторский стиль в большей степени напоминает разговор с опытным тимлидом в баре за чашечкой местного напитка, чем нравоучения о том, что хорошо, что плохо, а что уже завтра даст вам огромный профит и вообще поступать следует только так. Рейнвотер приводит в большом количестве примеры из жизни не забывая приправить их шуткой (не всегда удачной, но и книга не о стендап мастерстве). Большое внимание уделяется ментальному состоянию новоиспеченного тимлида, регулярно напоминают ему о том, что круг его обязанностей изменился и результативность его работы заключается не только в написанном им коде, но и в коде, написанном его командой.</p>
+<h2 id="что-нашел-полезным-для-себя">Что нашел полезным для себя?</h2>
+<p>Приведу ряд цитат, которые нашел любопытными:</p>
+<ul>
+<li>&ldquo;Хочу специально сообщить приверженцам технологии: бизнесмены — тоже умные люди. Под бизнесменами я подразумеваю тех, кто многие годы участвует в строительстве крупных корпораций и правительственных органов. Должен признать, что мне далеко не сразу удалось научиться уважать навыки, необходимые для ведения бизнеса. Я был интеллектуальным снобом, считавшим, что если кто то не понимает всех деталей технологии, то он по определению не может принадлежать к когорте ярчайших и лучших. Это было проявлением слабости. Вы можете многому научиться у руководителей в различных областях, не только связанных с технологией. Расширьте ваши интеллектуальные поиски, включив в них области деятельности, в большей степени связанные с применением не технологии.&quot;(С)</li>
+<li>Список вопросов к самому себе, который позволит оценить себя и наметить пути развития:
+<ol>
+<li>Подвергаю ли я качество своего управления ежедневной оценке?</li>
+<li>Действительно ли я с каждым днем руковожу все лучше или я постоянно откладываю совершенствование стиля и сути моего управления на потом?</li>
+<li>Нравится ли мне то, что я делаю?</li>
+<li>Теряю ли я попусту время при выполнении своих служебных обязанностей?</li>
+<li>Оцениваю ли я свою производительность тем, сколько сделали мои подчинен ные под моим руководством, или у меня есть ощущение, что сам я не сделал ничего?</li>
+<li>Как мои слабости дали себя знать сегодня (по отношению ко мне самому или другим)?</li>
+<li>Чему я научился сегодня, чтобы оставаться в курсе, чтобы быть осведомленным, чтобы углубить и расширить свои знания?</li>
+</ol>
+</li>
+<li>&ldquo;По большей части, разрастание рамок проекта происходит по причине недоработок специалистов, отвечающих за планирование&rdquo; (С)</li>
+<li>&ldquo;Степень эффективности и успеха ретроспективных совещаний обусловливается безопасностью сотрудников. Под безопасностью я имею в виду защищенность сотрудников от критики в рамках их группы. Лишь при таком условии они смогут обсуждать собственные результаты и даже признаваться в том, что поставленных целей можно было достичь по другому, более оптимальными способами — иначе говоря, учиться анализировать выполненные проекты. Без опасность необходимо культивировать и поддерживать. Несмотря на то, что, по большому счету, безопасность выражает ответственность всех участников ретроспективного совещания, его руководитель призван создавать условия для безопасности, следить за ее поддержанием и контролировать это ощущение. Чтобы сотрудник чувствовал себя в безопасности, он должен быть уверен, что за проявленную честность он не получит по ушам (например, не нарвется на отрицательную оценку во время следующего критического обзора). В ходе ретроспективного совещания не обойтись без постоянного и должным образом поощряемого взаимодоверия&rdquo; (С)</li>
+<li>&ldquo;Комментарии должны разъяснять, почему код написан именно так и никак иначе, и как этого удалось достичь — причем основной упор следует делать на раскрытии вопроса «почему?». О том как разработчик достиг поставленной задачи, свидетельствует сам код; в то же время комментарии помогают проследить ход мыслей разработчика во время разработки модуля.&rdquo; (С)</li>
+<li>&ldquo;Во всем, что вы делаете, необходимо соблюдать пять основных принципов лидерства.
+<ul>
+<li><strong>Понимание</strong>. Определитесь с тем, куда вы идете.</li>
+<li><strong>Передача знаний</strong>. Делитесь своими знаниями — так, чтобы подчиненные все поняли.</li>
+<li><strong>Делегирование</strong>. Общие задачи нужно решать общими усилиями.</li>
+<li><strong>Проверка</strong>. Проверяйте свои действия и то, что делают ваши подчиненные в контексте достижения поставленных целей.</li>
+<li><strong>Участие</strong>. Погружайтесь в работу с головой — будьте примером для остальных. Не забывайте о надстройке. Свое развитие основные принципы лидерства получают в следующих областях деятельности.</li>
+<li><strong>Наставничество</strong>. Учите окружающих учить.</li>
+<li><strong>Вознаграждение</strong>. Награждая сотрудников за выдающиеся результаты, вы сможете создать ситуацию, в которой одни успехи естественным образом выливаются в другие.</li>
+<li><strong>Исправление</strong>. Помогая сотрудникам учиться на собственных ошибках, повышайте их квалификацию.</li>
+<li><strong>Предвидение</strong>. Предугадывайте проблемы, пока они не ударили по вашей команде, — это станет хорошим стимулом для окружающих.</li>
+<li><strong>Адаптация</strong>. Совершенствуйтесь, извлекая уроки из собственных ошибок.&quot;(С)</li>
+</ul>
+</li>
+</ul>
+<h2 id="кому-подойдет">Кому подойдет?</h2>
+<ul>
+<li>Новоиспеченным тимлидам;</li>
+<li>Людям, нацеленным на вертикальный рост;</li>
+<li>Тем, кто в том или ином виде взаимодействует с командой разработки.</li>
+</ul>
+<h2 id="кому-не-подойдет">Кому не подойдет?</h2>
+<ul>
+<li>Одиноким волкам, которые работают сами по себе;</li>
+<li>Специалистам, которые решили сконцентрироваться на горизонтальном росте.</li>
+</ul>
+<h2 id="оглавление">Оглавление</h2>
+<ul>
+<li>Как привыкнуть к роли руководителя.</li>
+<li>Как руководить собой.</li>
+<li>Как вести стаю за собой.</li>
+<li>Как организовать успех.</li>
+<li>Как вести совещания.</li>
+<li>Философия и методы технического лидера.</li>
+<li>Закат лидера.</li>
+<li>Восход лидера.</li>
+<li>Как ужиться с начальством.</li>
+<li>Слова без песни.</li>
+</ul>
+</span>
+
+
+
+    </div>
+    <style>
+    h1 {
+         
+        color: #23E298;
+        line-height: 6vmin;
+        font-size: 6vmin;
+    }
+
+
+    #block {
+        max-height: 350px;
+        max-width: 1000px;
+    }
+
+    ul ::marker {
+
+        content: "\1F480";
+
+    }
+
+    a,
+    strong,
+    ::marker,
+    #date {
+        color: #D08010;
+
+    }
+
+    table,
+    td {
+        border-collapse: collapse;
+        border: 2px solid #D08010;
+        max-width: 100%;
+    }
+
+    td {
+        padding: 25px;
+    }
+
+    li a {
+        font-family: -apple-system, BlinkMacSystemFont, Arial, sans-serif;
+        font-size: 1em;
+        line-height: 1.56;
+    }
+
+    li {
+        padding-left: 2%;
+
+
+    }
+
+    a {
+        text-decoration: none;
+        font-size: 1em;
+    }
+
+    img {
+        max-width: 100%;
+        max-height: 80vh;
+    }
+
+    .navFull {
+        background-color: #353535;
+        line-height: 150%;
+        font-family: "Courier New";
+         
+        display: inline;
+        position: fixed;
+        bottom: 0px;
+        left: 0px;
+        display: flex;
+        flex-direction: row;
+        justify-content: space-around;
+        width: 100%;
+        align-items: baseline;
+        padding-top: 5px;
+        padding: 10px;
+        padding-bottom: 0px;
+    }
+
+     
+    .navCredits {
+        float: right;
+        padding-right: 18px;
+        padding-bottom: 10px;
+         
+    }
+
+    #navigationBlock {}
+
+    #content::after {
+        content: "\a\a";
+        white-space: pre;
+    }
+
+    
+    #content {
+        font-size: 2.0vmax;
+        line-height: 1.56;
+        overflow-wrap: break-word;
+        font-family: -apple-system, BlinkMacSystemFont, Arial, sans-serif;
+        color: #BBBBBB;
+    }
+    @media only screen and (min-width : 1400px) {
+        #content {
+            font-size: 2.0vmin;
+        }
+
+    }
+    li p {
+        padding-left: 5%;
+    }
+
+    #coffee {
+        background-color: #D08010;
+        color: #fff;
+        display: block;
+        padding: 10px;
+        border-width: 2px;
+        border-radius: 10px;
+    }
+
+    @media only screen and (max-width:500px) {
+        #content {
+            padding-left: 2%;
+        }
+
+        body {
+            font-size: 1.2em;
+        }
+
+        .navFull {
+            line-height: 100%;
+        }
+    }
+</style>
+
+    
+    <span class="navFull">
+        
+    
+    
+
+    
+        
+
+<div id="navigationBlock">
+    <a href="/">Home</a>
+    <span>&#8192;|&#8192;</span>
+    <a href="./..">/books_reviews/</a>
+</div>
+
+    
+
+        
+        <div class="navCredits">
+            <a id="coffee" href="https://www.tinkoff.ru/cf/qTUdfLwVFO">Купить автору кофе</a>
+        </div>
+</span>
+
+
+    
+
+    
+
+</body>
+
+</html>
