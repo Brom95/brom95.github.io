@@ -262,7 +262,27 @@
     
 
     
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
         
+    
+
+    
+
+    
+
     
 
     
@@ -612,14 +632,14 @@ body{background:#1b1d1e}body #terminal{color:#BBBBBB}body #user{color:#23E298}bo
 <h2 id="weak-secret">Weak secret</h2>
 <p>По одному только названию становится понятно, в чем в этот раз будет проблема. Но давайте не будем сильно забегать вперед и для начала поговорим о том, что за “HS256” использовался для подписи сообщения в предыдущем примере. HS256 – это HMAC with SHA-256. Что это значит для нас, простых смертных людей, не обремененных знаниями криптографической магии? Интернет говорит, что HMAC (Hash-based Message Authentication Code) – это код аутентификации сообщения на основе хэширования. Данный вид аутентификации подразумевает наличие у клиента и сервера некоего секретного ключа, который известен только им двоим. Отлично, опытный проникновенец внутри вас наверняка прочитал эту фразу как “это что-то симметричное и его можно сбрутить”. Теперь мы морально готовы приступать к заданию с root-me.</p>
 <p>Поехали. Точка входа в задание одаривает нас JSON-ом следующего содержания:</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-json" data-lang="json">{     
-    <span style="color:#f92672">&#34;message&#34;</span>: <span style="color:#e6db74">&#34;Let&#39;s play a small game, I bet you cannot access to my super secret admin section. Make a GET request to /token and use the token you&#39;ll get to try to access /admin with a POST request.&#34;</span>
-}
-</code></pre></div><p>Я, конечно, не уверен, но, кажется, нам необходимо сделать GET-запрос на /token. Оттуда на нас нисходит новый JSON:</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-json" data-lang="json">{
-    <span style="color:#f92672">&#34;Here is your token&#34;</span>: <span style="color:#e6db74">&#34;eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJyb2xlIjoiZ3Vlc3QifQ.4kBPNf7Y6BrtP-Y3A-vQXPY9jAh_d0E6L4IUjL65CvmEjgdTZyr2ag-TM-glH6EYKGgO3dBYbhblaPQsbeClcw&#34;</span>
-}
-</code></pre></div><p><img src="/assets/images/gri_7.png" alt=""></p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-json" data-lang="json"><span style="display:flex;"><span>{     
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">&#34;message&#34;</span>: <span style="color:#e6db74">&#34;Let&#39;s play a small game, I bet you cannot access to my super secret admin section. Make a GET request to /token and use the token you&#39;ll get to try to access /admin with a POST request.&#34;</span>
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><p>Я, конечно, не уверен, но, кажется, нам необходимо сделать GET-запрос на /token. Оттуда на нас нисходит новый JSON:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-json" data-lang="json"><span style="display:flex;"><span>{
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">&#34;Here is your token&#34;</span>: <span style="color:#e6db74">&#34;eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJyb2xlIjoiZ3Vlc3QifQ.4kBPNf7Y6BrtP-Y3A-vQXPY9jAh_d0E6L4IUjL65CvmEjgdTZyr2ag-TM-glH6EYKGgO3dBYbhblaPQsbeClcw&#34;</span>
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><p><img src="/assets/images/gri_7.png" alt=""></p>
 <p>Поле role, вероятнее всего, придется сменить с guest на admin, но сразу возникает вопрос валидности подписи. Если же в этом задании вы решите попробовать поменять алгоритм подписи на различные вариации None, то это не сработает. Название челленджа как бы намекает…</p>
 <p>Намекает на то, что можно воспользоваться утилитой типа <a href="https://github.com/Sjord/jwtcrack">jwtcrack</a>  или <a href="https://github.com/magnumripper/JohnTheRipper">John the Ripper</a>  (я так и не понял, как заставить его работать с jwt), которые позволят узнать секрет методом словарного перебора и переподписать себе токен.</p>
 <p>Запускаем jwtcrack:</p>
@@ -653,8 +673,8 @@ body{background:#1b1d1e}body #terminal{color:#BBBBBB}body #user{color:#23E298}bo
 <p>Перегоним наш ключ, полученный ранее, в последовательность HEX-ов:</p>
 <p><code>2d2d2d2d2d424547494e205055424c4943204b45592d2d2d2d2d0a4d494942496a414e42676b71686b6947397730424151454641414f43415138414d49494243674b43415145417576773168347477504a6e5a42772b54327743440a59624832556b4d427852672f686b534d6c365a77693259566d37397771723372506433676a7430695a576432724e42337175644b5749536d42516132517152480a74503666546a6569354d413471734c53586c32724765576a47767471704851446d63583447417841454b7947306e6632445065324170454330323152472f564f0a64595343414149702b536d6443746d35504966314153694f4141585537644c37324959736f63534d6759705249634a755a5341435571314a367775553958796c0a7042314e7657774644334659437a72655435416b5469636276676546316b39792f4f4b5431667632626e5347706a354b4d45462f51575552377877337262516b0a796e6365436a714645744c78584873584a506d5536676a4132494377547131475671435a447a6a6a665162426f4b7a6d59534f774c7a4f6e364a6237454f50670a58514944415141420a2d2d2d2d2d454e44205055424c4943204b45592d2d2d2d2d0a</code></p>
 <p>А теперь самостоятельно, как взрослые мальчики, подпишем себе токен:</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">echo -n <span style="color:#e6db74">&#34;eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1c2VybmFtZSI6ImFkbWluIn0&#34;</span> | openssl dgst -sha256 -mac HMAC -macopt hexkey: 2d2d2d2d2d424547494e205055424c4943204b45592d2d2d2d2d0a4d494942496a414e42676b71686b6947397730424151454641414f43415138414d49494243674b43415145417576773168347477504a6e5a42772b54327743440a59624832556b4d427852672f686b534d6c365a77693259566d37397771723372506433676a7430695a576432724e42337175644b5749536d42516132517152480a74503666546a6569354d413471734c53586c32724765576a47767471704851446d63583447417841454b7947306e6632445065324170454330323152472f564f0a64595343414149702b536d6443746d35504966314153694f4141585537644c37324959736f63534d6759705249634a755a5341435571314a367775553958796c0a7042314e7657774644334659437a72655435416b5469636276676546316b39792f4f4b5431667632626e5347706a354b4d45462f51575552377877337262516b0a796e6365436a714645744c78584873584a506d5536676a4132494377547131475671435a447a6a6a665162426f4b7a6d59534f774c7a4f6e364a6237454f50670a58514944415141420a2d2d2d2d2d454e44205055424c4943204b45592d2d2d2d2d0a
-</code></pre></div><p>Наша подпись:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>echo -n <span style="color:#e6db74">&#34;eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1c2VybmFtZSI6ImFkbWluIn0&#34;</span> | openssl dgst -sha256 -mac HMAC -macopt hexkey: 2d2d2d2d2d424547494e205055424c4943204b45592d2d2d2d2d0a4d494942496a414e42676b71686b6947397730424151454641414f43415138414d49494243674b43415145417576773168347477504a6e5a42772b54327743440a59624832556b4d427852672f686b534d6c365a77693259566d37397771723372506433676a7430695a576432724e42337175644b5749536d42516132517152480a74503666546a6569354d413471734c53586c32724765576a47767471704851446d63583447417841454b7947306e6632445065324170454330323152472f564f0a64595343414149702b536d6443746d35504966314153694f4141585537644c37324959736f63534d6759705249634a755a5341435571314a367775553958796c0a7042314e7657774644334659437a72655435416b5469636276676546316b39792f4f4b5431667632626e5347706a354b4d45462f51575552377877337262516b0a796e6365436a714645744c78584873584a506d5536676a4132494377547131475671435a447a6a6a665162426f4b7a6d59534f774c7a4f6e364a6237454f50670a58514944415141420a2d2d2d2d2d454e44205055424c4943204b45592d2d2d2d2d0a
+</span></span></code></pre></div><p>Наша подпись:</p>
 <p><code>f4a3602e56b0b5d07229d66130ef0aedd1d338cbdc543641d0bb8bedaf8f65ba</code></p>
 <p>Но не спешите подставлять ее в наш токен. Вы ведь помните, что подпись должна быть base64url? Кодируем:</p>
 <p>Но не спешите подставлять ее в наш токен. Вы ведь помните, что подпись должна быть base64url? Кодируем:</p>

@@ -14,22 +14,22 @@
       
       <guid>https://it-irokez.ru/articles/comparer/</guid>
       <description>Предисловие Автор знает, как работает сравнение в C#, достаточно четко представляет разницу между семантикой значимого и ссылочного типов, однако все еще находит эту статью хорошей и позволяющей чуть глубже заглянуть под капот.
- Думаю, что каждый программист рано или поздно сталкивается с кодом, который работает «не так, как ты от него ожидаешь». Именно это и подтолкнуло меня к написанию следующей статьи, в которой я пытаюсь понять, почему Except в Linq работает так, как написан, а не так, как я хочу.</description>
+Думаю, что каждый программист рано или поздно сталкивается с кодом, который работает «не так, как ты от него ожидаешь». Именно это и подтолкнуло меня к написанию следующей статьи, в которой я пытаюсь понять, почему Except в Linq работает так, как написан, а не так, как я хочу.</description>
       <turbo:content>&lt;h2 id=&#34;предисловие&#34;&gt;Предисловие&lt;/h2&gt;
 &lt;p&gt;Автор знает, как работает сравнение в C#, достаточно четко представляет разницу между семантикой значимого и ссылочного типов, однако все еще находит эту статью хорошей и позволяющей чуть глубже заглянуть под капот.&lt;/p&gt;
 &lt;hr&gt;
 &lt;p&gt;Думаю, что каждый программист рано или поздно сталкивается с кодом, который работает «не так, как ты от него ожидаешь». Именно это и подтолкнуло меня к написанию следующей статьи, в которой я пытаюсь понять, почему Except в Linq работает так, как написан, а не так, как я хочу.&lt;/p&gt;
 &lt;hr&gt;
 &lt;p&gt;Что, по вашему мнению, должен вывести следующий код:&lt;/p&gt;
-&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-csharp&#34; data-lang=&#34;csharp&#34;&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;var&lt;/span&gt; documentsDir = &lt;span style=&#34;color:#66d9ef&#34;&gt;new&lt;/span&gt; DirectoryInfo(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments));
-
-FileInfo[] FirstDirrectoryFiles = documentsDir.GetFiles();
-FileInfo[] SecondDirrectoryFiles = documentsDir.GetFiles();
-&lt;span style=&#34;color:#66d9ef&#34;&gt;foreach&lt;/span&gt; (FileInfo item &lt;span style=&#34;color:#66d9ef&#34;&gt;in&lt;/span&gt; FirstDirrectoryFiles.Except(SecondDirrectoryFiles))
-{
-    Console.WriteLine(item.Name);
-}
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Я вот предположил, что ничего, потому что Except должен вычитать множество (IEnumerable) правого аргумента из множества (IEnumerable) левого аргумента. Однако, вопреки моим ожиданиям я получил:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-csharp&#34; data-lang=&#34;csharp&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;var&lt;/span&gt; documentsDir = &lt;span style=&#34;color:#66d9ef&#34;&gt;new&lt;/span&gt; DirectoryInfo(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments));
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;FileInfo[] FirstDirrectoryFiles = documentsDir.GetFiles();
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;FileInfo[] SecondDirrectoryFiles = documentsDir.GetFiles();
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;foreach&lt;/span&gt; (FileInfo item &lt;span style=&#34;color:#66d9ef&#34;&gt;in&lt;/span&gt; FirstDirrectoryFiles.Except(SecondDirrectoryFiles))
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;{
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    Console.WriteLine(item.Name);
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;}
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Я вот предположил, что ничего, потому что Except должен вычитать множество (IEnumerable) правого аргумента из множества (IEnumerable) левого аргумента. Однако, вопреки моим ожиданиям я получил:&lt;/p&gt;
 &lt;p&gt;&lt;img src=&#34;https://it-irokez.ru/assets/images/comparer_1.png&#34; alt=&#34;&#34;&gt;&lt;/p&gt;
 &lt;p&gt;Вне всякого сомнения — это не похоже на пустое множество. Давайте попробуем разобраться в том, почему так получается (результат в .NET 5 и в .NET 6 — эквивалентен). Чтобы понять, почему так происходит, и что можно с этим сделать обратимся к документации метода &lt;a href=&#34;https://docs.microsoft.com/ru-ru/dotnet/api/system.linq.enumerable.except?view=net-6.0&#34;&gt;Except&lt;/a&gt;. Там действительно написано, что этот метод «Находит разность множеств, представленных двумя последовательностями» и имеет две перегрузки:&lt;/p&gt;
 &lt;ul&gt;
@@ -38,125 +38,123 @@ FileInfo[] SecondDirrectoryFiles = documentsDir.GetFiles();
 &lt;/ul&gt;
 &lt;p&gt;Обратите внимание на заявление о том, что для сравнения используется компаратор по умолчанию. Чтобы понять, почему наш код сработал именно так, как сработал, нам предстоит разобраться с поведением компаратора по умолчанию. Для этого я предлагаю проследовать на &lt;a href=&#34;https://github.com/dotnet/runtime/&#34;&gt;https://github.com/dotnet/runtime/&lt;/a&gt; и проанализировать работу метода Except.&lt;/p&gt;
 &lt;p&gt;Наша &lt;a href=&#34;https://github.com/dotnet/runtime/blob/a7c69745a4e22757c69f65d2a750e2d6923e1186/src/libraries/System.Linq/src/System/Linq/Except.cs#L10&#34;&gt;точка входа&lt;/a&gt;:&lt;/p&gt;
-&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-csharp&#34; data-lang=&#34;csharp&#34;&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;public&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;static&lt;/span&gt; IEnumerable&amp;lt;TSource&amp;gt; Except&amp;lt;TSource&amp;gt;(&lt;span style=&#34;color:#66d9ef&#34;&gt;this&lt;/span&gt; IEnumerable&amp;lt;TSource&amp;gt; first, IEnumerable&amp;lt;TSource&amp;gt; second)
-{
-    &lt;span style=&#34;color:#66d9ef&#34;&gt;if&lt;/span&gt; (first == &lt;span style=&#34;color:#66d9ef&#34;&gt;null&lt;/span&gt;)
-    {
-        ThrowHelper.ThrowArgumentNullException(ExceptionArgument.first);
-    }
-
-    &lt;span style=&#34;color:#66d9ef&#34;&gt;if&lt;/span&gt; (second == &lt;span style=&#34;color:#66d9ef&#34;&gt;null&lt;/span&gt;)
-    {
-        ThrowHelper.ThrowArgumentNullException(ExceptionArgument.second);
-    }
-
-    &lt;span style=&#34;color:#66d9ef&#34;&gt;return&lt;/span&gt; ExceptIterator(first, second, &lt;span style=&#34;color:#66d9ef&#34;&gt;null&lt;/span&gt;);
-}
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Метод проверяет, что получил два объекта с ненулевым указателем и передает аргументы в &lt;a href=&#34;https://github.com/dotnet/runtime/blob/a7c69745a4e22757c69f65d2a750e2d6923e1186/src/libraries/System.Linq/src/System/Linq/Except.cs#L79&#34;&gt;ExceptIterator&lt;/a&gt;.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-csharp&#34; data-lang=&#34;csharp&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;public&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;static&lt;/span&gt; IEnumerable&amp;lt;TSource&amp;gt; Except&amp;lt;TSource&amp;gt;(&lt;span style=&#34;color:#66d9ef&#34;&gt;this&lt;/span&gt; IEnumerable&amp;lt;TSource&amp;gt; first, IEnumerable&amp;lt;TSource&amp;gt; second)
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;{
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    &lt;span style=&#34;color:#66d9ef&#34;&gt;if&lt;/span&gt; (first == &lt;span style=&#34;color:#66d9ef&#34;&gt;null&lt;/span&gt;)
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    {
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;        ThrowHelper.ThrowArgumentNullException(ExceptionArgument.first);
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    }
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    &lt;span style=&#34;color:#66d9ef&#34;&gt;if&lt;/span&gt; (second == &lt;span style=&#34;color:#66d9ef&#34;&gt;null&lt;/span&gt;)
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    {
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;        ThrowHelper.ThrowArgumentNullException(ExceptionArgument.second);
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    }
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    &lt;span style=&#34;color:#66d9ef&#34;&gt;return&lt;/span&gt; ExceptIterator(first, second, &lt;span style=&#34;color:#66d9ef&#34;&gt;null&lt;/span&gt;);
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;}
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Метод проверяет, что получил два объекта с ненулевым указателем и передает аргументы в &lt;a href=&#34;https://github.com/dotnet/runtime/blob/a7c69745a4e22757c69f65d2a750e2d6923e1186/src/libraries/System.Linq/src/System/Linq/Except.cs#L79&#34;&gt;ExceptIterator&lt;/a&gt;.&lt;/p&gt;
 &lt;p&gt;Строго говоря, можно было бы использовать и метод перегрузку, так как он работает буквально также:&lt;/p&gt;
-&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-csharp&#34; data-lang=&#34;csharp&#34;&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;public&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;static&lt;/span&gt; IEnumerable&amp;lt;TSource&amp;gt; Except&amp;lt;TSource&amp;gt;(&lt;span style=&#34;color:#66d9ef&#34;&gt;this&lt;/span&gt; IEnumerable&amp;lt;TSource&amp;gt; first, IEnumerable&amp;lt;TSource&amp;gt; second, IEqualityComparer&amp;lt;TSource&amp;gt;? comparer)
-{
-    &lt;span style=&#34;color:#66d9ef&#34;&gt;if&lt;/span&gt; (first == &lt;span style=&#34;color:#66d9ef&#34;&gt;null&lt;/span&gt;)
-    {
-        ThrowHelper.ThrowArgumentNullException(ExceptionArgument.first);
-    }
-
-    &lt;span style=&#34;color:#66d9ef&#34;&gt;if&lt;/span&gt; (second == &lt;span style=&#34;color:#66d9ef&#34;&gt;null&lt;/span&gt;)
-    {
-        ThrowHelper.ThrowArgumentNullException(ExceptionArgument.second);
-    }
-
-    &lt;span style=&#34;color:#66d9ef&#34;&gt;return&lt;/span&gt; ExceptIterator(first, second, comparer);
-}
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Почему перегрузка, а не параметр по умолчанию? Силами &lt;a href=&#34;https://t.me/dotnettalks&#34;&gt;сообщества&lt;/a&gt; было вынесено предположение, что дело в &lt;a href=&#34;https://coding.abel.nu/2014/07/adding-an-overload-is-a-breaking-change/&#34;&gt;этом&lt;/a&gt; и &lt;a href=&#34;https://rules.sonarsource.com/csharp/RSPEC-2360&#34;&gt;этом&lt;/a&gt;.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-csharp&#34; data-lang=&#34;csharp&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;public&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;static&lt;/span&gt; IEnumerable&amp;lt;TSource&amp;gt; Except&amp;lt;TSource&amp;gt;(&lt;span style=&#34;color:#66d9ef&#34;&gt;this&lt;/span&gt; IEnumerable&amp;lt;TSource&amp;gt; first, IEnumerable&amp;lt;TSource&amp;gt; second, IEqualityComparer&amp;lt;TSource&amp;gt;? comparer)
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;{
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    &lt;span style=&#34;color:#66d9ef&#34;&gt;if&lt;/span&gt; (first == &lt;span style=&#34;color:#66d9ef&#34;&gt;null&lt;/span&gt;)
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    {
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;        ThrowHelper.ThrowArgumentNullException(ExceptionArgument.first);
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    }
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    &lt;span style=&#34;color:#66d9ef&#34;&gt;if&lt;/span&gt; (second == &lt;span style=&#34;color:#66d9ef&#34;&gt;null&lt;/span&gt;)
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    {
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;        ThrowHelper.ThrowArgumentNullException(ExceptionArgument.second);
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    }
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    &lt;span style=&#34;color:#66d9ef&#34;&gt;return&lt;/span&gt; ExceptIterator(first, second, comparer);
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;}
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Почему перегрузка, а не параметр по умолчанию? Силами &lt;a href=&#34;https://t.me/dotnettalks&#34;&gt;сообщества&lt;/a&gt; было вынесено предположение, что дело в &lt;a href=&#34;https://coding.abel.nu/2014/07/adding-an-overload-is-a-breaking-change/&#34;&gt;этом&lt;/a&gt; и &lt;a href=&#34;https://rules.sonarsource.com/csharp/RSPEC-2360&#34;&gt;этом&lt;/a&gt;.&lt;/p&gt;
 &lt;p&gt;Собственно код &lt;a href=&#34;https://github.com/dotnet/runtime/blob/a7c69745a4e22757c69f65d2a750e2d6923e1186/src/libraries/System.Linq/src/System/Linq/Except.cs#L79&#34;&gt;ExceptIterator&lt;/a&gt;:&lt;/p&gt;
-&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-csharp&#34; data-lang=&#34;csharp&#34;&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;private&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;static&lt;/span&gt; IEnumerable&amp;lt;TSource&amp;gt; ExceptIterator&amp;lt;TSource&amp;gt;(IEnumerable&amp;lt;TSource&amp;gt; first, IEnumerable&amp;lt;TSource&amp;gt; second, IEqualityComparer&amp;lt;TSource&amp;gt;? comparer)
-{
-    &lt;span style=&#34;color:#66d9ef&#34;&gt;var&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;set&lt;/span&gt; = &lt;span style=&#34;color:#66d9ef&#34;&gt;new&lt;/span&gt; HashSet&amp;lt;TSource&amp;gt;(second, comparer);
-
-    &lt;span style=&#34;color:#66d9ef&#34;&gt;foreach&lt;/span&gt; (TSource element &lt;span style=&#34;color:#66d9ef&#34;&gt;in&lt;/span&gt; first)
-    {
-        &lt;span style=&#34;color:#66d9ef&#34;&gt;if&lt;/span&gt; (&lt;span style=&#34;color:#66d9ef&#34;&gt;set&lt;/span&gt;.Add(element))
-        {
-            &lt;span style=&#34;color:#66d9ef&#34;&gt;yield&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;return&lt;/span&gt; element;
-        }
-    }
-}
-
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Из элементов второго аргумента создается &lt;a href=&#34;https://github.com/dotnet/runtime/blob/57bfe474518ab5b7cfe6bf7424a79ce3af9d6657/src/libraries/System.Private.CoreLib/src/System/Collections/Generic/HashSet.cs#L55&#34;&gt;множество&lt;/a&gt;. Элементы первого аргумента, которые удалось добавить в множество, возвращаются в качестве итератора.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-csharp&#34; data-lang=&#34;csharp&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;private&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;static&lt;/span&gt; IEnumerable&amp;lt;TSource&amp;gt; ExceptIterator&amp;lt;TSource&amp;gt;(IEnumerable&amp;lt;TSource&amp;gt; first, IEnumerable&amp;lt;TSource&amp;gt; second, IEqualityComparer&amp;lt;TSource&amp;gt;? comparer)
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;{
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    &lt;span style=&#34;color:#66d9ef&#34;&gt;var&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;set&lt;/span&gt; = &lt;span style=&#34;color:#66d9ef&#34;&gt;new&lt;/span&gt; HashSet&amp;lt;TSource&amp;gt;(second, comparer);
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    &lt;span style=&#34;color:#66d9ef&#34;&gt;foreach&lt;/span&gt; (TSource element &lt;span style=&#34;color:#66d9ef&#34;&gt;in&lt;/span&gt; first)
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    {
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;        &lt;span style=&#34;color:#66d9ef&#34;&gt;if&lt;/span&gt; (&lt;span style=&#34;color:#66d9ef&#34;&gt;set&lt;/span&gt;.Add(element))
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;        {
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;            &lt;span style=&#34;color:#66d9ef&#34;&gt;yield&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;return&lt;/span&gt; element;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;        }
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    }
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;}
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Из элементов второго аргумента создается &lt;a href=&#34;https://github.com/dotnet/runtime/blob/57bfe474518ab5b7cfe6bf7424a79ce3af9d6657/src/libraries/System.Private.CoreLib/src/System/Collections/Generic/HashSet.cs#L55&#34;&gt;множество&lt;/a&gt;. Элементы первого аргумента, которые удалось добавить в множество, возвращаются в качестве итератора.&lt;/p&gt;
 &lt;p&gt;Конструктор множества принимает интерфейс компаратора, который используется для сравнения элементов множества:&lt;/p&gt;
 &lt;p&gt;&lt;img src=&#34;https://it-irokez.ru/assets/images/comparer_2.png&#34; alt=&#34;&#34;&gt;&lt;/p&gt;
 &lt;p&gt;Конкретно в нашем случае компаратор равен null, поэтому проваливаемся в свойство Default обобщенного класса EqualityComparer.&lt;/p&gt;
-&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-csharp&#34; data-lang=&#34;csharp&#34;&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;public&lt;/span&gt; HashSet(IEqualityComparer&amp;lt;T&amp;gt;? comparer)
-{
-    &lt;span style=&#34;color:#66d9ef&#34;&gt;if&lt;/span&gt; (comparer &lt;span style=&#34;color:#66d9ef&#34;&gt;is&lt;/span&gt; not &lt;span style=&#34;color:#66d9ef&#34;&gt;null&lt;/span&gt; &amp;amp;&amp;amp; comparer != EqualityComparer&amp;lt;T&amp;gt;.Default) &lt;span style=&#34;color:#75715e&#34;&gt;// first check for null to avoid forcing default comparer instantiation unnecessarily
-&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;&lt;/span&gt;    {
-        &lt;span style=&#34;color:#ae81ff&#34;&gt;_&lt;/span&gt;comparer = comparer;
-    }
-
-    &lt;span style=&#34;color:#75715e&#34;&gt;// Special-case EqualityComparer&amp;lt;string&amp;gt;.Default, StringComparer.Ordinal, and StringComparer.OrdinalIgnoreCase.
-&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;&lt;/span&gt;    &lt;span style=&#34;color:#75715e&#34;&gt;// We use a non-randomized comparer for improved perf, falling back to a randomized comparer if the
-&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;&lt;/span&gt;    &lt;span style=&#34;color:#75715e&#34;&gt;// hash buckets become unbalanced.
-&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;&lt;/span&gt;    &lt;span style=&#34;color:#66d9ef&#34;&gt;if&lt;/span&gt; (&lt;span style=&#34;color:#66d9ef&#34;&gt;typeof&lt;/span&gt;(T) == &lt;span style=&#34;color:#66d9ef&#34;&gt;typeof&lt;/span&gt;(&lt;span style=&#34;color:#66d9ef&#34;&gt;string&lt;/span&gt;))
-    {
-        IEqualityComparer&amp;lt;&lt;span style=&#34;color:#66d9ef&#34;&gt;string&lt;/span&gt;&amp;gt;? stringComparer = NonRandomizedStringEqualityComparer.GetStringComparer(&lt;span style=&#34;color:#ae81ff&#34;&gt;_&lt;/span&gt;comparer);
-        &lt;span style=&#34;color:#66d9ef&#34;&gt;if&lt;/span&gt; (stringComparer &lt;span style=&#34;color:#66d9ef&#34;&gt;is&lt;/span&gt; not &lt;span style=&#34;color:#66d9ef&#34;&gt;null&lt;/span&gt;)
-        {
-            &lt;span style=&#34;color:#ae81ff&#34;&gt;_&lt;/span&gt;comparer = (IEqualityComparer&amp;lt;T&amp;gt;?)stringComparer;
-        }
-    }
-}
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;&lt;img src=&#34;https://it-irokez.ru/assets/images/comparer_3.png&#34; alt=&#34;&#34;&gt;&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-csharp&#34; data-lang=&#34;csharp&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;public&lt;/span&gt; HashSet(IEqualityComparer&amp;lt;T&amp;gt;? comparer)
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;{
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    &lt;span style=&#34;color:#66d9ef&#34;&gt;if&lt;/span&gt; (comparer &lt;span style=&#34;color:#66d9ef&#34;&gt;is&lt;/span&gt; not &lt;span style=&#34;color:#66d9ef&#34;&gt;null&lt;/span&gt; &amp;amp;&amp;amp; comparer != EqualityComparer&amp;lt;T&amp;gt;.Default) &lt;span style=&#34;color:#75715e&#34;&gt;// first check for null to avoid forcing default comparer instantiation unnecessarily&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    {
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;        _comparer = comparer;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    }
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    &lt;span style=&#34;color:#75715e&#34;&gt;// Special-case EqualityComparer&amp;lt;string&amp;gt;.Default, StringComparer.Ordinal, and StringComparer.OrdinalIgnoreCase.&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    &lt;span style=&#34;color:#75715e&#34;&gt;// We use a non-randomized comparer for improved perf, falling back to a randomized comparer if the&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    &lt;span style=&#34;color:#75715e&#34;&gt;// hash buckets become unbalanced.&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    &lt;span style=&#34;color:#66d9ef&#34;&gt;if&lt;/span&gt; (&lt;span style=&#34;color:#66d9ef&#34;&gt;typeof&lt;/span&gt;(T) == &lt;span style=&#34;color:#66d9ef&#34;&gt;typeof&lt;/span&gt;(&lt;span style=&#34;color:#66d9ef&#34;&gt;string&lt;/span&gt;))
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    {
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;        IEqualityComparer&amp;lt;&lt;span style=&#34;color:#66d9ef&#34;&gt;string&lt;/span&gt;&amp;gt;? stringComparer = NonRandomizedStringEqualityComparer.GetStringComparer(_comparer);
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;        &lt;span style=&#34;color:#66d9ef&#34;&gt;if&lt;/span&gt; (stringComparer &lt;span style=&#34;color:#66d9ef&#34;&gt;is&lt;/span&gt; not &lt;span style=&#34;color:#66d9ef&#34;&gt;null&lt;/span&gt;)
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;        {
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;            _comparer = (IEqualityComparer&amp;lt;T&amp;gt;?)stringComparer;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;        }
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    }
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;}
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;&lt;img src=&#34;https://it-irokez.ru/assets/images/comparer_3.png&#34; alt=&#34;&#34;&gt;&lt;/p&gt;
 &lt;p&gt;&lt;a href=&#34;https://github.com/dotnet/runtime/blob/57bfe474518ab5b7cfe6bf7424a79ce3af9d6657/src/coreclr/System.Private.CoreLib/src/System/Collections/Generic/EqualityComparer.CoreCLR.cs#L10&#34;&gt;Тут&lt;/a&gt;, на мой скромный взгляд, все очевидно:&lt;/p&gt;
-&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-csharp&#34; data-lang=&#34;csharp&#34;&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;public&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;abstract&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;partial&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;class&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;EqualityComparer&lt;/span&gt;&amp;lt;T&amp;gt; : IEqualityComparer, IEqualityComparer&amp;lt;T&amp;gt;
-{
-    &lt;span style=&#34;color:#75715e&#34;&gt;// To minimize generic instantiation overhead of creating the comparer per type, we keep the generic portion of the code as small
-&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;&lt;/span&gt;    &lt;span style=&#34;color:#75715e&#34;&gt;// as possible and define most of the creation logic in a non-generic class.
-&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;&lt;/span&gt;    &lt;span style=&#34;color:#66d9ef&#34;&gt;public&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;static&lt;/span&gt; EqualityComparer&amp;lt;T&amp;gt; Default { [Intrinsic] &lt;span style=&#34;color:#66d9ef&#34;&gt;get&lt;/span&gt;; } = (EqualityComparer&amp;lt;T&amp;gt;)ComparerHelpers.CreateDefaultEqualityComparer(&lt;span style=&#34;color:#66d9ef&#34;&gt;typeof&lt;/span&gt;(T));
-}
-
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Комментарий гласит, что с целью минимизации накладных расходов на создание универсального экземпляра для каждого типа код обобщенных классов уменьшают насколько это возможно за счет переноса его логики в необобщенный класс (в нашем случае это ComparerHelpers).&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-csharp&#34; data-lang=&#34;csharp&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;public&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;abstract&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;partial&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;class&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;EqualityComparer&lt;/span&gt;&amp;lt;T&amp;gt; : IEqualityComparer, IEqualityComparer&amp;lt;T&amp;gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;{
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    &lt;span style=&#34;color:#75715e&#34;&gt;// To minimize generic instantiation overhead of creating the comparer per type, we keep the generic portion of the code as small&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    &lt;span style=&#34;color:#75715e&#34;&gt;// as possible and define most of the creation logic in a non-generic class.&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    &lt;span style=&#34;color:#66d9ef&#34;&gt;public&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;static&lt;/span&gt; EqualityComparer&amp;lt;T&amp;gt; Default { [Intrinsic] &lt;span style=&#34;color:#66d9ef&#34;&gt;get&lt;/span&gt;; } = (EqualityComparer&amp;lt;T&amp;gt;)ComparerHelpers.CreateDefaultEqualityComparer(&lt;span style=&#34;color:#66d9ef&#34;&gt;typeof&lt;/span&gt;(T));
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;}
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Комментарий гласит, что с целью минимизации накладных расходов на создание универсального экземпляра для каждого типа код обобщенных классов уменьшают насколько это возможно за счет переноса его логики в необобщенный класс (в нашем случае это ComparerHelpers).&lt;/p&gt;
 &lt;p&gt;Давайте же посмотрим на то, как &lt;a href=&#34;https://github.com/dotnet/runtime/blob/57bfe474518ab5b7cfe6bf7424a79ce3af9d6657/src/coreclr/System.Private.CoreLib/src/System/Collections/Generic/ComparerHelpers.cs#L116&#34;&gt;происходит процесс создания компаратора по умолчанию&lt;/a&gt;:&lt;/p&gt;
-&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-csharp&#34; data-lang=&#34;csharp&#34;&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;internal&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;static&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;object&lt;/span&gt; CreateDefaultEqualityComparer(Type type)
-{
-    Debug.Assert(type != &lt;span style=&#34;color:#66d9ef&#34;&gt;null&lt;/span&gt; &amp;amp;&amp;amp; type &lt;span style=&#34;color:#66d9ef&#34;&gt;is&lt;/span&gt; RuntimeType);
-
-    &lt;span style=&#34;color:#66d9ef&#34;&gt;object?&lt;/span&gt; result = &lt;span style=&#34;color:#66d9ef&#34;&gt;null&lt;/span&gt;;
-    &lt;span style=&#34;color:#66d9ef&#34;&gt;var&lt;/span&gt; runtimeType = (RuntimeType)type;
-
-    &lt;span style=&#34;color:#66d9ef&#34;&gt;if&lt;/span&gt; (type == &lt;span style=&#34;color:#66d9ef&#34;&gt;typeof&lt;/span&gt;(&lt;span style=&#34;color:#66d9ef&#34;&gt;byte&lt;/span&gt;))
-    {
-        &lt;span style=&#34;color:#75715e&#34;&gt;// Specialize for byte so Array.IndexOf is faster.
-&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;&lt;/span&gt;        result = &lt;span style=&#34;color:#66d9ef&#34;&gt;new&lt;/span&gt; ByteEqualityComparer();
-    }
-    &lt;span style=&#34;color:#66d9ef&#34;&gt;else&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;if&lt;/span&gt; (type == &lt;span style=&#34;color:#66d9ef&#34;&gt;typeof&lt;/span&gt;(&lt;span style=&#34;color:#66d9ef&#34;&gt;string&lt;/span&gt;))
-    {
-        &lt;span style=&#34;color:#75715e&#34;&gt;// Specialize for string, as EqualityComparer&amp;lt;string&amp;gt;.Default is on the startup path
-&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;&lt;/span&gt;        result = &lt;span style=&#34;color:#66d9ef&#34;&gt;new&lt;/span&gt; GenericEqualityComparer&amp;lt;&lt;span style=&#34;color:#66d9ef&#34;&gt;string&lt;/span&gt;&amp;gt;();
-    }
-    &lt;span style=&#34;color:#66d9ef&#34;&gt;else&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;if&lt;/span&gt; (type.IsAssignableTo(&lt;span style=&#34;color:#66d9ef&#34;&gt;typeof&lt;/span&gt;(IEquatable&amp;lt;&amp;gt;).MakeGenericType(type)))
-    {
-        &lt;span style=&#34;color:#75715e&#34;&gt;// If T implements IEquatable&amp;lt;T&amp;gt; return a GenericEqualityComparer&amp;lt;T&amp;gt;
-&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;&lt;/span&gt;        result = CreateInstanceForAnotherGenericParameter((RuntimeType)&lt;span style=&#34;color:#66d9ef&#34;&gt;typeof&lt;/span&gt;(GenericEqualityComparer&amp;lt;&lt;span style=&#34;color:#66d9ef&#34;&gt;string&lt;/span&gt;&amp;gt;), runtimeType);
-    }
-    &lt;span style=&#34;color:#66d9ef&#34;&gt;else&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;if&lt;/span&gt; (type.IsGenericType)
-    {
-        &lt;span style=&#34;color:#75715e&#34;&gt;// Nullable does not implement IEquatable&amp;lt;T?&amp;gt; directly because that would add an extra interface call per comparison.
-&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;&lt;/span&gt;        &lt;span style=&#34;color:#75715e&#34;&gt;// Instead, it relies on EqualityComparer&amp;lt;T?&amp;gt;.Default to specialize for nullables and do the lifted comparisons if T implements IEquatable.
-&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;&lt;/span&gt;        &lt;span style=&#34;color:#66d9ef&#34;&gt;if&lt;/span&gt; (type.GetGenericTypeDefinition() == &lt;span style=&#34;color:#66d9ef&#34;&gt;typeof&lt;/span&gt;(Nullable&amp;lt;&amp;gt;))
-        {
-            result = TryCreateNullableEqualityComparer(runtimeType);
-        }
-    }
-    &lt;span style=&#34;color:#66d9ef&#34;&gt;else&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;if&lt;/span&gt; (type.IsEnum)
-    {
-        &lt;span style=&#34;color:#75715e&#34;&gt;// The equality comparer for enums is specialized to avoid boxing.
-&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;&lt;/span&gt;        result = TryCreateEnumEqualityComparer(runtimeType);
-    }
-
-    &lt;span style=&#34;color:#66d9ef&#34;&gt;return&lt;/span&gt; result ?? CreateInstanceForAnotherGenericParameter((RuntimeType)&lt;span style=&#34;color:#66d9ef&#34;&gt;typeof&lt;/span&gt;(ObjectEqualityComparer&amp;lt;&lt;span style=&#34;color:#66d9ef&#34;&gt;object&lt;/span&gt;&amp;gt;), runtimeType);
-}
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Пойдем по порядку:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-csharp&#34; data-lang=&#34;csharp&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;internal&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;static&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;object&lt;/span&gt; CreateDefaultEqualityComparer(Type type)
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;{
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    Debug.Assert(type != &lt;span style=&#34;color:#66d9ef&#34;&gt;null&lt;/span&gt; &amp;amp;&amp;amp; type &lt;span style=&#34;color:#66d9ef&#34;&gt;is&lt;/span&gt; RuntimeType);
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    &lt;span style=&#34;color:#66d9ef&#34;&gt;object?&lt;/span&gt; result = &lt;span style=&#34;color:#66d9ef&#34;&gt;null&lt;/span&gt;;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    &lt;span style=&#34;color:#66d9ef&#34;&gt;var&lt;/span&gt; runtimeType = (RuntimeType)type;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    &lt;span style=&#34;color:#66d9ef&#34;&gt;if&lt;/span&gt; (type == &lt;span style=&#34;color:#66d9ef&#34;&gt;typeof&lt;/span&gt;(&lt;span style=&#34;color:#66d9ef&#34;&gt;byte&lt;/span&gt;))
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    {
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;        &lt;span style=&#34;color:#75715e&#34;&gt;// Specialize for byte so Array.IndexOf is faster.&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;        result = &lt;span style=&#34;color:#66d9ef&#34;&gt;new&lt;/span&gt; ByteEqualityComparer();
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    }
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    &lt;span style=&#34;color:#66d9ef&#34;&gt;else&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;if&lt;/span&gt; (type == &lt;span style=&#34;color:#66d9ef&#34;&gt;typeof&lt;/span&gt;(&lt;span style=&#34;color:#66d9ef&#34;&gt;string&lt;/span&gt;))
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    {
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;        &lt;span style=&#34;color:#75715e&#34;&gt;// Specialize for string, as EqualityComparer&amp;lt;string&amp;gt;.Default is on the startup path&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;        result = &lt;span style=&#34;color:#66d9ef&#34;&gt;new&lt;/span&gt; GenericEqualityComparer&amp;lt;&lt;span style=&#34;color:#66d9ef&#34;&gt;string&lt;/span&gt;&amp;gt;();
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    }
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    &lt;span style=&#34;color:#66d9ef&#34;&gt;else&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;if&lt;/span&gt; (type.IsAssignableTo(&lt;span style=&#34;color:#66d9ef&#34;&gt;typeof&lt;/span&gt;(IEquatable&amp;lt;&amp;gt;).MakeGenericType(type)))
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    {
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;        &lt;span style=&#34;color:#75715e&#34;&gt;// If T implements IEquatable&amp;lt;T&amp;gt; return a GenericEqualityComparer&amp;lt;T&amp;gt;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;        result = CreateInstanceForAnotherGenericParameter((RuntimeType)&lt;span style=&#34;color:#66d9ef&#34;&gt;typeof&lt;/span&gt;(GenericEqualityComparer&amp;lt;&lt;span style=&#34;color:#66d9ef&#34;&gt;string&lt;/span&gt;&amp;gt;), runtimeType);
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    }
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    &lt;span style=&#34;color:#66d9ef&#34;&gt;else&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;if&lt;/span&gt; (type.IsGenericType)
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    {
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;        &lt;span style=&#34;color:#75715e&#34;&gt;// Nullable does not implement IEquatable&amp;lt;T?&amp;gt; directly because that would add an extra interface call per comparison.&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;        &lt;span style=&#34;color:#75715e&#34;&gt;// Instead, it relies on EqualityComparer&amp;lt;T?&amp;gt;.Default to specialize for nullables and do the lifted comparisons if T implements IEquatable.&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;        &lt;span style=&#34;color:#66d9ef&#34;&gt;if&lt;/span&gt; (type.GetGenericTypeDefinition() == &lt;span style=&#34;color:#66d9ef&#34;&gt;typeof&lt;/span&gt;(Nullable&amp;lt;&amp;gt;))
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;        {
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;            result = TryCreateNullableEqualityComparer(runtimeType);
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;        }
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    }
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    &lt;span style=&#34;color:#66d9ef&#34;&gt;else&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;if&lt;/span&gt; (type.IsEnum)
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    {
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;        &lt;span style=&#34;color:#75715e&#34;&gt;// The equality comparer for enums is specialized to avoid boxing.&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;        result = TryCreateEnumEqualityComparer(runtimeType);
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    }
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    &lt;span style=&#34;color:#66d9ef&#34;&gt;return&lt;/span&gt; result ?? CreateInstanceForAnotherGenericParameter((RuntimeType)&lt;span style=&#34;color:#66d9ef&#34;&gt;typeof&lt;/span&gt;(ObjectEqualityComparer&amp;lt;&lt;span style=&#34;color:#66d9ef&#34;&gt;object&lt;/span&gt;&amp;gt;), runtimeType);
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;}
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Пойдем по порядку:&lt;/p&gt;
 &lt;ol&gt;
 &lt;li&gt;
 &lt;p&gt;Если тип аргумента byte, то возвращается компаратор специально для этого типа (ByteEqualityComparer)&lt;/p&gt;
@@ -178,46 +176,45 @@ FileInfo[] SecondDirrectoryFiles = documentsDir.GetFiles();
 &lt;/li&gt;
 &lt;/ol&gt;
 &lt;p&gt;С помощью такого нехитрого кода (хотел было переписать через string builder, но, думаю, тут можно забить :D) попробуем понять, какой же из перечисленных случаев – наш:&lt;/p&gt;
-&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-csharp&#34; data-lang=&#34;csharp&#34;&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;var&lt;/span&gt; documentsDir = &lt;span style=&#34;color:#66d9ef&#34;&gt;new&lt;/span&gt; DirectoryInfo(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments));
-FileInfo[] result1 = documentsDir.GetFiles();
-FileInfo[] result2 = documentsDir.GetFiles();
-
-Type type = result1[&lt;span style=&#34;color:#ae81ff&#34;&gt;0&lt;/span&gt;].GetType();
-Console.Write(
-    &lt;span style=&#34;color:#e6db74&#34;&gt;$&amp;#34;type == typeof(byte): {type == typeof(byte)}\n&amp;#34;&lt;/span&gt; +
-    &lt;span style=&#34;color:#e6db74&#34;&gt;$&amp;#34;type == typeof(string): {type == typeof(string)}\n&amp;#34;&lt;/span&gt; +
-    &lt;span style=&#34;color:#e6db74&#34;&gt;$&amp;#34;type.IsAssignableTo(typeof(IEquatable&amp;lt;&amp;gt;).MakeGenericType(type)): {type.IsAssignableTo(typeof(IEquatable&amp;lt;&amp;gt;).MakeGenericType(type))}\n&amp;#34;&lt;/span&gt; +
-    &lt;span style=&#34;color:#e6db74&#34;&gt;$&amp;#34;type.IsGenericType: {type.IsGenericType}\n&amp;#34;&lt;/span&gt; +
-    &lt;span style=&#34;color:#e6db74&#34;&gt;$&amp;#34;type.IsEnum: {type.IsEnum}\n\n&amp;#34;&lt;/span&gt;);
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Что и следовало ожидать:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-csharp&#34; data-lang=&#34;csharp&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;var&lt;/span&gt; documentsDir = &lt;span style=&#34;color:#66d9ef&#34;&gt;new&lt;/span&gt; DirectoryInfo(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments));
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;FileInfo[] result1 = documentsDir.GetFiles();
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;FileInfo[] result2 = documentsDir.GetFiles();
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;Type type = result1[&lt;span style=&#34;color:#ae81ff&#34;&gt;0&lt;/span&gt;].GetType();
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;Console.Write(
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    &lt;span style=&#34;color:#e6db74&#34;&gt;$&amp;#34;type == typeof(byte): {type == typeof(byte)}\n&amp;#34;&lt;/span&gt; +
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    &lt;span style=&#34;color:#e6db74&#34;&gt;$&amp;#34;type == typeof(string): {type == typeof(string)}\n&amp;#34;&lt;/span&gt; +
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    &lt;span style=&#34;color:#e6db74&#34;&gt;$&amp;#34;type.IsAssignableTo(typeof(IEquatable&amp;lt;&amp;gt;).MakeGenericType(type)): {type.IsAssignableTo(typeof(IEquatable&amp;lt;&amp;gt;).MakeGenericType(type))}\n&amp;#34;&lt;/span&gt; +
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    &lt;span style=&#34;color:#e6db74&#34;&gt;$&amp;#34;type.IsGenericType: {type.IsGenericType}\n&amp;#34;&lt;/span&gt; +
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    &lt;span style=&#34;color:#e6db74&#34;&gt;$&amp;#34;type.IsEnum: {type.IsEnum}\n\n&amp;#34;&lt;/span&gt;);
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Что и следовало ожидать:&lt;/p&gt;
 &lt;p&gt;&lt;img src=&#34;https://it-irokez.ru/assets/images/comparer_4.png&#34; alt=&#34;&#34;&gt;&lt;/p&gt;
 &lt;p&gt;Это значит, что теперь наш путь лежит в &lt;a href=&#34;https://github.com/dotnet/runtime/blob/57bfe474518ab5b7cfe6bf7424a79ce3af9d6657/src/libraries/System.Private.CoreLib/src/System/Collections/Generic/EqualityComparer.cs&#34;&gt;ObjectEqualityComparer&lt;/a&gt;. Вот, собственно, и он:&lt;/p&gt;
-&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-csharp&#34; data-lang=&#34;csharp&#34;&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;public&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;sealed&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;partial&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;class&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;ObjectEqualityComparer&lt;/span&gt;&amp;lt;T&amp;gt; : EqualityComparer&amp;lt;T&amp;gt;
-{
-&lt;span style=&#34;color:#a6e22e&#34;&gt;    [MethodImpl(MethodImplOptions.AggressiveInlining)]&lt;/span&gt;
-    &lt;span style=&#34;color:#66d9ef&#34;&gt;public&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;override&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;bool&lt;/span&gt; Equals(T? x, T? y)
-    {
-        &lt;span style=&#34;color:#66d9ef&#34;&gt;if&lt;/span&gt; (x != &lt;span style=&#34;color:#66d9ef&#34;&gt;null&lt;/span&gt;)
-        {
-            &lt;span style=&#34;color:#66d9ef&#34;&gt;if&lt;/span&gt; (y != &lt;span style=&#34;color:#66d9ef&#34;&gt;null&lt;/span&gt;) &lt;span style=&#34;color:#66d9ef&#34;&gt;return&lt;/span&gt; x.Equals(y);
-            &lt;span style=&#34;color:#66d9ef&#34;&gt;return&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;false&lt;/span&gt;;
-        }
-        &lt;span style=&#34;color:#66d9ef&#34;&gt;if&lt;/span&gt; (y != &lt;span style=&#34;color:#66d9ef&#34;&gt;null&lt;/span&gt;) &lt;span style=&#34;color:#66d9ef&#34;&gt;return&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;false&lt;/span&gt;;
-        &lt;span style=&#34;color:#66d9ef&#34;&gt;return&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;true&lt;/span&gt;;
-    }
-&lt;span style=&#34;color:#a6e22e&#34;&gt;
-&lt;/span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;    [MethodImpl(MethodImplOptions.AggressiveInlining)]&lt;/span&gt;
-    &lt;span style=&#34;color:#66d9ef&#34;&gt;public&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;override&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;int&lt;/span&gt; GetHashCode([DisallowNull] T obj) =&amp;gt; obj?.GetHashCode() ?? &lt;span style=&#34;color:#ae81ff&#34;&gt;0&lt;/span&gt;;
-
-    &lt;span style=&#34;color:#75715e&#34;&gt;// Equals method for the comparer itself.
-&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;&lt;/span&gt;    &lt;span style=&#34;color:#66d9ef&#34;&gt;public&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;override&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;bool&lt;/span&gt; Equals([NotNullWhen(&lt;span style=&#34;color:#66d9ef&#34;&gt;true&lt;/span&gt;)] &lt;span style=&#34;color:#66d9ef&#34;&gt;object?&lt;/span&gt; obj) =&amp;gt;
-        obj != &lt;span style=&#34;color:#66d9ef&#34;&gt;null&lt;/span&gt; &amp;amp;&amp;amp; GetType() == obj.GetType();
-
-    &lt;span style=&#34;color:#66d9ef&#34;&gt;public&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;override&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;int&lt;/span&gt; GetHashCode() =&amp;gt;
-        GetType().GetHashCode();
-}
-
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;ObjectEqualityComparer определяет метод Equals для двух объектов следующим образом:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-csharp&#34; data-lang=&#34;csharp&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;public&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;sealed&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;partial&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;class&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;ObjectEqualityComparer&lt;/span&gt;&amp;lt;T&amp;gt; : EqualityComparer&amp;lt;T&amp;gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;{
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;    [MethodImpl(MethodImplOptions.AggressiveInlining)]&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    &lt;span style=&#34;color:#66d9ef&#34;&gt;public&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;override&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;bool&lt;/span&gt; Equals(T? x, T? y)
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    {
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;        &lt;span style=&#34;color:#66d9ef&#34;&gt;if&lt;/span&gt; (x != &lt;span style=&#34;color:#66d9ef&#34;&gt;null&lt;/span&gt;)
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;        {
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;            &lt;span style=&#34;color:#66d9ef&#34;&gt;if&lt;/span&gt; (y != &lt;span style=&#34;color:#66d9ef&#34;&gt;null&lt;/span&gt;) &lt;span style=&#34;color:#66d9ef&#34;&gt;return&lt;/span&gt; x.Equals(y);
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;            &lt;span style=&#34;color:#66d9ef&#34;&gt;return&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;false&lt;/span&gt;;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;        }
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;        &lt;span style=&#34;color:#66d9ef&#34;&gt;if&lt;/span&gt; (y != &lt;span style=&#34;color:#66d9ef&#34;&gt;null&lt;/span&gt;) &lt;span style=&#34;color:#66d9ef&#34;&gt;return&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;false&lt;/span&gt;;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;        &lt;span style=&#34;color:#66d9ef&#34;&gt;return&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;true&lt;/span&gt;;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    }
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;    [MethodImpl(MethodImplOptions.AggressiveInlining)]&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    &lt;span style=&#34;color:#66d9ef&#34;&gt;public&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;override&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;int&lt;/span&gt; GetHashCode([DisallowNull] T obj) =&amp;gt; obj?.GetHashCode() ?? &lt;span style=&#34;color:#ae81ff&#34;&gt;0&lt;/span&gt;;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    &lt;span style=&#34;color:#75715e&#34;&gt;// Equals method for the comparer itself.&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    &lt;span style=&#34;color:#66d9ef&#34;&gt;public&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;override&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;bool&lt;/span&gt; Equals([NotNullWhen(&lt;span style=&#34;color:#66d9ef&#34;&gt;true&lt;/span&gt;)] &lt;span style=&#34;color:#66d9ef&#34;&gt;object?&lt;/span&gt; obj) =&amp;gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;        obj != &lt;span style=&#34;color:#66d9ef&#34;&gt;null&lt;/span&gt; &amp;amp;&amp;amp; GetType() == obj.GetType();
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    &lt;span style=&#34;color:#66d9ef&#34;&gt;public&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;override&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;int&lt;/span&gt; GetHashCode() =&amp;gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;        GetType().GetHashCode();
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;}
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;ObjectEqualityComparer определяет метод Equals для двух объектов следующим образом:&lt;/p&gt;
 &lt;ul&gt;
 &lt;li&gt;
 &lt;p&gt;Объекты равны, если они оба null (что логично);&lt;/p&gt;
@@ -235,46 +232,44 @@ Console.Write(
 &lt;/blockquote&gt;
 &lt;p&gt;На этом, казалось, можно было бы завершить наше путешествие, но давайте на последок придумаем, как заставить Except перестать показывать файлы в директории с моими документами.&lt;/p&gt;
 &lt;p&gt;Вариант из категории «пока так, потом пофикшу»:&lt;/p&gt;
-&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-csharp&#34; data-lang=&#34;csharp&#34;&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;var&lt;/span&gt; documentsDir = &lt;span style=&#34;color:#66d9ef&#34;&gt;new&lt;/span&gt; DirectoryInfo(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments));
-FileInfo[] result1 = documentsDir.GetFiles();
-FileInfo[] result2 = documentsDir.GetFiles();
-&lt;span style=&#34;color:#66d9ef&#34;&gt;foreach&lt;/span&gt; (FileInfo item &lt;span style=&#34;color:#66d9ef&#34;&gt;in&lt;/span&gt; result1
-                                 .Select(i =&amp;gt; i.FullName)
-                                 .Except(result2.Select(i =&amp;gt; i.FullName))
-                                 .Select(i =&amp;gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;new&lt;/span&gt; FileInfo(i)))
-{
-    Console.WriteLine(item.Name);
-}
-
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Мы, по сути, вызываем Except для двух IEnumerate&lt;!-- raw HTML omitted --&gt;, а потом из результата снова собираем IEnumerate&lt;!-- raw HTML omitted --&gt;.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-csharp&#34; data-lang=&#34;csharp&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;var&lt;/span&gt; documentsDir = &lt;span style=&#34;color:#66d9ef&#34;&gt;new&lt;/span&gt; DirectoryInfo(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments));
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;FileInfo[] result1 = documentsDir.GetFiles();
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;FileInfo[] result2 = documentsDir.GetFiles();
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;foreach&lt;/span&gt; (FileInfo item &lt;span style=&#34;color:#66d9ef&#34;&gt;in&lt;/span&gt; result1
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;                                 .Select(i =&amp;gt; i.FullName)
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;                                 .Except(result2.Select(i =&amp;gt; i.FullName))
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;                                 .Select(i =&amp;gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;new&lt;/span&gt; FileInfo(i)))
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;{
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    Console.WriteLine(item.Name);
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;}
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Мы, по сути, вызываем Except для двух IEnumerate&lt;!-- raw HTML omitted --&gt;, а потом из результата снова собираем IEnumerate&lt;!-- raw HTML omitted --&gt;.&lt;/p&gt;
 &lt;p&gt;В свежем .net6 еще можно воспользоваться &lt;a href=&#34;https://docs.microsoft.com/en-us/dotnet/api/system.linq.enumerable.exceptby?view=net-6.0&#34;&gt;ExceptBy&lt;/a&gt;:&lt;/p&gt;
-&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-csharp&#34; data-lang=&#34;csharp&#34;&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;var&lt;/span&gt; documentsDir = &lt;span style=&#34;color:#66d9ef&#34;&gt;new&lt;/span&gt; DirectoryInfo(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments));
-FileInfo[] result1 = documentsDir.GetFiles();
-FileInfo[] result2 = documentsDir.GetFiles();
-&lt;span style=&#34;color:#66d9ef&#34;&gt;foreach&lt;/span&gt; (FileInfo item &lt;span style=&#34;color:#66d9ef&#34;&gt;in&lt;/span&gt; result1.ExceptBy(result2.Select(i =&amp;gt; i.FullName), ks =&amp;gt; ks.FullName))
-{
-    Console.WriteLine(item.Name);
-}
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Этот код уже выглядит приятнее и даже избавляет нас от необходимости разбирать и снова собирать изначальный массив, но можно сделать это иначе.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-csharp&#34; data-lang=&#34;csharp&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;var&lt;/span&gt; documentsDir = &lt;span style=&#34;color:#66d9ef&#34;&gt;new&lt;/span&gt; DirectoryInfo(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments));
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;FileInfo[] result1 = documentsDir.GetFiles();
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;FileInfo[] result2 = documentsDir.GetFiles();
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;foreach&lt;/span&gt; (FileInfo item &lt;span style=&#34;color:#66d9ef&#34;&gt;in&lt;/span&gt; result1.ExceptBy(result2.Select(i =&amp;gt; i.FullName), ks =&amp;gt; ks.FullName))
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;{
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    Console.WriteLine(item.Name);
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;}
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Этот код уже выглядит приятнее и даже избавляет нас от необходимости разбирать и снова собирать изначальный массив, но можно сделать это иначе.&lt;/p&gt;
 &lt;p&gt;Следующей идеей, посетившей мою голову, было унаследовать FileInfo и переопределить Equals, но, к сожалению, FileInfo является запечатанным (sealed) классом, а это значит, что он не может быть унаследован, так что этот путь нам отрезан.&lt;/p&gt;
 &lt;p&gt;Подойдем к вопросу с другой стороны. Вспомним, что Equals имеет перегрузку, принимающую вторым аргументом IEqualityComparer, что позволяет нам создать что-то вроде такого решения:&lt;/p&gt;
-&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-csharp&#34; data-lang=&#34;csharp&#34;&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;var&lt;/span&gt; documentsDir = &lt;span style=&#34;color:#66d9ef&#34;&gt;new&lt;/span&gt; DirectoryInfo(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments));
-FileInfo[] result1 = documentsDir.GetFiles();
-FileInfo[] result2 = documentsDir.GetFiles();
-
-&lt;span style=&#34;color:#66d9ef&#34;&gt;foreach&lt;/span&gt; (FileInfo item &lt;span style=&#34;color:#66d9ef&#34;&gt;in&lt;/span&gt; result1.Except(result2, &lt;span style=&#34;color:#66d9ef&#34;&gt;new&lt;/span&gt; CustomFileInfoComparer()))
-{
-    Console.WriteLine(item.Name);
-}
-
-&lt;span style=&#34;color:#66d9ef&#34;&gt;public&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;class&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;CustomFileInfoComparer&lt;/span&gt; : IEqualityComparer&amp;lt;FileInfo&amp;gt;
-{
-    &lt;span style=&#34;color:#66d9ef&#34;&gt;bool&lt;/span&gt; IEqualityComparer&amp;lt;FileInfo&amp;gt;.Equals(FileInfo? lhv, FileInfo? rhv)
-       =&amp;gt; lhv?.FullName == rhv?.FullName;
-    &lt;span style=&#34;color:#66d9ef&#34;&gt;int&lt;/span&gt; IEqualityComparer&amp;lt;FileInfo&amp;gt;.GetHashCode(FileInfo obj) =&amp;gt; obj.FullName.GetHashCode();
-}
-
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Это решение хорошо подходит в том случае, если дальше по коду вам предстоит еще хотя бы раз сравнивать IEnumerable&lt;!-- raw HTML omitted --&gt;.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-csharp&#34; data-lang=&#34;csharp&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;var&lt;/span&gt; documentsDir = &lt;span style=&#34;color:#66d9ef&#34;&gt;new&lt;/span&gt; DirectoryInfo(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments));
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;FileInfo[] result1 = documentsDir.GetFiles();
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;FileInfo[] result2 = documentsDir.GetFiles();
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;foreach&lt;/span&gt; (FileInfo item &lt;span style=&#34;color:#66d9ef&#34;&gt;in&lt;/span&gt; result1.Except(result2, &lt;span style=&#34;color:#66d9ef&#34;&gt;new&lt;/span&gt; CustomFileInfoComparer()))
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;{
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    Console.WriteLine(item.Name);
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;}
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;public&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;class&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;CustomFileInfoComparer&lt;/span&gt; : IEqualityComparer&amp;lt;FileInfo&amp;gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;{
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    &lt;span style=&#34;color:#66d9ef&#34;&gt;bool&lt;/span&gt; IEqualityComparer&amp;lt;FileInfo&amp;gt;.Equals(FileInfo? lhv, FileInfo? rhv)
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;       =&amp;gt; lhv?.FullName == rhv?.FullName;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    &lt;span style=&#34;color:#66d9ef&#34;&gt;int&lt;/span&gt; IEqualityComparer&amp;lt;FileInfo&amp;gt;.GetHashCode(FileInfo obj) =&amp;gt; obj.FullName.GetHashCode();
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;}
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Это решение хорошо подходит в том случае, если дальше по коду вам предстоит еще хотя бы раз сравнивать IEnumerable&lt;!-- raw HTML omitted --&gt;.&lt;/p&gt;
 &lt;p&gt;На этом у меня все, надеюсь, что читатель нашел любопытным мой скромный труд.&lt;/p&gt;
 &lt;p&gt;Хочется выразить огромную благодарность моей жене за помощь в подготовке данного поста, а также сообществу &lt;a href=&#34;https://t.me/dotnettalks&#34;&gt;.NET Talks&lt;/a&gt;&lt;/p&gt;
 </turbo:content>
@@ -344,14 +339,14 @@ JWT (JSON Web Token) – это токен, а будет этот токен х
 &lt;h2 id=&#34;weak-secret&#34;&gt;Weak secret&lt;/h2&gt;
 &lt;p&gt;По одному только названию становится понятно, в чем в этот раз будет проблема. Но давайте не будем сильно забегать вперед и для начала поговорим о том, что за “HS256” использовался для подписи сообщения в предыдущем примере. HS256 – это HMAC with SHA-256. Что это значит для нас, простых смертных людей, не обремененных знаниями криптографической магии? Интернет говорит, что HMAC (Hash-based Message Authentication Code) – это код аутентификации сообщения на основе хэширования. Данный вид аутентификации подразумевает наличие у клиента и сервера некоего секретного ключа, который известен только им двоим. Отлично, опытный проникновенец внутри вас наверняка прочитал эту фразу как “это что-то симметричное и его можно сбрутить”. Теперь мы морально готовы приступать к заданию с root-me.&lt;/p&gt;
 &lt;p&gt;Поехали. Точка входа в задание одаривает нас JSON-ом следующего содержания:&lt;/p&gt;
-&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-json&#34; data-lang=&#34;json&#34;&gt;{     
-    &lt;span style=&#34;color:#f92672&#34;&gt;&amp;#34;message&amp;#34;&lt;/span&gt;: &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;Let&amp;#39;s play a small game, I bet you cannot access to my super secret admin section. Make a GET request to /token and use the token you&amp;#39;ll get to try to access /admin with a POST request.&amp;#34;&lt;/span&gt;
-}
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Я, конечно, не уверен, но, кажется, нам необходимо сделать GET-запрос на /token. Оттуда на нас нисходит новый JSON:&lt;/p&gt;
-&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-json&#34; data-lang=&#34;json&#34;&gt;{
-    &lt;span style=&#34;color:#f92672&#34;&gt;&amp;#34;Here is your token&amp;#34;&lt;/span&gt;: &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJyb2xlIjoiZ3Vlc3QifQ.4kBPNf7Y6BrtP-Y3A-vQXPY9jAh_d0E6L4IUjL65CvmEjgdTZyr2ag-TM-glH6EYKGgO3dBYbhblaPQsbeClcw&amp;#34;&lt;/span&gt;
-}
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;&lt;img src=&#34;https://it-irokez.ru/assets/images/gri_7.png&#34; alt=&#34;&#34;&gt;&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-json&#34; data-lang=&#34;json&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;{     
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    &lt;span style=&#34;color:#f92672&#34;&gt;&amp;#34;message&amp;#34;&lt;/span&gt;: &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;Let&amp;#39;s play a small game, I bet you cannot access to my super secret admin section. Make a GET request to /token and use the token you&amp;#39;ll get to try to access /admin with a POST request.&amp;#34;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;}
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Я, конечно, не уверен, но, кажется, нам необходимо сделать GET-запрос на /token. Оттуда на нас нисходит новый JSON:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-json&#34; data-lang=&#34;json&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;{
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    &lt;span style=&#34;color:#f92672&#34;&gt;&amp;#34;Here is your token&amp;#34;&lt;/span&gt;: &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJyb2xlIjoiZ3Vlc3QifQ.4kBPNf7Y6BrtP-Y3A-vQXPY9jAh_d0E6L4IUjL65CvmEjgdTZyr2ag-TM-glH6EYKGgO3dBYbhblaPQsbeClcw&amp;#34;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;}
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;&lt;img src=&#34;https://it-irokez.ru/assets/images/gri_7.png&#34; alt=&#34;&#34;&gt;&lt;/p&gt;
 &lt;p&gt;Поле role, вероятнее всего, придется сменить с guest на admin, но сразу возникает вопрос валидности подписи. Если же в этом задании вы решите попробовать поменять алгоритм подписи на различные вариации None, то это не сработает. Название челленджа как бы намекает…&lt;/p&gt;
 &lt;p&gt;Намекает на то, что можно воспользоваться утилитой типа &lt;a href=&#34;https://github.com/Sjord/jwtcrack&#34;&gt;jwtcrack&lt;/a&gt;  или &lt;a href=&#34;https://github.com/magnumripper/JohnTheRipper&#34;&gt;John the Ripper&lt;/a&gt;  (я так и не понял, как заставить его работать с jwt), которые позволят узнать секрет методом словарного перебора и переподписать себе токен.&lt;/p&gt;
 &lt;p&gt;Запускаем jwtcrack:&lt;/p&gt;
@@ -385,8 +380,8 @@ JWT (JSON Web Token) – это токен, а будет этот токен х
 &lt;p&gt;Перегоним наш ключ, полученный ранее, в последовательность HEX-ов:&lt;/p&gt;
 &lt;p&gt;&lt;code&gt;2d2d2d2d2d424547494e205055424c4943204b45592d2d2d2d2d0a4d494942496a414e42676b71686b6947397730424151454641414f43415138414d49494243674b43415145417576773168347477504a6e5a42772b54327743440a59624832556b4d427852672f686b534d6c365a77693259566d37397771723372506433676a7430695a576432724e42337175644b5749536d42516132517152480a74503666546a6569354d413471734c53586c32724765576a47767471704851446d63583447417841454b7947306e6632445065324170454330323152472f564f0a64595343414149702b536d6443746d35504966314153694f4141585537644c37324959736f63534d6759705249634a755a5341435571314a367775553958796c0a7042314e7657774644334659437a72655435416b5469636276676546316b39792f4f4b5431667632626e5347706a354b4d45462f51575552377877337262516b0a796e6365436a714645744c78584873584a506d5536676a4132494377547131475671435a447a6a6a665162426f4b7a6d59534f774c7a4f6e364a6237454f50670a58514944415141420a2d2d2d2d2d454e44205055424c4943204b45592d2d2d2d2d0a&lt;/code&gt;&lt;/p&gt;
 &lt;p&gt;А теперь самостоятельно, как взрослые мальчики, подпишем себе токен:&lt;/p&gt;
-&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;echo -n &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1c2VybmFtZSI6ImFkbWluIn0&amp;#34;&lt;/span&gt; | openssl dgst -sha256 -mac HMAC -macopt hexkey: 2d2d2d2d2d424547494e205055424c4943204b45592d2d2d2d2d0a4d494942496a414e42676b71686b6947397730424151454641414f43415138414d49494243674b43415145417576773168347477504a6e5a42772b54327743440a59624832556b4d427852672f686b534d6c365a77693259566d37397771723372506433676a7430695a576432724e42337175644b5749536d42516132517152480a74503666546a6569354d413471734c53586c32724765576a47767471704851446d63583447417841454b7947306e6632445065324170454330323152472f564f0a64595343414149702b536d6443746d35504966314153694f4141585537644c37324959736f63534d6759705249634a755a5341435571314a367775553958796c0a7042314e7657774644334659437a72655435416b5469636276676546316b39792f4f4b5431667632626e5347706a354b4d45462f51575552377877337262516b0a796e6365436a714645744c78584873584a506d5536676a4132494377547131475671435a447a6a6a665162426f4b7a6d59534f774c7a4f6e364a6237454f50670a58514944415141420a2d2d2d2d2d454e44205055424c4943204b45592d2d2d2d2d0a
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Наша подпись:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;echo -n &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1c2VybmFtZSI6ImFkbWluIn0&amp;#34;&lt;/span&gt; | openssl dgst -sha256 -mac HMAC -macopt hexkey: 2d2d2d2d2d424547494e205055424c4943204b45592d2d2d2d2d0a4d494942496a414e42676b71686b6947397730424151454641414f43415138414d49494243674b43415145417576773168347477504a6e5a42772b54327743440a59624832556b4d427852672f686b534d6c365a77693259566d37397771723372506433676a7430695a576432724e42337175644b5749536d42516132517152480a74503666546a6569354d413471734c53586c32724765576a47767471704851446d63583447417841454b7947306e6632445065324170454330323152472f564f0a64595343414149702b536d6443746d35504966314153694f4141585537644c37324959736f63534d6759705249634a755a5341435571314a367775553958796c0a7042314e7657774644334659437a72655435416b5469636276676546316b39792f4f4b5431667632626e5347706a354b4d45462f51575552377877337262516b0a796e6365436a714645744c78584873584a506d5536676a4132494377547131475671435a447a6a6a665162426f4b7a6d59534f774c7a4f6e364a6237454f50670a58514944415141420a2d2d2d2d2d454e44205055424c4943204b45592d2d2d2d2d0a
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Наша подпись:&lt;/p&gt;
 &lt;p&gt;&lt;code&gt;f4a3602e56b0b5d07229d66130ef0aedd1d338cbdc543641d0bb8bedaf8f65ba&lt;/code&gt;&lt;/p&gt;
 &lt;p&gt;Но не спешите подставлять ее в наш токен. Вы ведь помните, что подпись должна быть base64url? Кодируем:&lt;/p&gt;
 &lt;p&gt;Но не спешите подставлять ее в наш токен. Вы ведь помните, что подпись должна быть base64url? Кодируем:&lt;/p&gt;
@@ -405,7 +400,7 @@ JWT (JSON Web Token) – это токен, а будет этот токен х
       
       <guid>https://it-irokez.ru/articles/agregate/</guid>
       <description>Оригинал статьи. Статья была написана в рамках моего обучения в магистратуре.
- В современном мире, где объемы данных, поступающие в информационные системы, имеют тенденцию к постоянному росту, а отдельное клиентское устройство зачастую не способно совершать выборку и обработку всех необходимых данных режиме реального времени, вопрос построения систем агрегирования информации встает все более остро.
+В современном мире, где объемы данных, поступающие в информационные системы, имеют тенденцию к постоянному росту, а отдельное клиентское устройство зачастую не способно совершать выборку и обработку всех необходимых данных режиме реального времени, вопрос построения систем агрегирования информации встает все более остро.
 Что же представляет из себя система агрегирования информации в сети Интернет? Согласно [4], система агрегации это способ создания новых web-приложений за счет объединения уже существующих интернетресурсов.</description>
       <turbo:content>&lt;p&gt;&lt;a href=&#34;http://journal.tc22.ru/wp-content/uploads/2018/05/postroenie_sistemi_agregirovaniya_informacii.pdf&#34;&gt;Оригинал статьи&lt;/a&gt;. Статья была написана в рамках моего обучения в магистратуре.&lt;/p&gt;
 &lt;hr&gt;
