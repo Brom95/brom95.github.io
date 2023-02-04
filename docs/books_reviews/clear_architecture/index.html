@@ -553,6 +553,16 @@ body{background:#1b1d1e}body #terminal{color:#BBBBBB}body #user{color:#23E298}bo
 
 
 </head><body><div id="content">
+<div id="mobile-block">
+  
+<div id="yandex_rtb_R-A-1957258-10"></div>
+<script>window.yaContextCb.push(()=>{
+  Ya.Context.AdvManager.render({
+    renderTo: 'yandex_rtb_R-A-1957258-10',
+    blockId: 'R-A-1957258-10'
+  })
+})</script>
+</div>
 <div id="block">
 
 <div id="yandex_rtb_R-A-1957258-2"></div>
@@ -972,11 +982,7 @@ body{background:#1b1d1e}body #terminal{color:#BBBBBB}body #user{color:#23E298}bo
         max-width: 1000px;
     }
 
-    ul ::marker {
 
-        content: "\1F480";
-
-    }
 
     a,
     strong,
@@ -1055,11 +1061,22 @@ body{background:#1b1d1e}body #terminal{color:#BBBBBB}body #user{color:#23E298}bo
 
     
     #content {
-        font-size: 2.0vmax;
+        max-width: 90vw;
+        font-size: 1.8vmax;
         line-height: 1.56;
         overflow-wrap: break-word;
         font-family: -apple-system, BlinkMacSystemFont, Arial, sans-serif;
         color: #BBBBBB;
+    }
+    @media only screen and (max-width : 1000px){
+        #block {
+            display: none;
+        }
+    }
+    @media only screen and (min-width : 1000px){
+        #mobile-block {
+            display: none;
+        }
     }
     @media only screen and (min-width : 1400px) {
         #content {
