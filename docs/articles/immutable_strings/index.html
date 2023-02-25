@@ -1,0 +1,870 @@
+<!DOCTYPE html>
+<html lang="ru-ru"><head>
+    <title>(Не)изменяемые строки в dotnet</title>
+    <link rel="icon"  type="image/x-icon" href="https://it-irokez.ru/favicon.ico">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <meta name="description" content="Строки в dotnet являются предназначенной только для чтения последовательностью `Char`-ов. Об этом явно написано в документации Microsoft  посвященной строкам. Согласно документации, изменить строки нельзя, но жизнь не всегда согласуется с документацией, поэтому предлагаю взглянуть на способы, позволяющие изменять строки в dotnet (к тому же это иногда спрашивают на собеседованиях!)." />
+    <meta property="og:type" content="article" />
+    <meta property="og:title" content="(Не)изменяемые строки в dotnet" />
+    <meta property="og:image" content="https://it-irokez.ru/assets/images/logo.jpg" />
+    <meta property="og:url" content="https://it-irokez.ru/articles/immutable_strings/" />
+    <meta property="og:description" content="Строки в dotnet являются предназначенной только для чтения последовательностью `Char`-ов. Об этом явно написано в документации Microsoft  посвященной строкам. Согласно документации, изменить строки нельзя, но жизнь не всегда согласуется с документацией, поэтому предлагаю взглянуть на способы, позволяющие изменять строки в dotnet (к тому же это иногда спрашивают на собеседованиях!)." />
+    <style>
+@import "https://fonts.googleapis.com/css2?family=Inconsolata&display=swap";:root{--cursor-visibility:hidden}html,body{width:100%;height:100%;overflow:auto;font-family:inconsolata,monospace;font-size:4vmin;line-height:4.1vmin;font-weight:400}body{margin:0;display:flex;flex-direction:row;justify-content:center;align-items:center}#content{min-width:82vmin;min-height:82vmin}::-webkit-scrollbar{width:10px}::-webkit-scrollbar-track{border-radius:10px;box-shadow:inset 0 0 1px white}::-webkit-scrollbar-thumb{border-radius:10px;box-shadow:0 0 0 1px white}.cursor,#activity-title:after,#activity-content:after,#cd:after,#whoami:after,#cat:after,#tree:after{visibility:var(--cursor-visibility);content:"|";overflow:hidden;color:#fff;animation:blink 500ms linear infinite alternate}@keyframes blink{0%{opacity:0}100%{opacity:1}}@media only screen and (min-width:768px){body{font-size:2.5vmin;line-height:2.6vmin}#content{min-width:60vmin}}:root{--cursor-visibility:hidden}body{align-items:unset;overflow-y:scroll}#content{max-width:80vmin}pre{overflow-x:scroll;white-space:pre}@keyframes blink{0%{opacity:0}100%{opacity:1}}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+        
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+
+
+body{background:#1b1d1e}body #terminal{color:#BBBBBB}body #user{color:#23E298}body #dir{color:#D08010}body .Typewriter__cursor{color:#BBBBBB}a{color:#BBBBBB}
+
+        
+
+        
+        
+</style>
+
+
+
+    <meta name="yandex-verification" content="355904de153d5134" />
+    
+    
+    <script>window.yaContextCb = window.yaContextCb || []</script>
+    <script src="https://yandex.ru/ads/system/context.js" async></script>
+
+    <script type="text/javascript">
+            (function (m, e, t, r, i, k, a) {
+                m[i] = m[i] || function () { (m[i].a = m[i].a || []).push(arguments) };
+                m[i].l = 1 * new Date();
+                for (var j = 0; j < document.scripts.length; j++) { if (document.scripts[j].src === r) { return; } }
+                k = e.createElement(t), a = e.getElementsByTagName(t)[0], k.async = 1, k.src = r, a.parentNode.insertBefore(k, a)
+            })
+            (window, document, "script", "https://mc.yandex.ru/metrika/tag.js", "ym");
+
+        ym(90533415, "init", {
+            clickmap: true,
+            trackLinks: true,
+            accurateTrackBounce: true
+        });
+    </script>
+    <noscript>
+        <div><img src="https://mc.yandex.ru/watch/90533415" style="position:absolute; left:-9999px;" alt="" /></div>
+    </noscript>
+    
+
+
+</head>
+<body>
+<div id="content">
+        <div id="search">
+            <div class="ya-site-form ya-site-form_inited_no" data-bem="{&quot;action&quot;:&quot;https://yandex.ru/search/site/&quot;,&quot;arrow&quot;:false,&quot;bg&quot;:&quot;transparent&quot;,&quot;fontsize&quot;:12,&quot;fg&quot;:&quot;#000000&quot;,&quot;language&quot;:&quot;ru&quot;,&quot;logo&quot;:&quot;rb&quot;,&quot;publicname&quot;:&quot;Поиск по it-irokez.ru&quot;,&quot;suggest&quot;:true,&quot;target&quot;:&quot;_self&quot;,&quot;tld&quot;:&quot;ru&quot;,&quot;type&quot;:3,&quot;usebigdictionary&quot;:true,&quot;searchid&quot;:2761108,&quot;input_fg&quot;:&quot;#000000&quot;,&quot;input_bg&quot;:&quot;#ffffff&quot;,&quot;input_fontStyle&quot;:&quot;normal&quot;,&quot;input_fontWeight&quot;:&quot;normal&quot;,&quot;input_placeholder&quot;:&quot;Поиск&quot;,&quot;input_placeholderColor&quot;:&quot;#000000&quot;,&quot;input_borderColor&quot;:&quot;#7f9db9&quot;}"><form action="https://yandex.ru/search/site/" method="get" target="_self" accept-charset="utf-8"><input type="hidden" name="searchid" value="2761108"/><input type="hidden" name="l10n" value="ru"/><input type="hidden" name="reqenc" value=""/><input type="search" name="text" value=""/><input type="submit" value="Найти"/></form></div><style type="text/css">.ya-page_js_yes .ya-site-form_inited_no { display: none; }</style><script type="text/javascript">(function(w,d,c){var s=d.createElement('script'),h=d.getElementsByTagName('script')[0],e=d.documentElement;if((' '+e.className+' ').indexOf(' ya-page_js_yes ')===-1){e.className+=' ya-page_js_yes';}s.type='text/javascript';s.async=true;s.charset='utf-8';s.src=(d.location.protocol==='https:'?'https:':'http:')+'//site.yandex.net/v2.0/js/all.js';h.parentNode.insertBefore(s,h);(w[c]||(w[c]=[])).push(function(){Ya.Site.Form.init()})})(window,document,'yandex_site_callbacks');</script>
+        </div>
+<div id="mobile-block">
+  
+<div id="yandex_rtb_R-A-1957258-10"></div>
+<script>window.yaContextCb.push(()=>{
+  Ya.Context.AdvManager.render({
+    renderTo: 'yandex_rtb_R-A-1957258-10',
+    blockId: 'R-A-1957258-10'
+  })
+})</script>
+</div>
+<div id="block">
+
+<div id="yandex_rtb_R-A-1957258-2"></div>
+<script>window.yaContextCb.push(()=>{
+  Ya.Context.AdvManager.render({
+    renderTo: 'yandex_rtb_R-A-1957258-2',
+    blockId: 'R-A-1957258-2'
+  })
+})</script>
+</div>
+<meta property="og:title" content="(Не)изменяемые строки в dotnet"/>
+
+
+    
+    
+    
+
+
+
+    
+
+
+    <span id='terminal'><h1 id='title'>(Не)изменяемые строки в dotnet</h1><span id='date'>Опубликовано: 02-01-2023</span></span>
+
+    <span id=''><h1 id="как-изменять-строки-в-dotnet">Как изменять строки в dotnet</h1>
+<p>Строки в dotnet являются предназначенной только для чтения последовательностью <code>Char</code>-ов. Об этом явно написано в <a href="https://learn.microsoft.com/ru-ru/dotnet/csharp/programming-guide/strings/">документации Microsoft</a>, посвященной строкам. Там же в секции &ldquo;Неизменность строк&rdquo; сказано следующее: &ldquo;Может показаться, что все методы String и операторы C# изменяют строку, но в действительности они возвращают результаты в новый строковый объект&rdquo;. Согласно документации, изменить строки нельзя, но жизнь не всегда согласуется с документацией, поэтому предлагаю взглянуть на способы, позволяющие изменять строки в dotnet (к тому же это иногда спрашивают на собеседованиях!).</p>
+<h2 id="fixed">Fixed</h2>
+<p>Нельзя изменять строки, но можно попробовать изменить то, из чего строка состоит. Как было упомянуто ранее, строка — это последовательность <code>Char</code>-ов, а про неизменяемость <a href="https://learn.microsoft.com/ru-ru/dotnet/standard/collections/">коллекций</a> или <a href="https://learn.microsoft.com/ru-ru/dotnet/csharp/language-reference/builtin-types/char"><code>Char</code>-ов</a> в документации информации нет. Однако, там же нет и информации о том, как получить коллекцию, на которой построена строка. Здесь будет полезно знать, что с точки зрения логики работы CLR строки — это <a href="https://mattwarren.org/2016/05/31/Strings-and-the-CLR-a-Special-Relationship/">особый тип данных</a>. При  получении указателя на объект строки возвращается указатель не на сам объект <code>System.String</code>, в котором есть поле, в котором находится коллекция Char-ов, а сразу указатель на коллекцию Char-ов.
+Это значит, что воспользовавшись инструкцией <a href="https://learn.microsoft.com/ru-ru/dotnet/csharp/language-reference/statements/fixed">fixed</a> внутри блока unsafe, можно получить указатель на первый символ строки. Путем инкрементирования или дикрементирования этого указателя можно получить адрес любого символа в строке. В приведенном ниже примере изменяется второй символ в строке:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-csharp" data-lang="csharp"><span style="display:flex;"><span><span style="color:#66d9ef">var</span> test = <span style="color:#e6db74">&#34;Test&#34;</span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">unsafe</span>
+</span></span><span style="display:flex;"><span>{
+</span></span><span style="display:flex;"><span> <span style="color:#66d9ef">fixed</span>(<span style="color:#66d9ef">char</span>* c = test)
+</span></span><span style="display:flex;"><span> {
+</span></span><span style="display:flex;"><span>   <span style="color:#66d9ef">var</span> c1=c+<span style="color:#ae81ff">1</span>;
+</span></span><span style="display:flex;"><span>   *c1 = <span style="color:#e6db74">&#39;v&#39;</span>;
+</span></span><span style="display:flex;"><span> }
+</span></span><span style="display:flex;"><span>}
+</span></span><span style="display:flex;"><span>Console.WriteLine(test); <span style="color:#75715e">// Tvst</span>
+</span></span></code></pre></div><h2 id="span">Span</h2>
+<p>Начиная с .net core 2.1 стало возможным изменить  строку более изящным способом. В dotnet появилась <a href="https://learn.microsoft.com/en-us/dotnet/api/system.span-1?view=net-6.0">Span-ы</a> — абстракция для типобезопасной работы с последовательным фрагментом управляемой или неуправляемой памяти.  Также у строк появился метод расширение <code>.AsSpan()</code>, который позволяет получить коллекцию Char-ов в виде неизменяемого <code>ReadOnlySpan&lt;Char&gt;</code>.  Теперь необходимо конвертировать <code>ReadOnlySpan&lt;Char&gt;</code> в <code>Span&lt;Char&gt;</code>. Для этих целей подойдет класс <a href="https://learn.microsoft.com/ru-ru/dotnet/api/system.runtime.interopservices.memorymarshal?view=net-7.0">MemorryMarshal</a>, в котором есть методы:</p>
+<ul>
+<li><code>CreateSpan</code>, позволяющий создать новый <code>Span</code> для коллекции заданной длины, по ссылке на первый элемент коллекции;</li>
+<li><code>GetReference</code>, позволяющий получить ссылку на первый элемент Span-а.</li>
+</ul>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-csharp" data-lang="csharp"><span style="display:flex;"><span><span style="color:#66d9ef">var</span> test = <span style="color:#e6db74">&#34;Test&#34;</span>; 
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">var</span> span = MemoryMarshal.CreateSpan(<span style="color:#66d9ef">ref</span> MemoryMarshal.GetReference(test.AsSpan()), test.Length); 
+</span></span><span style="display:flex;"><span>span[<span style="color:#ae81ff">1</span>] = <span style="color:#e6db74">&#39;v&#39;</span>; 
+</span></span><span style="display:flex;"><span>Console.WriteLine(test); <span style="color:#75715e">// Tvst</span>
+</span></span></code></pre></div><h2 id="pinvoke">P/Invoke</h2>
+<p>В мире dotnet существует технология <a href="https://learn.microsoft.com/ru-ru/dotnet/standard/native-interop/pinvoke">P/Invoke</a>, которая помимо прочего позволяет осуществлять вызов функций в неуправляемых библиотеках из управляемого кода. Это позволяет собрать собственную динамическую библиотеку, реализованную, к примеру, на C++, и работать со строкой аналогичным с описанным в разделе Fixed образом.
+Изменение строки реализуем в методе <code>MutateSecondCharToV</code>, который, как следует из названия, будет заменять второй символ в строке на <code>v</code>. Для создания динамической библиотеки понадобится два файла:</p>
+<ul>
+<li>StringMutLib.h
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-cpp" data-lang="cpp"><span style="display:flex;"><span><span style="color:#75715e">#pragma once
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">#ifdef STRINGMUTATION_EXPORTS
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">#define STRINGMUTHLIB_API __declspec(dllexport)
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">#else
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">#define STRINGMUTHLIB_API __declspec(dllimport)
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">#endif
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">extern</span> <span style="color:#e6db74">&#34;C&#34;</span> STRINGMUTHLIB_API <span style="color:#66d9ef">void</span> MutateSecondCharToV(<span style="color:#66d9ef">char</span><span style="color:#f92672">*</span> lha);
+</span></span></code></pre></div></li>
+<li>StringMutLib.cpp
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-cpp" data-lang="cpp"><span style="display:flex;"><span>STRINGMUTHLIB_API <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">MutateSecondCharToV</span>(<span style="color:#66d9ef">char</span><span style="color:#f92672">*</span> lha)
+</span></span><span style="display:flex;"><span>{
+</span></span><span style="display:flex;"><span>	<span style="color:#66d9ef">char</span><span style="color:#f92672">*</span> second <span style="color:#f92672">=</span> lha <span style="color:#f92672">+</span> <span style="color:#ae81ff">1</span>;
+</span></span><span style="display:flex;"><span>	<span style="color:#f92672">*</span>second <span style="color:#f92672">=</span> <span style="color:#e6db74">&#39;v&#39;</span>;
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div></li>
+</ul>
+<p>После того, как динамическая библиотека будет скомпилирована и положена в видимое для проекта место, останется только воспользоваться описанной в библиотеке функцией <code>MutateSecondCharToV</code>:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-csharp" data-lang="csharp"><span style="display:flex;"><span><span style="color:#66d9ef">using</span> System.Runtime.InteropServices;
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">using</span> System.Text;
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">var</span> a = <span style="color:#e6db74">&#34;Test&#34;</span>;
+</span></span><span style="display:flex;"><span>Console.WriteLine(a); <span style="color:#75715e">// Test</span>
+</span></span><span style="display:flex;"><span>TestMutator.MutateSecondCharToV(a);
+</span></span><span style="display:flex;"><span>Console.WriteLine(a); <span style="color:#75715e">// Tvst</span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">public</span> <span style="color:#66d9ef">static</span> <span style="color:#66d9ef">class</span> <span style="color:#a6e22e">TestMutator</span>
+</span></span><span style="display:flex;"><span>{
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">    [DllImport(&#34;StringMutation.dll&#34;, CharSet = CharSet.Unicode)]</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">static</span> <span style="color:#66d9ef">extern</span> <span style="color:#66d9ef">void</span> MutateSecondCharToV(<span style="color:#66d9ef">string</span> foo);
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><p><a href="https://fornever.me/ru/posts/2017-09-20-clr-string-marshalling.html">Подробнее</a> про данный метод, а также о том, как избежать описанных далее побочных эффектов при его использовании, рассказал широкоизвестный в узких кругах <a href="https://fornever.me/ru/">Dr. Friedrich von Never</a>.</p>
+<h2 id="побочные-эффекты">Побочные эффекты</h2>
+<p>После применения любого из описанных выше способов для изменения строк в программе проявится &ldquo;побочный эффект&rdquo;: Каждый вызов <code>Console.WriteLine(&quot;Test&quot;)</code> будет выводить в консоль не <code>Test</code>, а <code>Tvst</code>. Подобный &ldquo;эффект&rdquo;  связан с механизмом интернирования литеральных строк.
+Среда CLR поддерживает хранилище строк в виде таблицы, называемой пулом интернирования. Эта таблица содержит ссылку на каждую уникальную строку литерала, объявленную или созданную в программе.Это позволяет экземпляру литеральной строки с определенным значением встречаться в системе только один раз. Манипуляции по изменению строк из предыдущих разделов создали ситуацию, когда CLR не знает, что указатель, который раньше указывал на строку <code>Test</code>, теперь указывает на <code>Tvst</code>, как если бы в супермаркете кто-то поставил товар под несоответствующий ему ценник. По этой причине не стоит использовать эти методы без особой необходимости.</p>
+<h2 id="stringcreate">String.Create</h2>
+<p>Если необходимо изменять строки во время их создания с целью повышения производительности, то для этих целей подойдет <a href="https://learn.microsoft.com/ru-RU/dotnet/api/system.string.create?view=net-7.0#system-string-create-1(system-int32-0-system-buffers-spanaction((system-char-0)))">метод</a> <code>String.Create</code>. Этот метод позволяет преобразовать коллекцию <code>Char</code>-ов в строку, используя переданный делегат:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-csharp" data-lang="csharp"><span style="display:flex;"><span><span style="color:#66d9ef">var</span> buffer = <span style="color:#66d9ef">new</span> <span style="color:#66d9ef">char</span>[] { <span style="color:#e6db74">&#39;T&#39;</span>, <span style="color:#e6db74">&#39;e&#39;</span>, <span style="color:#e6db74">&#39;s&#39;</span>, <span style="color:#e6db74">&#39;t&#39;</span> };
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">string</span> result = <span style="color:#66d9ef">string</span>.Create(buffer.Length, buffer, (chars, buf) =&gt; {
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">for</span> (<span style="color:#66d9ef">int</span> i = <span style="color:#ae81ff">0</span>; i &lt; chars.Length; i++)
+</span></span><span style="display:flex;"><span>    {
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">if</span>(i == <span style="color:#ae81ff">1</span>)
+</span></span><span style="display:flex;"><span>        {
+</span></span><span style="display:flex;"><span>            chars[i] = <span style="color:#e6db74">&#39;v&#39;</span>;
+</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">continue</span>;
+</span></span><span style="display:flex;"><span>        }
+</span></span><span style="display:flex;"><span>        chars[i] = buf[i];
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>});
+</span></span><span style="display:flex;"><span>Console.WriteLine(result); <span style="color:#75715e">// Tvst</span>
+</span></span></code></pre></div><p>В рамках делегата предоставляется доступ к <code>Span&lt;Char&gt;</code>, который оборачивает коллекцию <code>Char</code>-ов будущей строки. Благодаря тому, что строка изменяется до того, как она была проинтернирована, этот способ не вызывает побочных эффектов, свойственных предыдущим методам.</p>
+<h1 id="заключение">Заключение</h1>
+<p>Вопреки тому, что в документации dotnet в отношении строк сказано, что они являются неизменяемыми, существуют разные подходы к изменению строк. Часть из рассмотренных ранее способов являются скорее &ldquo;хаками&rdquo; и вряд ли могут быть использованы в production коде, хотя и могут служить наглядной демонстрацией особенностей работы CLR. Последний из рассмотренных методов, напротив, является вполне законным и уместным способом изменять строки и более того может служить для оптимизации работы приложения.</p>
+</span>
+
+
+
+    </div>
+    <style>
+    h1 {
+         
+        color: #23E298;
+        line-height: 6vmin;
+        font-size: 6vmin;
+    }
+
+
+    #block {
+        max-height: 350px;
+        max-width: 1000px;
+    }
+
+
+
+    a,
+    strong,
+    ::marker,
+    #date {
+        color: #D08010;
+
+    }
+
+    table,
+    td {
+        border-collapse: collapse;
+        border: 2px solid #D08010;
+        max-width: 100%;
+    }
+
+    td {
+        padding: 25px;
+    }
+
+    li a {
+        font-family: -apple-system, BlinkMacSystemFont, Arial, sans-serif;
+        font-size: 1em;
+        line-height: 1.56;
+    }
+
+    li {
+        padding-left: 2%;
+
+
+    }
+
+    a {
+        text-decoration: none;
+        font-size: 1em;
+    }
+
+    img {
+        max-width: 100%;
+        max-height: 80vh;
+    }
+
+    .navFull {
+        background-color: #353535;
+        line-height: 150%;
+        font-family: "Courier New";
+         
+        display: inline;
+        position: fixed;
+        bottom: 0px;
+        left: 0px;
+        display: flex;
+        flex-direction: row;
+        justify-content: space-around;
+        width: 100%;
+        align-items: baseline;
+        padding-top: 5px;
+        padding: 10px;
+        padding-bottom: 0px;
+    }
+
+     
+    .navCredits {
+        float: right;
+        padding-right: 18px;
+        padding-bottom: 10px;
+         
+    }
+
+    #navigationBlock {}
+
+    #content::after {
+        content: "\a\a";
+        white-space: pre;
+    }
+
+    
+    #content {
+        max-width: 80vw;
+        font-size: 1.8vmax;
+        line-height: 1.56;
+        overflow-wrap: break-word;
+        font-family: -apple-system, BlinkMacSystemFont, Arial, sans-serif;
+        overflow-y: scroll;
+        color: #BBBBBB;
+        padding: 10vmin;
+    }
+    @media only screen and (max-width : 1000px){
+        #block {
+            display: none;
+        }
+    }
+    @media only screen and (min-width : 1000px){
+        #mobile-block {
+            display: none;
+        }
+    }
+    @media only screen and (min-width : 1400px) {
+        #content {
+            font-size: 2.0vmin;
+        }
+
+    }
+    li p {
+        padding-left: 5%;
+    }
+
+    #coffee {
+        background-color: #D08010;
+        color: #fff;
+        display: block;
+        padding: 10px;
+        border-width: 2px;
+        border-radius: 10px;
+    }
+    #search{
+        max-width: 40vw;
+        margin-top: 10vh;
+        margin-left: -30px;
+    }
+    #search table, #search td{
+    border: none;
+    }
+    @media only screen and (max-width:500px) {
+        #content {
+            padding-left: 2%;
+        }
+
+        body {
+            font-size: 1.2em;
+        }
+
+        .navFull {
+            line-height: 100%;
+        }
+    }
+</style>
+
+    
+    <span class="navFull">
+        
+    
+    
+
+    
+        
+
+<div id="navigationBlock">
+    <a href="/">Home</a>
+    <span>&#8192;|&#8192;</span>
+    <a href="./..">/articles/</a>
+</div>
+
+    
+
+        
+        <div class="navCredits">
+            <a id="coffee" href="https://www.tinkoff.ru/cf/qTUdfLwVFO">Купить автору кофе</a>
+        </div>
+</span>
+
+
+    
+
+    
+
+</body>
+
+</html>

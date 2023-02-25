@@ -8,13 +8,106 @@
     <language>ru-ru</language>
     <lastBuildDate>Sun, 25 Sep 2022 20:25:57 +0300</lastBuildDate><atom:link href="https://it-irokez.ru/articles/rss.xml" rel="self" type="application/rss+xml" />
     <item turbo="true">
+      <title>(Не)изменяемые строки в dotnet</title>
+      <link>https://it-irokez.ru/articles/immutable_strings/</link>
+      <pubDate>Mon, 02 Jan 2023 08:21:49 +0300</pubDate>
+      
+      <guid>https://it-irokez.ru/articles/immutable_strings/</guid>
+      <description>Как изменять строки в dotnet Строки в dotnet являются предназначенной только для чтения последовательностью Char-ов. Об этом явно написано в документации Microsoft, посвященной строкам. Там же в секции &amp;ldquo;Неизменность строк&amp;rdquo; сказано следующее: &amp;ldquo;Может показаться, что все методы String и операторы C# изменяют строку, но в действительности они возвращают результаты в новый строковый объект&amp;rdquo;. Согласно документации, изменить строки нельзя, но жизнь не всегда согласуется с документацией, поэтому предлагаю взглянуть на способы, позволяющие изменять строки в dotnet (к тому же это иногда спрашивают на собеседованиях!</description>
+      <turbo:content>&lt;h1 id=&#34;как-изменять-строки-в-dotnet&#34;&gt;Как изменять строки в dotnet&lt;/h1&gt;
+&lt;p&gt;Строки в dotnet являются предназначенной только для чтения последовательностью &lt;code&gt;Char&lt;/code&gt;-ов. Об этом явно написано в &lt;a href=&#34;https://learn.microsoft.com/ru-ru/dotnet/csharp/programming-guide/strings/&#34;&gt;документации Microsoft&lt;/a&gt;, посвященной строкам. Там же в секции &amp;ldquo;Неизменность строк&amp;rdquo; сказано следующее: &amp;ldquo;Может показаться, что все методы String и операторы C# изменяют строку, но в действительности они возвращают результаты в новый строковый объект&amp;rdquo;. Согласно документации, изменить строки нельзя, но жизнь не всегда согласуется с документацией, поэтому предлагаю взглянуть на способы, позволяющие изменять строки в dotnet (к тому же это иногда спрашивают на собеседованиях!).&lt;/p&gt;
+&lt;h2 id=&#34;fixed&#34;&gt;Fixed&lt;/h2&gt;
+&lt;p&gt;Нельзя изменять строки, но можно попробовать изменить то, из чего строка состоит. Как было упомянуто ранее, строка — это последовательность &lt;code&gt;Char&lt;/code&gt;-ов, а про неизменяемость &lt;a href=&#34;https://learn.microsoft.com/ru-ru/dotnet/standard/collections/&#34;&gt;коллекций&lt;/a&gt; или &lt;a href=&#34;https://learn.microsoft.com/ru-ru/dotnet/csharp/language-reference/builtin-types/char&#34;&gt;&lt;code&gt;Char&lt;/code&gt;-ов&lt;/a&gt; в документации информации нет. Однако, там же нет и информации о том, как получить коллекцию, на которой построена строка. Здесь будет полезно знать, что с точки зрения логики работы CLR строки — это &lt;a href=&#34;https://mattwarren.org/2016/05/31/Strings-and-the-CLR-a-Special-Relationship/&#34;&gt;особый тип данных&lt;/a&gt;. При  получении указателя на объект строки возвращается указатель не на сам объект &lt;code&gt;System.String&lt;/code&gt;, в котором есть поле, в котором находится коллекция Char-ов, а сразу указатель на коллекцию Char-ов.
+Это значит, что воспользовавшись инструкцией &lt;a href=&#34;https://learn.microsoft.com/ru-ru/dotnet/csharp/language-reference/statements/fixed&#34;&gt;fixed&lt;/a&gt; внутри блока unsafe, можно получить указатель на первый символ строки. Путем инкрементирования или дикрементирования этого указателя можно получить адрес любого символа в строке. В приведенном ниже примере изменяется второй символ в строке:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-csharp&#34; data-lang=&#34;csharp&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;var&lt;/span&gt; test = &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;Test&amp;#34;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;unsafe&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;{
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;fixed&lt;/span&gt;(&lt;span style=&#34;color:#66d9ef&#34;&gt;char&lt;/span&gt;* c = test)
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt; {
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;   &lt;span style=&#34;color:#66d9ef&#34;&gt;var&lt;/span&gt; c1=c+&lt;span style=&#34;color:#ae81ff&#34;&gt;1&lt;/span&gt;;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;   *c1 = &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;v&amp;#39;&lt;/span&gt;;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt; }
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;}
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;Console.WriteLine(test); &lt;span style=&#34;color:#75715e&#34;&gt;// Tvst&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h2 id=&#34;span&#34;&gt;Span&lt;/h2&gt;
+&lt;p&gt;Начиная с .net core 2.1 стало возможным изменить  строку более изящным способом. В dotnet появилась &lt;a href=&#34;https://learn.microsoft.com/en-us/dotnet/api/system.span-1?view=net-6.0&#34;&gt;Span-ы&lt;/a&gt; — абстракция для типобезопасной работы с последовательным фрагментом управляемой или неуправляемой памяти.  Также у строк появился метод расширение &lt;code&gt;.AsSpan()&lt;/code&gt;, который позволяет получить коллекцию Char-ов в виде неизменяемого &lt;code&gt;ReadOnlySpan&amp;lt;Char&amp;gt;&lt;/code&gt;.  Теперь необходимо конвертировать &lt;code&gt;ReadOnlySpan&amp;lt;Char&amp;gt;&lt;/code&gt; в &lt;code&gt;Span&amp;lt;Char&amp;gt;&lt;/code&gt;. Для этих целей подойдет класс &lt;a href=&#34;https://learn.microsoft.com/ru-ru/dotnet/api/system.runtime.interopservices.memorymarshal?view=net-7.0&#34;&gt;MemorryMarshal&lt;/a&gt;, в котором есть методы:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;code&gt;CreateSpan&lt;/code&gt;, позволяющий создать новый &lt;code&gt;Span&lt;/code&gt; для коллекции заданной длины, по ссылке на первый элемент коллекции;&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;GetReference&lt;/code&gt;, позволяющий получить ссылку на первый элемент Span-а.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-csharp&#34; data-lang=&#34;csharp&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;var&lt;/span&gt; test = &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;Test&amp;#34;&lt;/span&gt;; 
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;var&lt;/span&gt; span = MemoryMarshal.CreateSpan(&lt;span style=&#34;color:#66d9ef&#34;&gt;ref&lt;/span&gt; MemoryMarshal.GetReference(test.AsSpan()), test.Length); 
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;span[&lt;span style=&#34;color:#ae81ff&#34;&gt;1&lt;/span&gt;] = &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;v&amp;#39;&lt;/span&gt;; 
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;Console.WriteLine(test); &lt;span style=&#34;color:#75715e&#34;&gt;// Tvst&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h2 id=&#34;pinvoke&#34;&gt;P/Invoke&lt;/h2&gt;
+&lt;p&gt;В мире dotnet существует технология &lt;a href=&#34;https://learn.microsoft.com/ru-ru/dotnet/standard/native-interop/pinvoke&#34;&gt;P/Invoke&lt;/a&gt;, которая помимо прочего позволяет осуществлять вызов функций в неуправляемых библиотеках из управляемого кода. Это позволяет собрать собственную динамическую библиотеку, реализованную, к примеру, на C++, и работать со строкой аналогичным с описанным в разделе Fixed образом.
+Изменение строки реализуем в методе &lt;code&gt;MutateSecondCharToV&lt;/code&gt;, который, как следует из названия, будет заменять второй символ в строке на &lt;code&gt;v&lt;/code&gt;. Для создания динамической библиотеки понадобится два файла:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;StringMutLib.h
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-cpp&#34; data-lang=&#34;cpp&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;#pragma once
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;#ifdef STRINGMUTATION_EXPORTS
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;#define STRINGMUTHLIB_API __declspec(dllexport)
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;#else
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;#define STRINGMUTHLIB_API __declspec(dllimport)
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;#endif
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;extern&lt;/span&gt; &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;C&amp;#34;&lt;/span&gt; STRINGMUTHLIB_API &lt;span style=&#34;color:#66d9ef&#34;&gt;void&lt;/span&gt; MutateSecondCharToV(&lt;span style=&#34;color:#66d9ef&#34;&gt;char&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;*&lt;/span&gt; lha);
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/li&gt;
+&lt;li&gt;StringMutLib.cpp
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-cpp&#34; data-lang=&#34;cpp&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;STRINGMUTHLIB_API &lt;span style=&#34;color:#66d9ef&#34;&gt;void&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;MutateSecondCharToV&lt;/span&gt;(&lt;span style=&#34;color:#66d9ef&#34;&gt;char&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;*&lt;/span&gt; lha)
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;{
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;	&lt;span style=&#34;color:#66d9ef&#34;&gt;char&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;*&lt;/span&gt; second &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; lha &lt;span style=&#34;color:#f92672&#34;&gt;+&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;1&lt;/span&gt;;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;	&lt;span style=&#34;color:#f92672&#34;&gt;*&lt;/span&gt;second &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;v&amp;#39;&lt;/span&gt;;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;}
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;После того, как динамическая библиотека будет скомпилирована и положена в видимое для проекта место, останется только воспользоваться описанной в библиотеке функцией &lt;code&gt;MutateSecondCharToV&lt;/code&gt;:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-csharp&#34; data-lang=&#34;csharp&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;using&lt;/span&gt; System.Runtime.InteropServices;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;using&lt;/span&gt; System.Text;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;var&lt;/span&gt; a = &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;Test&amp;#34;&lt;/span&gt;;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;Console.WriteLine(a); &lt;span style=&#34;color:#75715e&#34;&gt;// Test&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;TestMutator.MutateSecondCharToV(a);
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;Console.WriteLine(a); &lt;span style=&#34;color:#75715e&#34;&gt;// Tvst&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;public&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;static&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;class&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;TestMutator&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;{
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;    [DllImport(&amp;#34;StringMutation.dll&amp;#34;, CharSet = CharSet.Unicode)]&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    &lt;span style=&#34;color:#66d9ef&#34;&gt;public&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;static&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;extern&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;void&lt;/span&gt; MutateSecondCharToV(&lt;span style=&#34;color:#66d9ef&#34;&gt;string&lt;/span&gt; foo);
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;}
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;&lt;a href=&#34;https://fornever.me/ru/posts/2017-09-20-clr-string-marshalling.html&#34;&gt;Подробнее&lt;/a&gt; про данный метод, а также о том, как избежать описанных далее побочных эффектов при его использовании, рассказал широкоизвестный в узких кругах &lt;a href=&#34;https://fornever.me/ru/&#34;&gt;Dr. Friedrich von Never&lt;/a&gt;.&lt;/p&gt;
+&lt;h2 id=&#34;побочные-эффекты&#34;&gt;Побочные эффекты&lt;/h2&gt;
+&lt;p&gt;После применения любого из описанных выше способов для изменения строк в программе проявится &amp;ldquo;побочный эффект&amp;rdquo;: Каждый вызов &lt;code&gt;Console.WriteLine(&amp;quot;Test&amp;quot;)&lt;/code&gt; будет выводить в консоль не &lt;code&gt;Test&lt;/code&gt;, а &lt;code&gt;Tvst&lt;/code&gt;. Подобный &amp;ldquo;эффект&amp;rdquo;  связан с механизмом интернирования литеральных строк.
+Среда CLR поддерживает хранилище строк в виде таблицы, называемой пулом интернирования. Эта таблица содержит ссылку на каждую уникальную строку литерала, объявленную или созданную в программе.Это позволяет экземпляру литеральной строки с определенным значением встречаться в системе только один раз. Манипуляции по изменению строк из предыдущих разделов создали ситуацию, когда CLR не знает, что указатель, который раньше указывал на строку &lt;code&gt;Test&lt;/code&gt;, теперь указывает на &lt;code&gt;Tvst&lt;/code&gt;, как если бы в супермаркете кто-то поставил товар под несоответствующий ему ценник. По этой причине не стоит использовать эти методы без особой необходимости.&lt;/p&gt;
+&lt;h2 id=&#34;stringcreate&#34;&gt;String.Create&lt;/h2&gt;
+&lt;p&gt;Если необходимо изменять строки во время их создания с целью повышения производительности, то для этих целей подойдет &lt;a href=&#34;https://learn.microsoft.com/ru-RU/dotnet/api/system.string.create?view=net-7.0#system-string-create-1(system-int32-0-system-buffers-spanaction((system-char-0)))&#34;&gt;метод&lt;/a&gt; &lt;code&gt;String.Create&lt;/code&gt;. Этот метод позволяет преобразовать коллекцию &lt;code&gt;Char&lt;/code&gt;-ов в строку, используя переданный делегат:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-csharp&#34; data-lang=&#34;csharp&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;var&lt;/span&gt; buffer = &lt;span style=&#34;color:#66d9ef&#34;&gt;new&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;char&lt;/span&gt;[] { &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;T&amp;#39;&lt;/span&gt;, &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;e&amp;#39;&lt;/span&gt;, &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;s&amp;#39;&lt;/span&gt;, &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;t&amp;#39;&lt;/span&gt; };
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;string&lt;/span&gt; result = &lt;span style=&#34;color:#66d9ef&#34;&gt;string&lt;/span&gt;.Create(buffer.Length, buffer, (chars, buf) =&amp;gt; {
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    &lt;span style=&#34;color:#66d9ef&#34;&gt;for&lt;/span&gt; (&lt;span style=&#34;color:#66d9ef&#34;&gt;int&lt;/span&gt; i = &lt;span style=&#34;color:#ae81ff&#34;&gt;0&lt;/span&gt;; i &amp;lt; chars.Length; i++)
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    {
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;        &lt;span style=&#34;color:#66d9ef&#34;&gt;if&lt;/span&gt;(i == &lt;span style=&#34;color:#ae81ff&#34;&gt;1&lt;/span&gt;)
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;        {
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;            chars[i] = &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;v&amp;#39;&lt;/span&gt;;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;            &lt;span style=&#34;color:#66d9ef&#34;&gt;continue&lt;/span&gt;;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;        }
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;        chars[i] = buf[i];
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    }
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;});
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;Console.WriteLine(result); &lt;span style=&#34;color:#75715e&#34;&gt;// Tvst&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;В рамках делегата предоставляется доступ к &lt;code&gt;Span&amp;lt;Char&amp;gt;&lt;/code&gt;, который оборачивает коллекцию &lt;code&gt;Char&lt;/code&gt;-ов будущей строки. Благодаря тому, что строка изменяется до того, как она была проинтернирована, этот способ не вызывает побочных эффектов, свойственных предыдущим методам.&lt;/p&gt;
+&lt;h1 id=&#34;заключение&#34;&gt;Заключение&lt;/h1&gt;
+&lt;p&gt;Вопреки тому, что в документации dotnet в отношении строк сказано, что они являются неизменяемыми, существуют разные подходы к изменению строк. Часть из рассмотренных ранее способов являются скорее &amp;ldquo;хаками&amp;rdquo; и вряд ли могут быть использованы в production коде, хотя и могут служить наглядной демонстрацией особенностей работы CLR. Последний из рассмотренных методов, напротив, является вполне законным и уместным способом изменять строки и более того может служить для оптимизации работы приложения.&lt;/p&gt;
+</turbo:content>
+    </item>
+    
+    <item turbo="true">
       <title>Сравнение в C#</title>
       <link>https://it-irokez.ru/articles/comparer/</link>
       <pubDate>Sat, 20 Nov 2021 17:23:23 +0300</pubDate>
       
       <guid>https://it-irokez.ru/articles/comparer/</guid>
       <description>Предисловие Автор знает, как работает сравнение в C#, достаточно четко представляет разницу между семантикой значимого и ссылочного типов, однако все еще находит эту статью хорошей и позволяющей чуть глубже заглянуть под капот.
- Думаю, что каждый программист рано или поздно сталкивается с кодом, который работает «не так, как ты от него ожидаешь». Именно это и подтолкнуло меня к написанию следующей статьи, в которой я пытаюсь понять, почему Except в Linq работает так, как написан, а не так, как я хочу.</description>
+Думаю, что каждый программист рано или поздно сталкивается с кодом, который работает «не так, как ты от него ожидаешь». Именно это и подтолкнуло меня к написанию следующей статьи, в которой я пытаюсь понять, почему Except в Linq работает так, как написан, а не так, как я хочу.</description>
       <turbo:content>&lt;h2 id=&#34;предисловие&#34;&gt;Предисловие&lt;/h2&gt;
 &lt;p&gt;Автор знает, как работает сравнение в C#, достаточно четко представляет разницу между семантикой значимого и ссылочного типов, однако все еще находит эту статью хорошей и позволяющей чуть глубже заглянуть под капот.&lt;/p&gt;
 &lt;hr&gt;
@@ -90,7 +183,7 @@
 &lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;{
 &lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    &lt;span style=&#34;color:#66d9ef&#34;&gt;if&lt;/span&gt; (comparer &lt;span style=&#34;color:#66d9ef&#34;&gt;is&lt;/span&gt; not &lt;span style=&#34;color:#66d9ef&#34;&gt;null&lt;/span&gt; &amp;amp;&amp;amp; comparer != EqualityComparer&amp;lt;T&amp;gt;.Default) &lt;span style=&#34;color:#75715e&#34;&gt;// first check for null to avoid forcing default comparer instantiation unnecessarily&lt;/span&gt;
 &lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    {
-&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;        &lt;span style=&#34;color:#ae81ff&#34;&gt;_&lt;/span&gt;comparer = comparer;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;        _comparer = comparer;
 &lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    }
 &lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;
 &lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    &lt;span style=&#34;color:#75715e&#34;&gt;// Special-case EqualityComparer&amp;lt;string&amp;gt;.Default, StringComparer.Ordinal, and StringComparer.OrdinalIgnoreCase.&lt;/span&gt;
@@ -98,10 +191,10 @@
 &lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    &lt;span style=&#34;color:#75715e&#34;&gt;// hash buckets become unbalanced.&lt;/span&gt;
 &lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    &lt;span style=&#34;color:#66d9ef&#34;&gt;if&lt;/span&gt; (&lt;span style=&#34;color:#66d9ef&#34;&gt;typeof&lt;/span&gt;(T) == &lt;span style=&#34;color:#66d9ef&#34;&gt;typeof&lt;/span&gt;(&lt;span style=&#34;color:#66d9ef&#34;&gt;string&lt;/span&gt;))
 &lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    {
-&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;        IEqualityComparer&amp;lt;&lt;span style=&#34;color:#66d9ef&#34;&gt;string&lt;/span&gt;&amp;gt;? stringComparer = NonRandomizedStringEqualityComparer.GetStringComparer(&lt;span style=&#34;color:#ae81ff&#34;&gt;_&lt;/span&gt;comparer);
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;        IEqualityComparer&amp;lt;&lt;span style=&#34;color:#66d9ef&#34;&gt;string&lt;/span&gt;&amp;gt;? stringComparer = NonRandomizedStringEqualityComparer.GetStringComparer(_comparer);
 &lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;        &lt;span style=&#34;color:#66d9ef&#34;&gt;if&lt;/span&gt; (stringComparer &lt;span style=&#34;color:#66d9ef&#34;&gt;is&lt;/span&gt; not &lt;span style=&#34;color:#66d9ef&#34;&gt;null&lt;/span&gt;)
 &lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;        {
-&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;            &lt;span style=&#34;color:#ae81ff&#34;&gt;_&lt;/span&gt;comparer = (IEqualityComparer&amp;lt;T&amp;gt;?)stringComparer;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;            _comparer = (IEqualityComparer&amp;lt;T&amp;gt;?)stringComparer;
 &lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;        }
 &lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    }
 &lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;}
@@ -400,7 +493,7 @@ JWT (JSON Web Token) – это токен, а будет этот токен х
       
       <guid>https://it-irokez.ru/articles/agregate/</guid>
       <description>Оригинал статьи. Статья была написана в рамках моего обучения в магистратуре.
- В современном мире, где объемы данных, поступающие в информационные системы, имеют тенденцию к постоянному росту, а отдельное клиентское устройство зачастую не способно совершать выборку и обработку всех необходимых данных режиме реального времени, вопрос построения систем агрегирования информации встает все более остро.
+В современном мире, где объемы данных, поступающие в информационные системы, имеют тенденцию к постоянному росту, а отдельное клиентское устройство зачастую не способно совершать выборку и обработку всех необходимых данных режиме реального времени, вопрос построения систем агрегирования информации встает все более остро.
 Что же представляет из себя система агрегирования информации в сети Интернет? Согласно [4], система агрегации это способ создания новых web-приложений за счет объединения уже существующих интернетресурсов.</description>
       <turbo:content>&lt;p&gt;&lt;a href=&#34;http://journal.tc22.ru/wp-content/uploads/2018/05/postroenie_sistemi_agregirovaniya_informacii.pdf&#34;&gt;Оригинал статьи&lt;/a&gt;. Статья была написана в рамках моего обучения в магистратуре.&lt;/p&gt;
 &lt;hr&gt;

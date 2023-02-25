@@ -276,7 +276,11 @@
     
 
     
+
+    
         
+    
+
     
 
     
@@ -667,7 +671,7 @@ body{background:#1b1d1e}body #terminal{color:#BBBBBB}body #user{color:#23E298}bo
 </span></span><span style="display:flex;"><span>{
 </span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">if</span> (comparer <span style="color:#66d9ef">is</span> not <span style="color:#66d9ef">null</span> &amp;&amp; comparer != EqualityComparer&lt;T&gt;.Default) <span style="color:#75715e">// first check for null to avoid forcing default comparer instantiation unnecessarily</span>
 </span></span><span style="display:flex;"><span>    {
-</span></span><span style="display:flex;"><span>        <span style="color:#ae81ff">_</span>comparer = comparer;
+</span></span><span style="display:flex;"><span>        _comparer = comparer;
 </span></span><span style="display:flex;"><span>    }
 </span></span><span style="display:flex;"><span>
 </span></span><span style="display:flex;"><span>    <span style="color:#75715e">// Special-case EqualityComparer&lt;string&gt;.Default, StringComparer.Ordinal, and StringComparer.OrdinalIgnoreCase.</span>
@@ -675,10 +679,10 @@ body{background:#1b1d1e}body #terminal{color:#BBBBBB}body #user{color:#23E298}bo
 </span></span><span style="display:flex;"><span>    <span style="color:#75715e">// hash buckets become unbalanced.</span>
 </span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">if</span> (<span style="color:#66d9ef">typeof</span>(T) == <span style="color:#66d9ef">typeof</span>(<span style="color:#66d9ef">string</span>))
 </span></span><span style="display:flex;"><span>    {
-</span></span><span style="display:flex;"><span>        IEqualityComparer&lt;<span style="color:#66d9ef">string</span>&gt;? stringComparer = NonRandomizedStringEqualityComparer.GetStringComparer(<span style="color:#ae81ff">_</span>comparer);
+</span></span><span style="display:flex;"><span>        IEqualityComparer&lt;<span style="color:#66d9ef">string</span>&gt;? stringComparer = NonRandomizedStringEqualityComparer.GetStringComparer(_comparer);
 </span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">if</span> (stringComparer <span style="color:#66d9ef">is</span> not <span style="color:#66d9ef">null</span>)
 </span></span><span style="display:flex;"><span>        {
-</span></span><span style="display:flex;"><span>            <span style="color:#ae81ff">_</span>comparer = (IEqualityComparer&lt;T&gt;?)stringComparer;
+</span></span><span style="display:flex;"><span>            _comparer = (IEqualityComparer&lt;T&gt;?)stringComparer;
 </span></span><span style="display:flex;"><span>        }
 </span></span><span style="display:flex;"><span>    }
 </span></span><span style="display:flex;"><span>}
