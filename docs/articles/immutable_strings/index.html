@@ -634,12 +634,12 @@ body{background:#1b1d1e}body #terminal{color:#BBBBBB}body #user{color:#23E298}bo
 </span></span></span><span style="display:flex;"><span><span style="color:#75715e">#define STRINGMUTHLIB_API __declspec(dllimport)
 </span></span></span><span style="display:flex;"><span><span style="color:#75715e">#endif
 </span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>
-</span></span><span style="display:flex;"><span><span style="color:#66d9ef">extern</span> <span style="color:#e6db74">&#34;C&#34;</span> STRINGMUTHLIB_API <span style="color:#66d9ef">void</span> MutateSecondCharToV(<span style="color:#66d9ef">char</span><span style="color:#f92672">*</span> lha);
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">extern</span> <span style="color:#e6db74">&#34;C&#34;</span> STRINGMUTHLIB_API <span style="color:#66d9ef">void</span> MutateSecondCharToV(<span style="color:#66d9ef">wchar_t</span><span style="color:#f92672">*</span> lha);
 </span></span></code></pre></div></li>
 <li>StringMutLib.cpp
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-cpp" data-lang="cpp"><span style="display:flex;"><span>STRINGMUTHLIB_API <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">MutateSecondCharToV</span>(<span style="color:#66d9ef">char</span><span style="color:#f92672">*</span> lha)
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-cpp" data-lang="cpp"><span style="display:flex;"><span>STRINGMUTHLIB_API <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">MutateSecondCharToV</span>(<span style="color:#66d9ef">wchar_t</span><span style="color:#f92672">*</span> lha)
 </span></span><span style="display:flex;"><span>{
-</span></span><span style="display:flex;"><span>	<span style="color:#66d9ef">char</span><span style="color:#f92672">*</span> second <span style="color:#f92672">=</span> lha <span style="color:#f92672">+</span> <span style="color:#ae81ff">1</span>;
+</span></span><span style="display:flex;"><span>	<span style="color:#66d9ef">wchar_t</span><span style="color:#f92672">*</span> second <span style="color:#f92672">=</span> lha <span style="color:#f92672">+</span> <span style="color:#ae81ff">1</span>;
 </span></span><span style="display:flex;"><span>	<span style="color:#f92672">*</span>second <span style="color:#f92672">=</span> <span style="color:#e6db74">&#39;v&#39;</span>;
 </span></span><span style="display:flex;"><span>}
 </span></span></code></pre></div></li>

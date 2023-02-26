@@ -47,13 +47,13 @@ Console.WriteLine(test); // Tvst
 	#define STRINGMUTHLIB_API __declspec(dllimport)
 	#endif
 
-	extern "C" STRINGMUTHLIB_API void MutateSecondCharToV(char* lha);
+	extern "C" STRINGMUTHLIB_API void MutateSecondCharToV(wchar_t* lha);
 	```
 - StringMutLib.cpp
 	```cpp 
-	STRINGMUTHLIB_API void MutateSecondCharToV(char* lha)
+	STRINGMUTHLIB_API void MutateSecondCharToV(wchar_t* lha)
 	{
-		char* second = lha + 1;
+		wchar_t* second = lha + 1;
 		*second = 'v';
 	}
 	```
